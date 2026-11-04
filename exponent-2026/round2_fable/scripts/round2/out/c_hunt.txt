@@ -1,0 +1,9 @@
+m=16 done, 39 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [0s]
+m=17 done, 78 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [0s]
+m=18 done, 117 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [1s]
+m=19 done, 156 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [1s]
+m=20 done, 195 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [2s]
+m=21 done, 234 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [4s]
+m=22 done, 273 instances, min ratio so far 1.000000 at (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2])  [9s]
+FINAL min a_k/a_(k+1) = (1.0, (16, 'two-valued', 7, [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2]))
+exit 0

@@ -1,0 +1,6 @@
+families: {'tests_in': 10199, 'viol_in': 0, 'tests_out': 11284, 'viol_out': 8323, 'max_in': 0, 'max_out': 3266} worst in-range: ('two-valued', [1, 1, 1, 2, 2, 2], 2, 0) [2s]
+hill-climb m=10: best max Phi so far = 0 at (10, [-20, -10, -8, -6, -5, 4, 5, 6, 13, 19])  [2s]
+hill-climb m=12: best max Phi so far = 0 at (10, [-20, -10, -8, -6, -5, 4, 5, 6, 13, 19])  [3s]
+hill-climb m=14: best max Phi so far = 0 at (10, [-20, -10, -8, -6, -5, 4, 5, 6, 13, 19])  [6s]
+DM violated by adversary? False
+exit 0

@@ -1,0 +1,3 @@
+instances x k: 1176
+G1 min over all Y of (m-k)|N(Y)| - (k+1)|Y| = 0 at ('two-valued', [1, 1, 1, 2, 2, 2], 2) -> Hall HOLDS
+G2 min over all Y of (m-k)|N(Y)| - (k+1)|Y| = 0 at ('two-valued', [1, 1, 1, 2, 2, 2], 2) -> Hall HOLDS

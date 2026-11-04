@@ -1,0 +1,12 @@
+Z2                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z3                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z4                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z5                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z6                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z7                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z8                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z9                : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z2^2              : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z2^3              : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z3^2              : tests 1098, monotonicity violations 0, DM violations 0; example None
+Z_10^6 (control)  : tests 360, monotonicity violations 0, DM violations 0; example None

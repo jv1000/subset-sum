@@ -1,0 +1,3 @@
+D:\Claude Projects\SubsetSum\Fable_review\Fable_round2\scripts\round2\lemmaE_test.py:1: SyntaxWarning: invalid escape sequence '\e'
+  """A1: test the induction ingredients for monotonicity a_k >= a_{k+1} (k+1 <= m/2):
+{'tests': 6562, 'mono_viol': 0, 'core_viol': 0, 'E_viol': 0, 'ident_fail': 0, 'rule_fail': {'maxmult': 0, 'minloss': 0, 'maxabs': 0, 'minabs': 0, 'all': 0}}

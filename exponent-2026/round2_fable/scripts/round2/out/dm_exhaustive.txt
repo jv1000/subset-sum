@@ -1,0 +1,9 @@
+ints [-3,3], m=4..12        : multisets 50268, monotonicity violations 0, DM violations 0, tight instances 973 (1.9%)  example None  [5s]
+Z_2, m=4..12                : multisets 81, monotonicity violations 0, DM violations 0, tight instances 0 (0.0%)  example None  [5s]
+Z_3, m=4..12                : multisets 435, monotonicity violations 0, DM violations 0, tight instances 51 (11.7%)  example None  [5s]
+Z_4, m=4..12                : multisets 1785, monotonicity violations 0, DM violations 0, tight instances 120 (6.7%)  example None  [5s]
+Z_5, m=4..12                : multisets 6132, monotonicity violations 0, DM violations 0, tight instances 390 (6.4%)  example None  [6s]
+Z_6, m=4..12                : multisets 18480, monotonicity violations 0, DM violations 0, tight instances 372 (2.0%)  example None  [7s]
+Z_7, m=4..12                : multisets 50268, monotonicity violations 0, DM violations 0, tight instances 959 (1.9%)  example None  [11s]
+ints [-6,6], m=4..9         : multisets 496860, monotonicity violations 16, DM violations 23, tight instances 4237 (0.9%)  example ([-6, -5, -2, -1, 0, 3, 4], [1, 1, 1, 1, 1, 1, 1])  [60s]
+exit 0

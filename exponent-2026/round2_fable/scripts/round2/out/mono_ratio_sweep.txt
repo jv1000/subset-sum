@@ -1,0 +1,12 @@
+ints [-3,3], m=4..12        : multisets 50268, monotonicity violations 0, DM violations 0, tight instances 973 (1.9%)  example None  [5s]
+Z_2, m=4..12                : multisets 81, monotonicity violations 0, DM violations 0, tight instances 0 (0.0%)  example None  [5s]
+Z_3, m=4..12                : multisets 435, monotonicity violations 0, DM violations 0, tight instances 51 (11.7%)  example None  [5s]
+Z_4, m=4..12                : multisets 1785, monotonicity violations 0, DM violations 0, tight instances 120 (6.7%)  example None  [5s]
+Z_5, m=4..12                : multisets 6132, monotonicity violations 0, DM violations 0, tight instances 390 (6.4%)  example None  [6s]
+Z_6, m=4..12                : multisets 18480, monotonicity violations 0, DM violations 0, tight instances 372 (2.0%)  example None  [7s]
+Z_7, m=4..12                : multisets 50268, monotonicity violations 0, DM violations 0, tight instances 959 (1.9%)  example None  [12s]
+ints [-6,6], m=4..9         : multisets 496860, monotonicity violations 16, DM violations 23, tight instances 4237 (0.9%)  example ([-6, -5, -2, -1, 0, 3, 4], [1, 1, 1, 1, 1, 1, 1])  [60s]
+m=10 done (646646 instances): min mid ratio 1.00000 ([-6, -5], [5, 5], 4); min interior ratio 1.23529 ([-6, -5, -3, 0, 6], [3, 2, 1, 1, 3], 3); max a_t/a_k 1.0000 ([-6], [10], 1); min [S] q 20.859 ([-6, -5], [5, 5], 2)  [40s]
+m=11 done (1998724 instances): min mid ratio 1.00000 ([-6, -5], [5, 5], 4); min interior ratio 1.12609 ([-6, 0, 3, 4, 5, 6], [4, 1, 1, 2, 1, 2], 4); max a_t/a_k 1.0000 ([-6], [10], 1); min [S] q 20.859 ([-6, -5], [5, 5], 2)  [149s]
+FINAL: min middle ratio (1.0, ([-6, -5], [5, 5], 4)); min interior ratio (1.126086956521739, ([-6, 0, 3, 4, 5, 6], [4, 1, 1, 2, 1, 2], 4)); max a_t/a_k (k<=m/4) (1.0, ([-6], [10], 1)); min [S] q = a_k 2^d (m+1) (20.85925925925926, ([-6, -5], [5, 5], 2))  [150s]
+exit 0
