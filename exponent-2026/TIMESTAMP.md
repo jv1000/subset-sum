@@ -8,4 +8,4 @@ Fingerprint = SHA-256 of `MANIFEST.sha256`:
 To verify: `sha256sum -c MANIFEST.sha256` (every line OK), then `sha256sum MANIFEST.sha256` must print the
 fingerprint above.
 
-Public timestamp record: (to be filled in, e.g. OpenTimestamps proof file or Zenodo DOI)
+Public timestamp record: MANIFEST.sha256.ots
