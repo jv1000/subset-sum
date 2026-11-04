@@ -1,0 +1,14 @@
+built 43 filters N_in=256 N_out=8192 beta=[0.10000 +/- 1e-10] in 84s; max q0 0.3934 max U* 1.647 max W* 18.142
+rho0: least log2 margin >= 0.000253791727568901 (filter 28), required 0.000250000
+rho1: least log2 margin >= 0.000359513928219632 (filter 34), required 0.000250000
+rho2: least log2 margin >= 4.15582444576566 (filter 3), required 4.00000
+rho3: least log2 margin >= 10.6050665594672 (filter 3), required 4.00000
+rho4: least log2 margin >= 17.9665613272021 (filter 3), required 4.00000
+rho5: least log2 margin >= 29.0005696573505 (filter 3), required 4.00000
+rho6: least log2 margin >= 45.5435398086452 (filter 3), required 4.00000
+rho7: least log2 margin >= 73.1069461722307 (filter 3), required 4.00000
+rho8: least log2 margin >= 128.224111847195 (filter 3), required 4.00000
+rho9: least log2 margin >= 256.819565703848 (filter 3), required 17.0000
+max outer err 1.789e-218; max inner eP 1.262e-42 eY 3.284e-41
+ALL CERTIFIED (430 certs, 100s)
+routeA rc=0 100s

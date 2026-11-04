@@ -1,0 +1,89 @@
+  filter 0: q0<=0.3359 U*<=0.885 W*<=12.844
+  filter 1: q0<=0.3392 U*<=1.011 W*<=11.076
+  filter 2: q0<=0.3475 U*<=1.196 W*<=10.128
+  filter 3: q0<=0.3662 U*<=1.596 W*<=14.659
+  filter 4: q0<=0.3757 U*<=1.434 W*<=15.970
+  filter 5: q0<=0.3665 U*<=1.314 W*<=15.341
+  filter 6: q0<=0.3792 U*<=1.250 W*<=16.141
+  filter 7: q0<=0.3644 U*<=1.149 W*<=15.432
+  filter 8: q0<=0.3558 U*<=1.185 W*<=14.867
+  filter 9: q0<=0.3624 U*<=1.167 W*<=15.284
+  filter 10: q0<=0.3588 U*<=1.176 W*<=15.270
+  filter 11: q0<=0.3709 U*<=1.219 W*<=15.809
+  filter 12: q0<=0.3594 U*<=1.130 W*<=15.036
+  filter 13: q0<=0.3651 U*<=1.181 W*<=15.694
+  filter 14: q0<=0.3693 U*<=1.160 W*<=15.618
+  filter 15: q0<=0.3606 U*<=1.155 W*<=15.078
+  filter 16: q0<=0.3656 U*<=1.185 W*<=15.499
+  filter 17: q0<=0.3651 U*<=1.137 W*<=15.521
+  filter 18: q0<=0.3644 U*<=1.159 W*<=15.443
+  filter 19: q0<=0.3617 U*<=1.137 W*<=15.297
+  filter 20: q0<=0.3649 U*<=1.215 W*<=16.076
+  filter 21: q0<=0.3795 U*<=1.276 W*<=17.323
+  filter 22: q0<=0.3768 U*<=1.268 W*<=17.047
+  filter 23: q0<=0.3734 U*<=1.259 W*<=16.846
+  filter 24: q0<=0.3583 U*<=1.164 W*<=15.351
+  filter 25: q0<=0.3707 U*<=1.228 W*<=16.385
+  filter 26: q0<=0.3631 U*<=1.191 W*<=15.888
+  filter 27: q0<=0.3751 U*<=1.250 W*<=16.942
+  filter 28: q0<=0.3586 U*<=1.148 W*<=15.263
+  filter 29: q0<=0.3649 U*<=1.196 W*<=15.960
+  filter 30: q0<=0.3603 U*<=1.153 W*<=15.197
+  filter 31: q0<=0.3612 U*<=1.162 W*<=15.426
+  filter 32: q0<=0.3642 U*<=1.201 W*<=15.988
+  filter 33: q0<=0.3765 U*<=1.248 W*<=16.999
+  filter 34: q0<=0.3733 U*<=1.241 W*<=16.803
+  filter 35: q0<=0.3586 U*<=1.138 W*<=14.975
+  filter 36: q0<=0.3720 U*<=1.238 W*<=16.725
+  filter 37: q0<=0.3711 U*<=1.238 W*<=16.678
+  filter 38: q0<=0.3713 U*<=1.238 W*<=16.657
+  filter 39: q0<=0.3735 U*<=1.247 W*<=16.814
+  filter 40: q0<=0.3743 U*<=1.240 W*<=16.782
+  filter 41: q0<=0.3715 U*<=1.233 W*<=16.619
+  filter 42: q0<=0.3621 U*<=1.164 W*<=15.420
+prepared in 780s
+  10 certs, 785s, all ok so far: True
+  20 certs, 789s, all ok so far: True
+  30 certs, 794s, all ok so far: True
+  40 certs, 800s, all ok so far: True
+  50 certs, 804s, all ok so far: True
+  60 certs, 809s, all ok so far: True
+  70 certs, 814s, all ok so far: True
+  80 certs, 819s, all ok so far: True
+  90 certs, 824s, all ok so far: True
+  100 certs, 830s, all ok so far: True
+  110 certs, 835s, all ok so far: True
+  120 certs, 839s, all ok so far: True
+  130 certs, 843s, all ok so far: True
+  140 certs, 847s, all ok so far: True
+  150 certs, 851s, all ok so far: True
+  160 certs, 856s, all ok so far: True
+  170 certs, 863s, all ok so far: True
+  180 certs, 868s, all ok so far: True
+  190 certs, 874s, all ok so far: True
+  200 certs, 879s, all ok so far: True
+  210 certs, 884s, all ok so far: True
+  220 certs, 890s, all ok so far: True
+  230 certs, 895s, all ok so far: True
+  240 certs, 902s, all ok so far: True
+  250 certs, 908s, all ok so far: True
+  260 certs, 913s, all ok so far: True
+  270 certs, 917s, all ok so far: True
+  280 certs, 924s, all ok so far: True
+  290 certs, 930s, all ok so far: True
+  300 certs, 935s, all ok so far: True
+  310 certs, 942s, all ok so far: True
+  320 certs, 948s, all ok so far: True
+  330 certs, 954s, all ok so far: True
+  340 certs, 961s, all ok so far: True
+  350 certs, 967s, all ok so far: True
+  360 certs, 973s, all ok so far: True
+  370 certs, 980s, all ok so far: True
+  380 certs, 987s, all ok so far: True
+  390 certs, 993s, all ok so far: True
+  400 certs, 1000s, all ok so far: True
+  410 certs, 1006s, all ok so far: True
+  420 certs, 1014s, all ok so far: True
+  430 certs, 1020s, all ok so far: True
+ROUTE B ALL CERTIFIED 430 1020s
+routeB rc=0 1020s

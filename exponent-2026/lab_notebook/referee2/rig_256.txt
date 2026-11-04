@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-claude/e6b88fde-407f-5350-a0a8-9cc298e460bb/scratchpad/referee2/rigorous_moments.py", line 39, in <module>
+    assert 2 * Kc + 1 <= Nout or Nout >= 1024
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

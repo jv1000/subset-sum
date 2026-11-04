@@ -1,0 +1,8 @@
+tau=0.4898 m1 nc=6 box=2.5: Delta_cap=0.03959 kappa=1.0 p=5.07 q=8.27 [5s]
+tau=0.4898 both nc=6 box=2.5: Delta_cap=0.0281 kappa=1.032 p=8.44 q=8.26 [3s]
+tau=0.4898 both nc=12 box=2.5: Delta_cap=0.02876 kappa=1.035 p=8.52 q=8.34 [13s]
+tau=0.4898 both nc=12 box=4.0: Delta_cap=0.02876 kappa=1.035 p=8.52 q=8.34 [12s]
+tau=0.486 m1 nc=6 box=2.5: Delta_cap=0.03866 kappa=1.0 p=5.15 q=8.27 [6s]
+tau=0.486 both nc=6 box=2.5: Delta_cap=0.02747 kappa=1.031 p=8.57 q=8.39 [4s]
+tau=0.486 both nc=12 box=2.5: Delta_cap=0.02813 kappa=1.034 p=8.67 q=8.5 [13s]
+tau=0.486 both nc=12 box=4.0: Delta_cap=0.02813 kappa=1.034 p=8.67 q=8.5 [12s]

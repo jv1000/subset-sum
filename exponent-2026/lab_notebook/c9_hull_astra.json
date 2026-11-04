@@ -1,0 +1,9 @@
+{
+ "which": "astra",
+ "psi1_prime": 0.5754915955982595,
+ "psi2_prime": 0.5758095248619641,
+ "maxLambda_region1": 0.6679588144095899,
+ "maxLambda_region2": 0.6927701314375773,
+ "escape_region1": false,
+ "escape_region2": false
+}

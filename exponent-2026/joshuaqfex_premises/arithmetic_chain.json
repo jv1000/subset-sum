@@ -1,0 +1,89 @@
+{
+ "Delta": "2845263/100000000",
+ "Gamma": "11480583/25000000",
+ "eta_minus_tau_minus_Delta": "0",
+ "q": 0.9999419052803484,
+ "K": 1.428304359630517e-05,
+ "A_minus_Ab": 3.110080260491055e-05,
+ "identity_0<q<1": true,
+ "identity_K>0": true,
+ "identity_A-Ab==K/Gb (exact)": true,
+ "A<1/4": true,
+ "transferred_margins_paper_form": {
+  "m0": 2.7545366639917152e-06,
+  "m1": 9.764929293739373e-05,
+  "m2_8": 3.9103667682157464,
+  "m9": 13.669097644885664,
+  "all_gt_1e-6": true
+ },
+ "new_multiplier_sum_bound": 418.3730113317778,
+ "new_sum_lt_419": true,
+ "mse_exponent_remaining": 9.7468e-07,
+ "alias_slacks_lower": {
+  "C1 gamma < h(2a)/2": 1.848069895564074e-08,
+  "C2 l + (h(a)-gamma)mu < tau": 1.8481810967809167e-08,
+  "C3 r + (1-gamma)mu < tau": 1.8480692734174333e-08,
+  "C4 1-mu+(h(a)+h(1/2-a)-gamma)mu-eta < tau": 1.848133774318121e-08,
+  "C5 h(1/2-a)mu + 1/2 - tau < tau": 1.848152677537204e-08,
+  "C5L h(a)mu + 1/2 - tau < tau": 0.4429127044711182,
+  "C6 r>0": 0.040776698481999996,
+  "C6 r<tau": 0.446899251518,
+  "C6 l<tau": 0.0038955477649999996,
+  "C7 mu(1-2a) < l": 0.01608266285363987,
+  "C8 (mu/2)log2(3) < eta": 0.13934899670114975,
+  "S mu(1-2a) <= 1/2": 0.03230226061863987,
+  "S3 h(2a)/2 + h(a) < 1-2a": 0.8554441962086762,
+  "h(a) < h(1/2-a)": 0.9315791373843918
+ },
+ "least_alias_slack_lower": 1.8480692734174333e-08,
+ "guard_plus_zeta": 2e-11,
+ "alias_all_strict": true,
+ "least_slack_exceeds_guard_plus_zeta": true,
+ "work_exponent_tau_plus_20eps": "2438379751/5000000000",
+ "target_exponent": "121919/250000",
+ "pure_gap": 4.98e-08,
+ "tau+20eps<target": true,
+ "per_certificate_transferred_margin_min_by_region (from certified old margins, actual z0)": {
+  "rho0": {
+   "min": 0.00013153717874415927,
+   "filter": 28
+  },
+  "rho1": {
+   "min": 0.00021423154235674825,
+   "filter": 34
+  },
+  "rho2": {
+   "min": 4.1558047411845696,
+   "filter": 3
+  },
+  "rho3": {
+   "min": 10.605047282806096,
+   "filter": 3
+  },
+  "rho4": {
+   "min": 17.966541335531833,
+   "filter": 3
+  },
+  "rho5": {
+   "min": 29.000549000947384,
+   "filter": 3
+  },
+  "rho6": {
+   "min": 45.54351797103448,
+   "filter": 3
+  },
+  "rho7": {
+   "min": 73.10692188793462,
+   "filter": 3
+  },
+  "rho8": {
+   "min": 128.22408362506368,
+   "filter": 3
+  },
+  "rho9": {
+   "min": 256.8190324352438,
+   "filter": 3
+  }
+ },
+ "per_certificate_all_gt_1e-6": true
+}

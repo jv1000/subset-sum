@@ -1,0 +1,9 @@
+J=2 start 0 (base32): phase-0 max-min margin at C12 alias point 3.000e-06 (J=1 value ~3e-6)
+J=2 start 0: tau0 0.4875749 feasible=True Delta=0.02870 kappas=[1.035, 1.032] certs=[[8.459, 0.0, 0.0, 8.2702, 0.0, 0.0], [8.9569, 1.0981, 7.8543, 8.3082, 0.0152, 9.4176]] [9s]
+J=2 start 1 (shift.3): phase-0 max-min margin at C12 alias point 3.000e-06 (J=1 value ~3e-6)
+J=2 start 1: tau0 0.4875749 feasible=True Delta=0.02870 kappas=[1.035, 1.035] certs=[[8.459, 0.0, 0.4983, 8.2702, 0.0, 0.4974], [8.459, 0.0, 0.5034, 8.2702, 0.0, 0.5069]] [12s]
+J=2 start 2 (base28): phase-0 max-min margin at C12 alias point 3.000e-06 (J=1 value ~3e-6)
+J=2 start 2: tau0 0.4875749 feasible=True Delta=0.02870 kappas=[1.035, 1.072] certs=[[8.459, 0.0, 0.0, 8.2702, 0.0, 0.0], [9.0671, 1.104, 8.3374, 8.2742, 0.0316, 9.828]] [18s]
+J=2 start 3 (refl): phase-0 max-min margin at C12 alias point 6.684e-05 (J=1 value ~3e-6)
+J=2 start 3: tau0 0.4875717 feasible=True Delta=0.02870 kappas=[1.035, 1.035] certs=[[8.4475, 0.0, 4.2245, 8.2601, 0.0, 3.684], [8.4475, 0.0, 4.2245, 8.2601, 0.0, 3.684]] [30s]
+BEST J=2 tau0 0.4875717 vs C12 .4875749 -> -3.25e-06; vs JoshuaQFEX -1.04e-04

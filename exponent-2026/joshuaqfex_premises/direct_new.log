@@ -1,0 +1,12 @@
+rho0: least NEW log2 margin >= 0.000131537178744 (filter 28); required > 1e-6
+rho1: least NEW log2 margin >= 0.000214231542357 (filter 34); required > 1e-6
+rho2: least NEW log2 margin >= 4.15580474118 (filter 3); required > 1e-6
+rho3: least NEW log2 margin >= 10.6050472828 (filter 3); required > 1e-6
+rho4: least NEW log2 margin >= 17.9665413355 (filter 3); required > 1e-6
+rho5: least NEW log2 margin >= 29.0005490009 (filter 3); required > 1e-6
+rho6: least NEW log2 margin >= 45.5435179710 (filter 3); required > 1e-6
+rho7: least NEW log2 margin >= 73.1069218879 (filter 3); required > 1e-6
+rho8: least NEW log2 margin >= 128.224083625 (filter 3); required > 1e-6
+rho9: least NEW log2 margin >= 256.819563257 (filter 3); required > 1e-6
+max modified multiplier sum 418.35391
+ALL MODIFIED CERTIFICATES CERTIFIED 194s

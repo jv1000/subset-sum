@@ -1,0 +1,9 @@
+{
+ "which": "k16",
+ "psi1_prime": 0.5731342667760662,
+ "psi2_prime": 0.5735087197887639,
+ "maxLambda_region1": 0.6432612075798523,
+ "maxLambda_region2": 0.6302580288688724,
+ "escape_region1": false,
+ "escape_region2": false
+}

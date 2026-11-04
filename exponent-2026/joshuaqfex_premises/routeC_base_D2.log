@@ -1,0 +1,477 @@
+43 filters, N = 8192, prepared in 11 s; max q0 = 0.6760
+  filter 0: q0 0.4132  U* 1.156  W* 16.995
+  filter 1: q0 0.3782  U* 1.165  W* 12.926
+  filter 2: q0 0.3757  U* 1.317  W* 11.185
+  filter 3: q0 0.5335  U* 2.685  W* 25.065
+  filter 4: q0 0.6120  U* 2.994  W* 34.791
+  filter 5: q0 0.5547  U* 2.365  W* 28.351
+  filter 6: q0 0.6509  U* 2.907  W* 40.226
+  filter 7: q0 0.5432  U* 2.018  W* 27.931
+  filter 8: q0 0.5084  U* 1.928  W* 24.662
+  filter 9: q0 0.5262  U* 1.959  W* 26.283
+  filter 10: q0 0.5266  U* 2.007  W* 26.788
+  filter 11: q0 0.6095  U* 2.546  W* 34.552
+  filter 12: q0 0.5158  U* 1.853  W* 25.152
+  filter 13: q0 0.5660  U* 2.213  W* 30.441
+  filter 14: q0 0.5693  U* 2.163  W* 30.213
+  filter 15: q0 0.5214  U* 1.916  W* 25.502
+  filter 16: q0 0.5663  U* 2.211  W* 29.823
+  filter 17: q0 0.5458  U* 2.005  W* 28.236
+  filter 18: q0 0.5401  U* 2.011  W* 27.514
+  filter 19: q0 0.5292  U* 1.929  W* 26.654
+  filter 20: q0 0.5622  U* 2.263  W* 31.081
+  filter 21: q0 0.6760  U* 3.260  W* 48.450
+  filter 22: q0 0.6510  U* 3.008  W* 43.654
+  filter 23: q0 0.6200  U* 2.739  W* 38.984
+  filter 24: q0 0.5104  U* 1.893  W* 25.549
+  filter 25: q0 0.6030  U* 2.543  W* 35.736
+  filter 26: q0 0.5522  U* 2.168  W* 29.944
+  filter 27: q0 0.6264  U* 2.756  W* 39.911
+  filter 28: q0 0.5114  U* 1.869  W* 25.376
+  filter 29: q0 0.5552  U* 2.182  W* 30.165
+  filter 30: q0 0.5179  U* 1.901  W* 25.625
+  filter 31: q0 0.5262  U* 1.959  W* 26.659
+  filter 32: q0 0.5503  U* 2.169  W* 29.928
+  filter 33: q0 0.6377  U* 2.841  W* 41.572
+  filter 34: q0 0.6170  U* 2.674  W* 38.515
+  filter 35: q0 0.5090  U* 1.831  W* 24.519
+  filter 36: q0 0.6067  U* 2.593  W* 37.098
+  filter 37: q0 0.6025  U* 2.567  W* 36.542
+  filter 38: q0 0.6020  U* 2.561  W* 36.434
+  filter 39: q0 0.6162  U* 2.678  W* 38.377
+  filter 40: q0 0.6168  U* 2.661  W* 38.305
+  filter 41: q0 0.5984  U* 2.521  W* 35.867
+  filter 42: q0 0.5285  U* 1.969  W* 26.756
+filter 0 case1: I <= [1.426466583 +/- 2.34e-10]  log2 margin [0.0036840 +/- 4.97e-8]  (outer err [2.76e-1334 +/- 3.77e-1337]) PASS
+filter 0 band 1: I <= [0.9598005007 +/- 2.63e-11]  log2 margin [0.57532 +/- 3.53e-6]  (outer err [1.62e-1110 +/- 8.73e-1115]) PASS
+filter 0 band 1.25: I <= [0.03966835173 +/- 3.32e-12]  log2 margin [5.1720 +/- 2.27e-6]  (outer err [2.33e-1113 +/- 1.11e-1116]) PASS
+filter 0 band 1.6: I <= [0.0004591859838 +/- 1.93e-14]  log2 margin [11.605 +/- 2.37e-4]  (outer err [1.47e-1116 +/- 4.31e-1119]) PASS
+filter 0 band 2: I <= [2.814374422e-6 +/- 8.72e-17]  log2 margin [18.955 +/- 1.16e-4]  (outer err [1.14e-1119 +/- 2.64e-1122]) PASS
+filter 0 band 2.6: I <= [1.351718260e-9 +/- 9.05e-20]  log2 margin [29.979 +/- 3.12e-4]  (outer err [8.19e-1124 +/- 1.88e-1127]) PASS
+filter 0 band 3.5: I <= [1.424050393e-14 +/- 1.90e-24]  log2 margin [46.513 +/- 1.24e-4]  (outer err [1.70e-1129 +/- 3.59e-1132]) PASS
+filter 0 band 5: I <= [7.215955631e-23 +/- 4.89e-33]  log2 margin [74.069 +/- 2.86e-4]  (outer err [2.13e-1138 +/- 5.49e-1142]) PASS
+filter 0 band 8: I <= [1.854570620e-39 +/- 1.64e-49]  log2 margin [129.18 +/- 2.41e-4]  (outer err [1.64e-1155 +/- 3.47e-1158]) PASS
+filter 0 band 15: I <= [3.618967303e-78 +/- 3.22e-88]  log2 margin [257.77 +/- 9.44e-4]  (outer err [1.26e-1194 +/- 3.49e-1197]) PASS
+filter 1 case1: I <= [1.411021415 +/- 3.35e-10]  log2 margin [0.019390 +/- 1.17e-7]  (outer err [6.76e-1332 +/- 4.73e-1335]) PASS
+filter 1 band 1: I <= [1.068053615 +/- 4.19e-10]  log2 margin [0.42115 +/- 4.08e-6]  (outer err [5.10e-1160 +/- 4.17e-1163]) PASS
+filter 1 band 1.25: I <= [0.04427033405 +/- 5.7e-15]  log2 margin [5.0136 +/- 4.60e-5]  (outer err [2.12e-1161 +/- 4.35e-1164]) PASS
+filter 1 band 1.6: I <= [0.0005136182442 +/- 4.56e-14]  log2 margin [11.443 +/- 1.46e-4]  (outer err [2.45e-1163 +/- 4.55e-1166]) PASS
+filter 1 band 2: I <= [3.152622958e-6 +/- 4.79e-16]  log2 margin [18.791 +/- 1.46e-4]  (outer err [1.51e-1165 +/- 3.39e-1168]) PASS
+filter 1 band 2.6: I <= [1.516070585e-9 +/- 5.62e-20]  log2 margin [29.813 +/- 1.46e-4]  (outer err [7.25e-1169 +/- 4.80e-1172]) PASS
+filter 1 band 3.5: I <= [1.598786613e-14 +/- 3.73e-24]  log2 margin [46.346 +/- 1.46e-4]  (outer err [7.64e-1174 +/- 5.01e-1178]) PASS
+filter 1 band 5: I <= [8.107910998e-23 +/- 3.70e-33]  log2 margin [73.901 +/- 1.47e-4]  (outer err [3.87e-1182 +/- 4.72e-1185]) PASS
+filter 1 band 8: I <= [2.085191336e-39 +/- 3.02e-49]  log2 margin [129.01 +/- 1.15e-3]  (outer err [9.96e-1199 +/- 5.00e-1202]) PASS
+filter 1 band 15: I <= [4.070978130e-78 +/- 1.47e-88]  log2 margin [257.60 +/- 1.15e-3]  (outer err [1.95e-1237 +/- 4.51e-1240]) PASS
+filter 2 case1: I <= [1.402953456 +/- 4.24e-10]  log2 margin [0.027663 +/- 1.47e-7]  (outer err [6.30e-1331 +/- 3.13e-1334]) PASS
+filter 2 band 1: I <= [1.198397756 +/- 3.25e-10]  log2 margin [0.25502 +/- 3.18e-6]  (outer err [1.82e-1174 +/- 8.10e-1178]) PASS
+filter 2 band 1.25: I <= [0.04967303914 +/- 3.24e-12]  log2 margin [4.8475 +/- 2.32e-5]  (outer err [7.54e-1176 +/- 4.64e-1180]) PASS
+filter 2 band 1.6: I <= [0.0005762996755 +/- 1.06e-14]  log2 margin [11.277 +/- 2.32e-5]  (outer err [8.75e-1178 +/- 1.67e-1181]) PASS
+filter 2 band 2: I <= [3.537365753e-6 +/- 2.28e-16]  log2 margin [18.625 +/- 2.32e-5]  (outer err [5.37e-1180 +/- 2.11e-1184]) PASS
+filter 2 band 2.6: I <= [1.701090247e-9 +/- 3.65e-19]  log2 margin [29.647 +/- 2.32e-5]  (outer err [2.58e-1183 +/- 2.29e-1186]) PASS
+filter 2 band 3.5: I <= [1.793900853e-14 +/- 5.66e-25]  log2 margin [46.180 +/- 2.32e-5]  (outer err [2.72e-1188 +/- 3.18e-1191]) PASS
+filter 2 band 5: I <= [9.097391944e-23 +/- 1.20e-33]  log2 margin [73.735 +/- 2.33e-5]  (outer err [1.38e-1196 +/- 1.01e-1199]) PASS
+filter 2 band 8: I <= [2.339665897e-39 +/- 4.70e-51]  log2 margin [128.85 +/- 4.98e-3]  (outer err [3.55e-1213 +/- 1.66e-1216]) PASS
+filter 2 band 15: I <= [4.567796027e-78 +/- 4.17e-88]  log2 margin [257.44 +/- 4.98e-3]  (outer err [6.93e-1252 +/- 4.01e-1255]) PASS
+filter 3 case1: I <= [1.385920503 +/- 3.29e-10]  log2 margin [0.045285 +/- 4.94e-7]  (outer err [1.29e-1111 +/- 2.80e-1114]) PASS
+filter 3 band 1: I <= [1.426916219 +/- 3.15e-10]  log2 margin [0.0032294 +/- 2.96e-8]  (outer err [6.49e-1327 +/- 4.68e-1331]) PASS
+filter 3 band 1.25: I <= [0.08023110927 +/- 4.11e-13]  log2 margin [4.1558 +/- 2.45e-5]  (outer err [8.42e-1038 +/- 3.16e-1041]) PASS
+filter 3 band 1.6: I <= [0.0009181792444 +/- 2.12e-14]  log2 margin [10.605 +/- 6.66e-5]  (outer err [4.35e-1040 +/- 3.65e-1043]) PASS
+filter 3 band 2: I <= [5.583374172e-6 +/- 2.86e-17]  log2 margin [17.967 +/- 4.39e-4]  (outer err [1.51e-1042 +/- 2.15e-1045]) PASS
+filter 3 band 2.6: I <= [2.662743011e-9 +/- 4.37e-20]  log2 margin [29.001 +/- 4.31e-4]  (outer err [4.29e-1046 +/- 9.34e-1050]) PASS
+filter 3 band 3.5: I <= [2.788682174e-14 +/- 1.15e-24]  log2 margin [45.544 +/- 4.61e-4]  (outer err [2.89e-1051 +/- 3.41e-1055]) PASS
+filter 3 band 5: I <= [1.406005186e-22 +/- 4.47e-32]  log2 margin [73.107 +/- 5.41e-5]  (outer err [9.95e-1060 +/- 2.66e-1063]) PASS
+filter 3 band 8: I <= [3.598046554e-39 +/- 3.03e-49]  log2 margin [128.22 +/- 4.12e-3]  (outer err [1.83e-1076 +/- 4.31e-1079]) PASS
+filter 3 band 15: I <= [6.998063218e-78 +/- 3.00e-88]  log2 margin [256.82 +/- 4.35e-4]  (outer err [2.74e-1115 +/- 4.07e-1118]) PASS
+filter 4 case1: I <= [1.425607619 +/- 3.72e-10]  log2 margin [0.0045530 +/- 4.81e-8]  (outer err [8.70e-1247 +/- 3.51e-1250]) PASS
+filter 4 band 1: I <= [1.428306172 +/- 2.34e-10]  log2 margin [0.0018247 +/- 3.09e-8]  (outer err [1.64e-1323 +/- 4.59e-1326]) PASS
+filter 4 band 1.25: I <= [0.07603311440 +/- 1.87e-12]  log2 margin [4.2334 +/- 4.17e-5]  (outer err [7.30e-919 +/- 1.64e-922]) PASS
+filter 4 band 1.6: I <= [0.0008702009809 +/- 1.27e-14]  log2 margin [10.682 +/- 4.94e-4]  (outer err [2.96e-921 +/- 2.90e-924]) PASS
+filter 4 band 2: I <= [5.291870974e-6 +/- 3.89e-17]  log2 margin [18.044 +/- 7.94e-5]  (outer err [8.56e-924 +/- 3.92e-928]) PASS
+filter 4 band 2.6: I <= [2.523822913e-9 +/- 1.79e-19]  log2 margin [29.078 +/- 1.28e-4]  (outer err [2.05e-927 +/- 1.47e-931]) PASS
+filter 4 band 3.5: I <= [2.643273469e-14 +/- 4.58e-24]  log2 margin [45.621 +/- 2.03e-4]  (outer err [1.19e-932 +/- 3.37e-935]) PASS
+filter 4 band 5: I <= [1.332725806e-22 +/- 2.56e-32]  log2 margin [73.184 +/- 1.69e-4]  (outer err [3.57e-941 +/- 2.26e-944]) PASS
+filter 4 band 8: I <= [3.410589834e-39 +/- 3.41e-49]  log2 margin [128.30 +/- 1.31e-3]  (outer err [5.82e-958 +/- 2.90e-961]) PASS
+filter 4 band 15: I <= [6.633566115e-78 +/- 2.13e-88]  log2 margin [256.90 +/- 3.27e-3]  (outer err [7.96e-997 +/- 2.23e-1000]) PASS
+filter 5 case1: I <= [1.427875254 +/- 4.29e-10]  log2 margin [0.0022601 +/- 4.46e-8]  (outer err [5.98e-1290 +/- 3.48e-1293]) PASS
+filter 5 band 1: I <= [1.429560608 +/- 4.06e-10]  log2 margin [0.00055821 +/- 3.48e-9]  (outer err [9.82e-1328 +/- 3.65e-1331]) PASS
+filter 5 band 1.25: I <= [0.07576132477 +/- 1.02e-12]  log2 margin [4.2385 +/- 2.47e-5]  (outer err [4.53e-958 +/- 4.37e-961]) PASS
+filter 5 band 1.6: I <= [0.0008693338161 +/- 2.21e-14]  log2 margin [10.684 +/- 6.80e-5]  (outer err [4.57e-962 +/- 4.80e-965]) PASS
+filter 5 band 2: I <= [5.295623030e-6 +/- 4.42e-16]  log2 margin [18.043 +/- 1.02e-4]  (outer err [9.79e-966 +/- 1.27e-969]) PASS
+filter 5 band 2.6: I <= [2.529339058e-9 +/- 1.64e-20]  log2 margin [29.075 +/- 2.78e-4]  (outer err [2.19e-970 +/- 2.90e-974]) PASS
+filter 5 band 3.5: I <= [2.652209934e-14 +/- 2.88e-25]  log2 margin [45.616 +/- 7.17e-5]  (outer err [1.70e-976 +/- 9.89e-980]) PASS
+filter 5 band 5: I <= [1.338544450e-22 +/- 4.07e-33]  log2 margin [73.178 +/- 1.18e-4]  (outer err [9.14e-986 +/- 3.39e-989]) PASS
+filter 5 band 8: I <= [3.428286757e-39 +/- 1.54e-49]  log2 margin [128.29 +/- 3.84e-3]  (outer err [3.34e-1003 +/- 2.80e-1006]) PASS
+filter 5 band 15: I <= [6.672069712e-78 +/- 4.56e-88]  log2 margin [256.89 +/- 1.62e-3]  (outer err [1.44e-1042 +/- 1.34e-1045]) PASS
+filter 6 case1: I <= [1.427544112 +/- 2.29e-10]  log2 margin [0.0025947 +/- 2.67e-8]  (outer err [8.27e-1260 +/- 1.40e-1263]) PASS
+filter 6 band 1: I <= [1.428507617 +/- 3.26e-10]  log2 margin [0.0016213 +/- 2.93e-8]  (outer err [4.03e-1314 +/- 3.56e-1317]) PASS
+filter 6 band 1.25: I <= [0.07244104365 +/- 4.00e-12]  log2 margin [4.3032 +/- 2.12e-5]  (outer err [4.74e-847 +/- 3.63e-850]) PASS
+filter 6 band 1.6: I <= [0.0008300982646 +/- 5.94e-15]  log2 margin [10.751 +/- 4.40e-4]  (outer err [7.71e-850 +/- 1.20e-853]) PASS
+filter 6 band 2: I <= [5.052468458e-6 +/- 1.48e-16]  log2 margin [18.111 +/- 2.90e-4]  (outer err [1.30e-852 +/- 6.85e-856]) PASS
+filter 6 band 2.6: I <= [2.411642395e-9 +/- 8.28e-20]  log2 margin [29.143 +/- 4.67e-4]  (outer err [1.90e-856 +/- 2.66e-859]) PASS
+filter 6 band 3.5: I <= [2.527599497e-14 +/- 7.84e-25]  log2 margin [45.685 +/- 3.56e-4]  (outer err [7.26e-862 +/- 1.49e-865]) PASS
+filter 6 band 5: I <= [1.275205874e-22 +/- 3.85e-33]  log2 margin [73.248 +/- 1.83e-4]  (outer err [1.53e-870 +/- 8.03e-874]) PASS
+filter 6 band 8: I <= [3.265199706e-39 +/- 4.46e-49]  log2 margin [128.36 +/- 4.16e-3]  (outer err [1.83e-887 +/- 3.97e-890]) PASS
+filter 6 band 15: I <= [6.353537370e-78 +/- 3.15e-88]  log2 margin [256.96 +/- 1.04e-3]  (outer err [1.97e-926 +/- 4.70e-929]) PASS
+filter 7 case1: I <= [1.427483005 +/- 3.55e-10]  log2 margin [0.0026564 +/- 3.01e-8]  (outer err [1.54e-1283 +/- 4.54e-1286]) PASS
+filter 7 band 1: I <= [1.429445401 +/- 1.62e-10]  log2 margin [0.00067448 +/- 3.90e-9]  (outer err [1.37e-1323 +/- 5.34e-1327]) PASS
+filter 7 band 1.25: I <= [0.06368391225 +/- 1.89e-12]  log2 margin [4.4891 +/- 4.28e-5]  (outer err [3.42e-945 +/- 2.12e-948]) PASS
+filter 7 band 1.6: I <= [0.0007362153943 +/- 3.61e-14]  log2 margin [10.924 +/- 2.86e-4]  (outer err [7.57e-949 +/- 1.42e-952]) PASS
+filter 7 band 2: I <= [4.508185656e-6 +/- 2.05e-16]  log2 margin [18.275 +/- 1.52e-4]  (outer err [2.83e-952 +/- 4.20e-955]) PASS
+filter 7 band 2.6: I <= [2.163451273e-9 +/- 1.65e-19]  log2 margin [29.300 +/- 1.49e-4]  (outer err [1.12e-956 +/- 3.05e-959]) PASS
+filter 7 band 3.5: I <= [2.277607071e-14 +/- 3.63e-24]  log2 margin [45.836 +/- 3.96e-4]  (outer err [1.47e-962 +/- 6.73e-966]) PASS
+filter 7 band 5: I <= [1.153401641e-22 +/- 2.47e-32]  log2 margin [73.393 +/- 3.48e-4]  (outer err [1.23e-971 +/- 4.91e-974]) PASS
+filter 7 band 8: I <= [2.962763322e-39 +/- 4.46e-49]  log2 margin [128.50 +/- 4.39e-3]  (outer err [6.64e-989 +/- 3.94e-992]) PASS
+filter 7 band 15: I <= [5.779056789e-78 +/- 6.50e-89]  log2 margin [257.10 +/- 4.32e-3]  (outer err [3.85e-1028 +/- 2.36e-1031]) PASS
+filter 8 case1: I <= [1.429364301 +/- 6.50e-11]  log2 margin [0.00075634 +/- 1.83e-9]  (outer err [9.63e-1324 +/- 2.82e-1327]) PASS
+filter 8 band 1: I <= [1.429508921 +/- 1.14e-10]  log2 margin [0.00061038 +/- 3.41e-9]  (outer err [1.54e-1330 +/- 4.87e-1333]) PASS
+filter 8 band 1.25: I <= [0.06855282739 +/- 3.54e-12]  log2 margin [4.3828 +/- 3.00e-5]  (outer err [9.45e-1012 +/- 4.59e-1015]) PASS
+filter 8 band 1.6: I <= [0.0007896796253 +/- 2.94e-14]  log2 margin [10.823 +/- 4.26e-4]  (outer err [1.72e-1015 +/- 3.85e-1018]) PASS
+filter 8 band 2: I <= [4.823430296e-6 +/- 8.66e-17]  log2 margin [18.178 +/- 3.61e-4]  (outer err [5.55e-1019 +/- 3.33e-1022]) PASS
+filter 8 band 2.6: I <= [2.309438248e-9 +/- 4.11e-19]  log2 margin [29.206 +/- 5.92e-5]  (outer err [1.80e-1023 +/- 4.41e-1026]) PASS
+filter 8 band 3.5: I <= [2.426602288e-14 +/- 3.35e-24]  log2 margin [45.744 +/- 1.86e-4]  (outer err [1.90e-1029 +/- 2.70e-1032]) PASS
+filter 8 band 5: I <= [1.226825982e-22 +/- 3.63e-33]  log2 margin [73.304 +/- 3.83e-4]  (outer err [1.33e-1038 +/- 6.08e-1042]) PASS
+filter 8 band 8: I <= [3.146881824e-39 +/- 2.37e-50]  log2 margin [128.42 +/- 2.60e-3]  (outer err [6.10e-1056 +/- 1.14e-1059]) PASS
+filter 8 band 15: I <= [6.131469164e-78 +/- 4.32e-88]  log2 margin [257.01 +/- 2.89e-4]  (outer err [3.13e-1095 +/- 1.18e-1098]) PASS
+filter 9 case1: I <= [1.429706600 +/- 3.77e-10]  log2 margin [0.00041089 +/- 2.32e-9]  (outer err [1.92e-1315 +/- 3.86e-1318]) PASS
+filter 9 band 1: I <= [1.429616199 +/- 8.59e-11]  log2 margin [0.00050211 +/- 3.14e-9]  (outer err [3.97e-1300 +/- 3.81e-1303]) PASS
+filter 9 band 1.25: I <= [0.06251720620 +/- 2.90e-12]  log2 margin [4.5157 +/- 3.29e-5]  (outer err [3.64e-851 +/- 3.65e-855]) PASS
+filter 9 band 1.6: I <= [0.0007226340235 +/- 2.19e-14]  log2 margin [10.951 +/- 4.23e-4]  (outer err [8.61e-857 +/- 1.03e-860]) PASS
+filter 9 band 2: I <= [4.424481984e-6 +/- 3.58e-16]  log2 margin [18.302 +/- 1.91e-4]  (outer err [2.14e-861 +/- 3.32e-864]) PASS
+filter 9 band 2.6: I <= [2.123063646e-9 +/- 2.83e-20]  log2 margin [29.327 +/- 3.36e-4]  (outer err [6.10e-855 +/- 1.15e-858]) PASS
+filter 9 band 3.5: I <= [2.234986615e-14 +/- 3.32e-24]  log2 margin [45.863 +/- 1.43e-4]  (outer err [2.77e-851 +/- 5.19e-855]) PASS
+filter 9 band 5: I <= [1.131818874e-22 +/- 4.62e-33]  log2 margin [73.420 +/- 9.53e-5]  (outer err [1.44e-859 +/- 8.10e-863]) PASS
+filter 9 band 8: I <= [2.907340567e-39 +/- 4.73e-49]  log2 margin [128.53 +/- 1.63e-3]  (outer err [3.70e-877 +/- 3.22e-880]) PASS
+filter 9 band 15: I <= [5.670968576e-78 +/- 2.15e-88]  log2 margin [257.12 +/- 2.93e-3]  (outer err [1.21e-916 +/- 1.72e-919]) PASS
+filter 10 case1: I <= [1.429487199 +/- 1.35e-10]  log2 margin [0.00063230 +/- 6.16e-10]  (outer err [1.81e-1326 +/- 3.66e-1329]) PASS
+filter 10 band 1: I <= [1.429543960 +/- 3.79e-10]  log2 margin [0.00057501 +/- 4.56e-9]  (outer err [4.37e-1328 +/- 4.41e-1331]) PASS
+filter 10 band 1.25: I <= [0.07196656333 +/- 1.77e-13]  log2 margin [4.3127 +/- 4.06e-5]  (outer err [1.27e-982 +/- 3.07e-987]) PASS
+filter 10 band 1.6: I <= [0.0008259977995 +/- 4.23e-14]  log2 margin [10.758 +/- 2.96e-4]  (outer err [2.45e-986 +/- 3.17e-989]) PASS
+filter 10 band 2: I <= [5.032620380e-6 +/- 4.95e-16]  log2 margin [18.116 +/- 3.89e-4]  (outer err [8.39e-990 +/- 9.99e-994]) PASS
+filter 10 band 2.6: I <= [2.404178635e-9 +/- 6.18e-21]  log2 margin [29.148 +/- 6.13e-5]  (outer err [2.88e-994 +/- 4.02e-997]) PASS
+filter 10 band 3.5: I <= [2.521397436e-14 +/- 1.97e-24]  log2 margin [45.689 +/- 1.01e-4]  (outer err [3.24e-1000 +/- 3.65e-1003]) PASS
+filter 10 band 5: I <= [1.272717606e-22 +/- 2.14e-32]  log2 margin [73.251 +/- 3.65e-4]  (outer err [2.39e-1009 +/- 1.12e-1012]) PASS
+filter 10 band 8: I <= [3.260132121e-39 +/- 6.05e-50]  log2 margin [128.37 +/- 3.61e-3]  (outer err [1.15e-1026 +/- 3.04e-1029]) PASS
+filter 10 band 15: I <= [6.345488359e-78 +/- 3.23e-88]  log2 margin [256.96 +/- 7.91e-4]  (outer err [6.17e-1066 +/- 2.12e-1069]) PASS
+filter 11 case1: I <= [1.429524147 +/- 4.40e-10]  log2 margin [0.00059501 +/- 7.91e-10]  (outer err [1.90e-1327 +/- 2.11e-1330]) PASS
+filter 11 band 1: I <= [1.429529586 +/- 4.22e-10]  log2 margin [0.00058952 +/- 8.21e-10]  (outer err [2.38e-1322 +/- 6.70e-1326]) PASS
+filter 11 band 1.25: I <= [0.07002666562 +/- 4.81e-12]  log2 margin [4.3521 +/- 1.83e-5]  (outer err [6.78e-820 +/- 7.02e-824]) PASS
+filter 11 band 1.6: I <= [0.0008059583298 +/- 4.48e-14]  log2 margin [10.793 +/- 1.38e-4]  (outer err [2.20e-825 +/- 1.46e-828]) PASS
+filter 11 band 2: I <= [4.919940513e-6 +/- 1.49e-16]  log2 margin [18.149 +/- 5.78e-5]  (outer err [4.22e-830 +/- 6.02e-834]) PASS
+filter 11 band 2.6: I <= [2.354403038e-9 +/- 3.75e-19]  log2 margin [29.178 +/- 1.22e-4]  (outer err [1.04e-835 +/- 3.77e-838]) PASS
+filter 11 band 3.5: I <= [2.472765111e-14 +/- 1.38e-24]  log2 margin [45.717 +/- 1.90e-6]  (outer err [1.25e-842 +/- 2.68e-845]) PASS
+filter 11 band 5: I <= [1.249704167e-22 +/- 3.06e-32]  log2 margin [73.277 +/- 3.88e-5]  (outer err [1.36e-852 +/- 4.67e-855]) PASS
+filter 11 band 8: I <= [3.204561908e-39 +/- 4.38e-49]  log2 margin [128.39 +/- 1.20e-3]  (outer err [1.23e-870 +/- 1.74e-873]) PASS
+filter 11 band 15: I <= [6.242370601e-78 +/- 7.38e-89]  log2 margin [256.98 +/- 4.43e-3]  (outer err [1.81e-910 +/- 2.71e-913]) PASS
+filter 12 case1: I <= [1.429744125 +/- 3.77e-10]  log2 margin [0.00037302 +/- 3.05e-9]  (outer err [5.86e-1329 +/- 4.48e-1332]) PASS
+filter 12 band 1: I <= [1.429628226 +/- 4.04e-10]  log2 margin [0.00048998 +/- 3.36e-9]  (outer err [1.48e-1314 +/- 2.73e-1317]) PASS
+filter 12 band 1.25: I <= [0.06214952967 +/- 3.53e-12]  log2 margin [4.5242 +/- 4.28e-5]  (outer err [2.56e-952 +/- 4.09e-955]) PASS
+filter 12 band 1.6: I <= [0.0007192487885 +/- 2.84e-14]  log2 margin [10.957 +/- 3.52e-4]  (outer err [1.52e-956 +/- 5.39e-960]) PASS
+filter 12 band 2: I <= [4.407585352e-6 +/- 7.53e-17]  log2 margin [18.308 +/- 2.90e-4]  (outer err [2.24e-960 +/- 3.28e-963]) PASS
+filter 12 band 2.6: I <= [2.116608957e-9 +/- 1.38e-19]  log2 margin [29.332 +/- 2.72e-4]  (outer err [3.56e-965 +/- 4.40e-968]) PASS
+filter 12 band 3.5: I <= [2.229595466e-14 +/- 3.91e-24]  log2 margin [45.866 +/- 3.42e-4]  (outer err [2.06e-971 +/- 3.04e-974]) PASS
+filter 12 band 5: I <= [1.129663610e-22 +/- 1.02e-32]  log2 margin [73.423 +/- 3.46e-4]  (outer err [1.06e-980 +/- 4.17e-983]) PASS
+filter 12 band 8: I <= [2.903060580e-39 +/- 4.22e-50]  log2 margin [128.53 +/- 3.76e-3]  (outer err [1.17e-997 +/- 3.56e-1000]) PASS
+filter 12 band 15: I <= [5.664489833e-78 +/- 5.68e-90]  log2 margin [257.12 +/- 4.58e-3]  (outer err [1.19e-1036 +/- 2.90e-1039]) PASS
+filter 13 case1: I <= [1.429716622 +/- 4.04e-10]  log2 margin [0.00040077 +/- 4.66e-9]  (outer err [7.06e-1330 +/- 1.91e-1333]) PASS
+filter 13 band 1: I <= [1.429579385 +/- 2.87e-10]  log2 margin [0.00053926 +/- 4.21e-9]  (outer err [4.38e-1312 +/- 4.88e-1316]) PASS
+filter 13 band 1.25: I <= [0.06561504677 +/- 3.80e-13]  log2 margin [4.4460 +/- 4.06e-5]  (outer err [9.69e-863 +/- 1.42e-866]) PASS
+filter 13 band 1.6: I <= [0.0007565943229 +/- 1.21e-14]  log2 margin [10.884 +/- 3.23e-4]  (outer err [8.79e-870 +/- 2.23e-873]) PASS
+filter 13 band 2: I <= [4.624643286e-6 +/- 4.12e-16]  log2 margin [18.238 +/- 3.57e-4]  (outer err [1.26e-875 +/- 1.04e-878]) PASS
+filter 13 band 2.6: I <= [2.215715585e-9 +/- 2.72e-19]  log2 margin [29.266 +/- 2.90e-4]  (outer err [2.76e-882 +/- 3.00e-885]) PASS
+filter 13 band 3.5: I <= [2.329433150e-14 +/- 1.26e-24]  log2 margin [45.803 +/- 1.45e-4]  (outer err [4.08e-890 +/- 2.14e-893]) PASS
+filter 13 band 5: I <= [1.178271619e-22 +/- 4.51e-32]  log2 margin [73.362 +/- 1.25e-4]  (outer err [7.06e-901 +/- 4.94e-904]) PASS
+filter 13 band 8: I <= [3.023613920e-39 +/- 3.16e-49]  log2 margin [128.48 +/- 4.95e-3]  (outer err [1.28e-919 +/- 4.27e-922]) PASS
+filter 13 band 15: I <= [5.893217124e-78 +/- 1.20e-88]  log2 margin [257.07 +/- 2.54e-3]  (outer err [5.31e-960 +/- 6.2e-966]) PASS
+filter 14 case1: I <= [1.429299540 +/- 2.55e-10]  log2 margin [0.00082170 +/- 4.83e-9]  (outer err [6.07e-1328 +/- 1.11e-1331]) PASS
+filter 14 band 1: I <= [1.429261481 +/- 2.23e-11]  log2 margin [0.00086012 +/- 7.95e-10]  (outer err [4.00e-1318 +/- 3.32e-1321]) PASS
+filter 14 band 1.25: I <= [0.06978830413 +/- 5.01e-12]  log2 margin [4.3570 +/- 9.17e-7]  (outer err [5.59e-940 +/- 7.24e-944]) PASS
+filter 14 band 1.6: I <= [0.0008024660635 +/- 4.10e-14]  log2 margin [10.799 +/- 4.03e-4]  (outer err [2.66e-943 +/- 3.77e-947]) PASS
+filter 14 band 2: I <= [4.895698530e-6 +/- 2.16e-16]  log2 margin [18.156 +/- 1.84e-4]  (outer err [1.74e-946 +/- 3.73e-949]) PASS
+filter 14 band 2.6: I <= [2.341628636e-9 +/- 2.23e-19]  log2 margin [29.186 +/- 2.95e-5]  (outer err [1.09e-950 +/- 2.55e-953]) PASS
+filter 14 band 3.5: I <= [2.458382530e-14 +/- 3.14e-24]  log2 margin [45.725 +/- 4.14e-4]  (outer err [2.04e-956 +/- 2.16e-959]) PASS
+filter 14 band 5: I <= [1.242045494e-22 +/- 1.21e-32]  log2 margin [73.286 +/- 1.71e-4]  (outer err [2.36e-965 +/- 5.49e-969]) PASS
+filter 14 band 8: I <= [3.184113281e-39 +/- 3.75e-49]  log2 margin [128.40 +/- 4.35e-4]  (outer err [1.68e-982 +/- 4.08e-985]) PASS
+filter 14 band 15: I <= [6.201390076e-78 +/- 7.76e-89]  log2 margin [256.99 +/- 3.93e-3]  (outer err [1.22e-1021 +/- 2.72e-1024]) PASS
+filter 15 case1: I <= [1.429700095 +/- 3.52e-11]  log2 margin [0.00041745 +/- 2.15e-9]  (outer err [4.89e-1333 +/- 1.02e-1336]) PASS
+filter 15 band 1: I <= [1.429400995 +/- 4.93e-10]  log2 margin [0.00071930 +/- 1.87e-9]  (outer err [3.35e-1317 +/- 9.90e-1321]) PASS
+filter 15 band 1.25: I <= [0.06677154024 +/- 2.85e-12]  log2 margin [4.4208 +/- 4.72e-5]  (outer err [2.18e-881 +/- 2.93e-884]) PASS
+filter 15 band 1.6: I <= [0.0007706582242 +/- 2.71e-14]  log2 margin [10.858 +/- 2.49e-4]  (outer err [9.21e-886 +/- 2.71e-889]) PASS
+filter 15 band 2: I <= [4.713630106e-6 +/- 1.19e-17]  log2 margin [18.211 +/- 1.41e-4]  (outer err [1.07e-889 +/- 4.24e-892]) PASS
+filter 15 band 2.6: I <= [2.259633059e-9 +/- 2.08e-19]  log2 margin [29.237 +/- 3.95e-4]  (outer err [1.38e-894 +/- 8.92e-898]) PASS
+filter 15 band 3.5: I <= [2.376721726e-14 +/- 2.46e-24]  log2 margin [45.774 +/- 1.51e-4]  (outer err [6.70e-901 +/- 1.38e-904]) PASS
+filter 15 band 5: I <= [1.202667013e-22 +/- 2.55e-32]  log2 margin [73.332 +/- 3.11e-4]  (outer err [2.09e-910 +/- 2.73e-913]) PASS
+filter 15 band 8: I <= [3.087247342e-39 +/- 3.24e-49]  log2 margin [128.45 +/- 5.00e-3]  (outer err [3.23e-930 +/- 1.79e-933]) PASS
+filter 15 band 15: I <= [6.018748250e-78 +/- 1.93e-88]  log2 margin [257.04 +/- 2.95e-3]  (outer err [1.96e-971 +/- 4.48e-974]) PASS
+filter 16 case1: I <= [1.429772900 +/- 2.60e-10]  log2 margin [0.00034399 +/- 2.96e-9]  (outer err [1.45e-1331 +/- 5.53e-1335]) PASS
+filter 16 band 1: I <= [1.429603611 +/- 2.15e-10]  log2 margin [0.00051482 +/- 3.79e-9]  (outer err [8.66e-1321 +/- 3.03e-1325]) PASS
+filter 16 band 1.25: I <= [0.06420015243 +/- 9.24e-13]  log2 margin [4.4774 +/- 9.47e-6]  (outer err [9.48e-771 +/- 3.19e-774]) PASS
+filter 16 band 1.6: I <= [0.0007425225861 +/- 1.16e-14]  log2 margin [10.911 +/- 4.08e-4]  (outer err [5.28e-781 +/- 1.24e-785]) PASS
+filter 16 band 2: I <= [4.548046410e-6 +/- 5.89e-17]  log2 margin [18.262 +/- 4.52e-4]  (outer err [3.96e-789 +/- 3.77e-792]) PASS
+filter 16 band 2.6: I <= [2.183047485e-9 +/- 5.58e-21]  log2 margin [29.287 +/- 1.40e-4]  (outer err [6.95e-798 +/- 2.92e-801]) PASS
+filter 16 band 3.5: I <= [2.298619509e-14 +/- 2.00e-24]  log2 margin [45.822 +/- 3.56e-4]  (outer err [1.66e-807 +/- 1.33e-810]) PASS
+filter 16 band 5: I <= [1.164196924e-22 +/- 4.85e-32]  log2 margin [73.379 +/- 2.14e-4]  (outer err [2.02e-819 +/- 4.36e-822]) PASS
+filter 16 band 8: I <= [2.990818013e-39 +/- 7.34e-50]  log2 margin [128.49 +/- 7.86e-4]  (outer err [4.52e-839 +/- 4.36e-844]) PASS
+filter 16 band 15: I <= [5.834231937e-78 +/- 1.12e-88]  log2 margin [257.08 +/- 1.98e-3]  (outer err [5.46e-881 +/- 4.36e-884]) PASS
+filter 17 case1: I <= [1.429656530 +/- 4.01e-10]  log2 margin [0.00046141 +/- 4.23e-9]  (outer err [3.61e-1330 +/- 3.76e-1333]) PASS
+filter 17 band 1: I <= [1.429581710 +/- 2.34e-11]  log2 margin [0.00053692 +/- 1.87e-9]  (outer err [3.19e-1313 +/- 1.89e-1316]) PASS
+filter 17 band 1.25: I <= [0.06170795928 +/- 4.79e-12]  log2 margin [4.5345 +/- 2.97e-5]  (outer err [3.32e-863 +/- 2.74e-866]) PASS
+filter 17 band 1.6: I <= [0.0007139358073 +/- 2.38e-15]  log2 margin [10.968 +/- 4.81e-5]  (outer err [1.56e-867 +/- 3.52e-870]) PASS
+filter 17 band 2: I <= [4.374111751e-6 +/- 4.35e-16]  log2 margin [18.319 +/- 2.92e-4]  (outer err [1.93e-871 +/- 2.28e-874]) PASS
+filter 17 band 2.6: I <= [2.100135777e-9 +/- 1.83e-19]  log2 margin [29.343 +/- 2.7e-7]  (outer err [3.14e-876 +/- 3.26e-879]) PASS
+filter 17 band 3.5: I <= [2.211897595e-14 +/- 2.84e-24]  log2 margin [45.878 +/- 1.62e-4]  (outer err [9.02e-883 +/- 4.53e-886]) PASS
+filter 17 band 5: I <= [1.120547857e-22 +/- 4.25e-32]  log2 margin [73.434 +/- 3.44e-4]  (outer err [2.06e-892 +/- 2.90e-897]) PASS
+filter 17 band 8: I <= [2.879331009e-39 +/- 4.24e-49]  log2 margin [128.55 +/- 4.41e-3]  (outer err [3.58e-910 +/- 4.98e-913]) PASS
+filter 17 band 15: I <= [5.617787159e-78 +/- 5.76e-89]  log2 margin [257.14 +/- 3.49e-3]  (outer err [8.71e-950 +/- 3.74e-953]) PASS
+filter 18 case1: I <= [1.429785700 +/- 4.22e-10]  log2 margin [0.00033107 +/- 2.11e-9]  (outer err [1.85e-1332 +/- 1.34e-1336]) PASS
+filter 18 band 1: I <= [1.429640613 +/- 2.92e-11]  log2 margin [0.00047748 +/- 3.90e-9]  (outer err [1.54e-1316 +/- 4.39e-1319]) PASS
+filter 18 band 1.25: I <= [0.06183583848 +/- 2.71e-12]  log2 margin [4.5315 +/- 4.30e-5]  (outer err [8.83e-788 +/- 4.05e-791]) PASS
+filter 18 band 1.6: I <= [0.0007159287428 +/- 1.57e-14]  log2 margin [10.964 +/- 2.64e-5]  (outer err [1.64e-795 +/- 3.67e-798]) PASS
+filter 18 band 2: I <= [4.388356730e-6 +/- 4.21e-16]  log2 margin [18.314 +/- 1.78e-5]  (outer err [7.78e-802 +/- 2.66e-805]) PASS
+filter 18 band 2.6: I <= [2.107785385e-9 +/- 6.93e-20]  log2 margin [29.338 +/- 2.46e-4]  (outer err [6.24e-809 +/- 6.97e-813]) PASS
+filter 18 band 3.5: I <= [2.220604721e-14 +/- 7.21e-25]  log2 margin [45.872 +/- 1.71e-4]  (outer err [3.93e-817 +/- 3.71e-820]) PASS
+filter 18 band 5: I <= [1.125216972e-22 +/- 7.16e-33]  log2 margin [73.428 +/- 3.45e-4]  (outer err [3.28e-828 +/- 2.40e-831]) PASS
+filter 18 band 8: I <= [2.891854227e-39 +/- 4.73e-49]  log2 margin [128.54 +/- 6.70e-4]  (outer err [3.14e-847 +/- 4.60e-850]) PASS
+filter 18 band 15: I <= [5.642950229e-78 +/- 2.68e-88]  log2 margin [257.13 +/- 7.19e-5]  (outer err [7.92e-888 +/- 1.45e-891]) PASS
+filter 19 case1: I <= [1.429768382 +/- 7.48e-11]  log2 margin [0.00034855 +/- 3.78e-9]  (outer err [2.12e-1330 +/- 2.35e-1333]) PASS
+filter 19 band 1: I <= [1.429061801 +/- 2.43e-10]  log2 margin [0.0010617 +/- 8.13e-9]  (outer err [1.35e-1238 +/- 1.72e-1241]) PASS
+filter 19 band 1.25: I <= [0.06066599742 +/- 1.73e-13]  log2 margin [4.5591 +/- 1.95e-6]  (outer err [6.12e-800 +/- 1.30e-803]) PASS
+filter 19 band 1.6: I <= [0.0007027900821 +/- 5.73e-15]  log2 margin [10.991 +/- 2.52e-4]  (outer err [9.21e-807 +/- 5.96e-811]) PASS
+filter 19 band 2: I <= [4.309598725e-6 +/- 1.87e-16]  log2 margin [18.340 +/- 1.46e-4]  (outer err [7.93e-812 +/- 3.59e-815]) PASS
+filter 19 band 2.6: I <= [2.070731629e-9 +/- 1.42e-20]  log2 margin [29.363 +/- 3.43e-4]  (outer err [9.16e-818 +/- 2.16e-821]) PASS
+filter 19 band 3.5: I <= [2.182258204e-14 +/- 3.38e-25]  log2 margin [45.897 +/- 3.02e-4]  (outer err [5.62e-825 +/- 2.64e-828]) PASS
+filter 19 band 5: I <= [1.106086229e-22 +/- 1.41e-32]  log2 margin [73.453 +/- 8.44e-5]  (outer err [3.35e-835 +/- 4.38e-838]) PASS
+filter 19 band 8: I <= [2.843354931e-39 +/- 1.78e-49]  log2 margin [128.56 +/- 3.74e-3]  (outer err [1.79e-853 +/- 2.78e-856]) PASS
+filter 19 band 15: I <= [5.549316700e-78 +/- 4.58e-88]  log2 margin [257.15 +/- 4.22e-3]  (outer err [1.74e-893 +/- 3.95e-896]) PASS
+filter 20 case1: I <= [1.429694840 +/- 5.40e-11]  log2 margin [0.00042276 +/- 5.00e-9]  (outer err [9.51e-1332 +/- 4.05e-1336]) PASS
+filter 20 band 1: I <= [1.429646693 +/- 2.96e-10]  log2 margin [0.00047134 +/- 8.72e-10]  (outer err [7.84e-1321 +/- 3.00e-1324]) PASS
+filter 20 band 1.25: I <= [0.06844755634 +/- 1.74e-12]  log2 margin [4.3850 +/- 1.29e-5]  (outer err [6.44e-895 +/- 4.13e-898]) PASS
+filter 20 band 1.6: I <= [0.0007869819860 +/- 4.12e-14]  log2 margin [10.828 +/- 4.89e-4]  (outer err [1.30e-899 +/- 2.73e-902]) PASS
+filter 20 band 2: I <= [4.800770697e-6 +/- 1.44e-16]  log2 margin [18.184 +/- 4.33e-4]  (outer err [8.72e-904 +/- 3.95e-908]) PASS
+filter 20 band 2.6: I <= [2.295962385e-9 +/- 2.20e-20]  log2 margin [29.214 +/- 3.84e-4]  (outer err [6.64e-909 +/- 2.12e-912]) PASS
+filter 20 band 3.5: I <= [2.410158034e-14 +/- 3.14e-24]  log2 margin [45.754 +/- 4.44e-6]  (outer err [2.03e-915 +/- 3.14e-918]) PASS
+filter 20 band 5: I <= [1.217541020e-22 +/- 1.33e-32]  log2 margin [73.315 +/- 4.23e-4]  (outer err [4.86e-925 +/- 4.17e-928]) PASS
+filter 20 band 8: I <= [3.120947595e-39 +/- 1.13e-49]  log2 margin [128.43 +/- 6.59e-4]  (outer err [8.69e-943 +/- 4.51e-946]) PASS
+filter 20 band 15: I <= [6.077805262e-78 +/- 4.51e-88]  log2 margin [257.02 +/- 2.98e-3]  (outer err [2.15e-982 +/- 3.27e-986]) PASS
+filter 21 case1: I <= [1.429763646 +/- 1.33e-10]  log2 margin [0.00035332 +/- 4.84e-9]  (outer err [2.77e-1324 +/- 5.00e-1327]) PASS
+filter 21 band 1: I <= [1.429747905 +/- 4.33e-10]  log2 margin [0.00036921 +/- 2.01e-9]  (outer err [1.94e-1314 +/- 3.45e-1317]) PASS
+filter 21 band 1.25: I <= [0.07892224725 +/- 1.22e-12]  log2 margin [4.1796 +/- 4.59e-5]  (outer err [4.17e-715 +/- 1.24e-718]) PASS
+filter 21 band 1.6: I <= [0.0009019997430 +/- 8.49e-16]  log2 margin [10.631 +/- 2.85e-4]  (outer err [3.57e-717 +/- 2.94e-720]) PASS
+filter 21 band 2: I <= [5.479768820e-6 +/- 3.55e-16]  log2 margin [17.994 +/- 4.17e-4]  (outer err [1.65e-719 +/- 1.34e-722]) PASS
+filter 21 band 2.6: I <= [2.611041517e-9 +/- 2.53e-19]  log2 margin [29.029 +/- 1.43e-4]  (outer err [5.80e-723 +/- 2.31e-726]) PASS
+filter 21 band 3.5: I <= [2.732483843e-14 +/- 2.50e-24]  log2 margin [45.573 +/- 8.97e-5]  (outer err [4.51e-728 +/- 2.57e-731]) PASS
+filter 21 band 5: I <= [1.376777371e-22 +/- 3.81e-32]  log2 margin [73.137 +/- 2.53e-4]  (outer err [1.71e-736 +/- 3.46e-739]) PASS
+filter 21 band 8: I <= [3.521261071e-39 +/- 4.42e-49]  log2 margin [128.26 +/- 4.77e-3]  (outer err [3.36e-753 +/- 4.66e-756]) PASS
+filter 21 band 15: I <= [6.845723048e-78 +/- 1.65e-88]  log2 margin [256.85 +/- 1.32e-3]  (outer err [5.24e-792 +/- 3.42e-795]) PASS
+filter 22 case1: I <= [1.429814763 +/- 6.69e-11]  log2 margin [0.00030175 +/- 3.50e-9]  (outer err [8.00e-1328 +/- 5.26e-1332]) PASS
+filter 22 band 1: I <= [1.429624027 +/- 8.81e-11]  log2 margin [0.00049421 +/- 3.72e-9]  (outer err [1.07e-1304 +/- 9.35e-1308]) PASS
+filter 22 band 1.25: I <= [0.07474463441 +/- 3.12e-13]  log2 margin [4.2580 +/- 1.62e-5]  (outer err [2.88e-770 +/- 1.24e-773]) PASS
+filter 22 band 1.6: I <= [0.0008566098643 +/- 2.27e-15]  log2 margin [10.705 +/- 2.05e-4]  (outer err [1.96e-773 +/- 4.98e-776]) PASS
+filter 22 band 2: I <= [5.214190230e-6 +/- 2.22e-16]  log2 margin [18.065 +/- 2.56e-4]  (outer err [1.55e-776 +/- 3.95e-780]) PASS
+filter 22 band 2.6: I <= [2.488942258e-9 +/- 1.89e-19]  log2 margin [29.098 +/- 5.00e-5]  (outer err [1.11e-780 +/- 4.97e-783]) PASS
+filter 22 band 3.5: I <= [2.608672670e-14 +/- 2.57e-24]  log2 margin [45.640 +/- 1.93e-4]  (outer err [2.29e-786 +/- 4.85e-789]) PASS
+filter 22 band 5: I <= [1.316118345e-22 +/- 3.21e-32]  log2 margin [73.202 +/- 2.59e-4]  (outer err [2.79e-795 +/- 4.13e-798]) PASS
+filter 22 band 8: I <= [3.369951289e-39 +/- 1.10e-49]  log2 margin [128.32 +/- 1.41e-3]  (outer err [2.05e-812 +/- 2.94e-816]) PASS
+filter 22 band 15: I <= [6.557322376e-78 +/- 3.40e-88]  log2 margin [256.91 +/- 3.42e-3]  (outer err [1.51e-851 +/- 1.48e-854]) PASS
+filter 23 case1: I <= [1.429842718 +/- 2.17e-10]  log2 margin [0.00027354 +/- 2.37e-10]  (outer err [1.88e-1326 +/- 5.00e-1329]) PASS
+filter 23 band 1: I <= [1.429679965 +/- 3.55e-10]  log2 margin [0.00043776 +/- 4.94e-9]  (outer err [1.34e-1308 +/- 1.99e-1312]) PASS
+filter 23 band 1.25: I <= [0.06805922297 +/- 2.89e-12]  log2 margin [4.3932 +/- 4.50e-6]  (outer err [2.43e-699 +/- 1.92e-702]) PASS
+filter 23 band 1.6: I <= [0.0007826815960 +/- 2.00e-14]  log2 margin [10.835 +/- 4.17e-4]  (outer err [6.97e-699 +/- 1.51e-702]) PASS
+filter 23 band 2: I <= [4.775637188e-6 +/- 2.61e-16]  log2 margin [18.192 +/- 5.35e-6]  (outer err [1.81e-699 +/- 8.48e-703]) PASS
+filter 23 band 2.6: I <= [2.284557618e-9 +/- 1.73e-20]  log2 margin [29.222 +/- 4.32e-4]  (outer err [2.41e-701 +/- 4.78e-704]) PASS
+filter 23 band 3.5: I <= [2.398841007e-14 +/- 4.18e-24]  log2 margin [45.761 +/- 2.15e-4]  (outer err [3.93e-705 +/- 4.41e-708]) PASS
+filter 23 band 5: I <= [1.212147510e-22 +/- 2.42e-32]  log2 margin [73.321 +/- 1.74e-5]  (outer err [2.61e-712 +/- 1.81e-715]) PASS
+filter 23 band 8: I <= [3.107913226e-39 +/- 3.46e-49]  log2 margin [128.44 +/- 4.63e-3]  (outer err [6.64e-728 +/- 4.24e-731]) PASS
+filter 23 band 15: I <= [6.053699835e-78 +/- 3.05e-88]  log2 margin [257.03 +/- 1.30e-3]  (outer err [7.43e-766 +/- 4.70e-769]) PASS
+filter 24 case1: I <= [1.429817271 +/- 3.72e-10]  log2 margin [0.00029922 +/- 3.65e-9]  (outer err [3.24e-1334 +/- 4.47e-1337]) PASS
+filter 24 band 1: I <= [1.429550647 +/- 4.01e-10]  log2 margin [0.00056827 +/- 3.97e-9]  (outer err [4.27e-1322 +/- 2.61e-1325]) PASS
+filter 24 band 1.25: I <= [0.06421701786 +/- 6.44e-13]  log2 margin [4.4770 +/- 3.06e-5]  (outer err [5.21e-838 +/- 6.53e-842]) PASS
+filter 24 band 1.6: I <= [0.0007417501259 +/- 2.60e-14]  log2 margin [10.913 +/- 9.10e-5]  (outer err [1.57e-844 +/- 4.90e-847]) PASS
+filter 24 band 2: I <= [4.539229706e-6 +/- 4.90e-16]  log2 margin [18.265 +/- 2.52e-4]  (outer err [5.07e-850 +/- 3.10e-853]) PASS
+filter 24 band 2.6: I <= [2.177058561e-9 +/- 1.37e-20]  log2 margin [29.291 +/- 1.03e-4]  (outer err [2.27e-856 +/- 2.42e-859]) PASS
+filter 24 band 3.5: I <= [2.290760910e-14 +/- 1.63e-24]  log2 margin [45.827 +/- 2.97e-4]  (outer err [2.54e-857 +/- 3.76e-860]) PASS
+filter 24 band 5: I <= [1.159536812e-22 +/- 3.39e-32]  log2 margin [73.385 +/- 8e-7]  (outer err [4.26e-859 +/- 2.29e-862]) PASS
+filter 24 band 8: I <= [2.977317568e-39 +/- 1.27e-49]  log2 margin [128.50 +/- 2.69e-3]  (outer err [5.15e-870 +/- 3.41e-873]) PASS
+filter 24 band 15: I <= [5.805588034e-78 +/- 4.42e-88]  log2 margin [257.09 +/- 9.22e-4]  (outer err [2.44e-904 +/- 3.39e-907]) PASS
+filter 25 case1: I <= [1.429543770 +/- 4.59e-10]  log2 margin [0.00057521 +/- 2.86e-9]  (outer err [2.96e-1326 +/- 1.09e-1329]) PASS
+filter 25 band 1: I <= [1.429494372 +/- 3.85e-10]  log2 margin [0.00062506 +/- 3.97e-10]  (outer err [5.25e-1315 +/- 5.00e-1318]) PASS
+filter 25 band 1.25: I <= [0.07169634061 +/- 1.37e-12]  log2 margin [4.3181 +/- 1.33e-5]  (outer err [2.98e-897 +/- 1.14e-900]) PASS
+filter 25 band 1.6: I <= [0.0008213953587 +/- 2.33e-14]  log2 margin [10.766 +/- 2.35e-4]  (outer err [3.33e-899 +/- 9.26e-903]) PASS
+filter 25 band 2: I <= [4.998666049e-6 +/- 1.73e-16]  log2 margin [18.126 +/- 1.56e-4]  (outer err [2.01e-901 +/- 1.75e-904]) PASS
+filter 25 band 2.6: I <= [2.385565298e-9 +/- 2.86e-19]  log2 margin [29.159 +/- 1.52e-4]  (outer err [9.55e-905 +/- 2.53e-908]) PASS
+filter 25 band 3.5: I <= [2.499890716e-14 +/- 3.97e-24]  log2 margin [45.701 +/- 2.59e-4]  (outer err [1.00e-909 +/- 8.85e-913]) PASS
+filter 25 band 5: I <= [1.261053643e-22 +/- 2.84e-32]  log2 margin [73.264 +/- 8.18e-5]  (outer err [5.06e-918 +/- 3.71e-922]) PASS
+filter 25 band 8: I <= [3.228562506e-39 +/- 7.56e-50]  log2 margin [128.38 +/- 4.34e-4]  (outer err [1.30e-934 +/- 1.67e-938]) PASS
+filter 25 band 15: I <= [6.281626998e-78 +/- 4.92e-88]  log2 margin [256.98 +/- 4.62e-3]  (outer err [2.54e-973 +/- 9.37e-977]) PASS
+filter 26 case1: I <= [1.429830521 +/- 2.17e-10]  log2 margin [0.00028585 +/- 3.08e-9]  (outer err [3.04e-1333 +/- 3.73e-1336]) PASS
+filter 26 band 1: I <= [1.429721441 +/- 3.31e-10]  log2 margin [0.00039591 +/- 2.66e-9]  (outer err [7.96e-1322 +/- 4.21e-1325]) PASS
+filter 26 band 1.25: I <= [0.06474771065 +/- 2.97e-12]  log2 margin [4.4652 +/- 4.30e-5]  (outer err [1.26e-870 +/- 8.69e-874]) PASS
+filter 26 band 1.6: I <= [0.0007471635303 +/- 6.58e-15]  log2 margin [10.902 +/- 4.19e-4]  (outer err [2.39e-877 +/- 4.05e-880]) PASS
+filter 26 band 2: I <= [4.569471987e-6 +/- 1.29e-16]  log2 margin [18.256 +/- 3.29e-4]  (outer err [6.07e-883 +/- 8.67e-887]) PASS
+filter 26 band 2.6: I <= [2.190371921e-9 +/- 4.84e-19]  log2 margin [29.282 +/- 3.08e-4]  (outer err [2.33e-889 +/- 3.16e-892]) PASS
+filter 26 band 3.5: I <= [2.303769336e-14 +/- 4.98e-24]  log2 margin [45.819 +/- 1.28e-4]  (outer err [5.67e-897 +/- 3.29e-900]) PASS
+filter 26 band 5: I <= [1.165720310e-22 +/- 8.54e-33]  log2 margin [73.377 +/- 3.27e-4]  (outer err [1.54e-907 +/- 1.36e-910]) PASS
+filter 26 band 8: I <= [2.992369776e-39 +/- 9.50e-50]  log2 margin [128.49 +/- 3.74e-5]  (outer err [4.18e-926 +/- 2.64e-929]) PASS
+filter 26 band 15: I <= [5.833781791e-78 +/- 1.09e-88]  log2 margin [257.08 +/- 2.10e-3]  (outer err [2.41e-966 +/- 4.87e-969]) PASS
+filter 27 case1: I <= [1.429836666 +/- 4.29e-10]  log2 margin [0.00027965 +/- 3.14e-9]  (outer err [2.82e-1329 +/- 4.98e-1333]) PASS
+filter 27 band 1: I <= [1.429722829 +/- 6.96e-11]  log2 margin [0.00039451 +/- 1.66e-9]  (outer err [1.62e-1317 +/- 4.25e-1320]) PASS
+filter 27 band 1.25: I <= [0.07001885591 +/- 1.64e-12]  log2 margin [4.3522 +/- 4.28e-5]  (outer err [8.25e-581 +/- 1.91e-584]) PASS
+filter 27 band 1.6: I <= [0.0008055261455 +/- 2.76e-14]  log2 margin [10.794 +/- 8.91e-5]  (outer err [5.50e-583 +/- 3.54e-586]) PASS
+filter 27 band 2: I <= [4.915592349e-6 +/- 1.59e-17]  log2 margin [18.150 +/- 3.34e-4]  (outer err [2.18e-585 +/- 2.15e-588]) PASS
+filter 27 band 2.6: I <= [2.351491657e-9 +/- 1.21e-19]  log2 margin [29.180 +/- 9.34e-5]  (outer err [6.81e-589 +/- 1.60e-593]) PASS
+filter 27 band 3.5: I <= [2.468898887e-14 +/- 3.22e-25]  log2 margin [45.719 +/- 2.56e-4]  (outer err [4.85e-594 +/- 5.00e-597]) PASS
+filter 27 band 5: I <= [1.247380740e-22 +/- 4.00e-32]  log2 margin [73.280 +/- 3.55e-4]  (outer err [1.18e-601 +/- 7.67e-605]) PASS
+filter 27 band 8: I <= [3.197810297e-39 +/- 1.15e-49]  log2 margin [128.39 +/- 4.25e-3]  (outer err [3.44e-617 +/- 3.30e-620]) PASS
+filter 27 band 15: I <= [6.228069198e-78 +/- 4.75e-88]  log2 margin [256.99 +/- 2.27e-3]  (outer err [4.37e-655 +/- 2.42e-659]) PASS
+filter 28 case1: I <= [1.429862290 +/- 4.96e-10]  log2 margin [0.00025379 +/- 1.73e-9]  (outer err [2.82e-1338 +/- 3.07e-1341]) PASS
+filter 28 band 1: I <= [1.429698412 +/- 3.08e-10]  log2 margin [0.00041915 +/- 1.69e-10]  (outer err [6.79e-1325 +/- 3.88e-1328]) PASS
+filter 28 band 1.25: I <= [0.06127402995 +/- 1.19e-12]  log2 margin [4.5447 +/- 1.05e-5]  (outer err [8.15e-782 +/- 2.13e-785]) PASS
+filter 28 band 1.6: I <= [0.0007088275562 +/- 1.05e-14]  log2 margin [10.978 +/- 4.08e-4]  (outer err [1.91e-795 +/- 4.49e-798]) PASS
+filter 28 band 2: I <= [4.342336937e-6 +/- 1.18e-16]  log2 margin [18.329 +/- 2.27e-4]  (outer err [5.66e-806 +/- 4.63e-810]) PASS
+filter 28 band 2.6: I <= [2.084619641e-9 +/- 7.33e-20]  log2 margin [29.354 +/- 3.02e-4]  (outer err [6.06e-817 +/- 1.95e-820]) PASS
+filter 28 band 3.5: I <= [2.195273505e-14 +/- 1.70e-24]  log2 margin [45.889 +/- 2.78e-4]  (outer err [1.84e-828 +/- 1.48e-831]) PASS
+filter 28 band 5: I <= [1.111987222e-22 +/- 2.41e-32]  log2 margin [73.445 +/- 4.08e-4]  (outer err [2.07e-842 +/- 4.77e-846]) PASS
+filter 28 band 8: I <= [2.856995773e-39 +/- 3.45e-49]  log2 margin [128.56 +/- 3.18e-3]  (outer err [4.15e-863 +/- 4.17e-866]) PASS
+filter 28 band 15: I <= [5.573729016e-78 +/- 4.35e-88]  log2 margin [257.15 +/- 2.13e-3]  (outer err [5.96e-904 +/- 1.08e-907]) PASS
+filter 29 case1: I <= [1.429828693 +/- 1.53e-10]  log2 margin [0.00028769 +/- 1.31e-9]  (outer err [9.79e-1333 +/- 4.59e-1336]) PASS
+filter 29 band 1: I <= [1.429607164 +/- 3.05e-10]  log2 margin [0.00051123 +/- 1.22e-9]  (outer err [1.99e-1307 +/- 3.63e-1310]) PASS
+filter 29 band 1.25: I <= [0.06680984905 +/- 1.05e-12]  log2 margin [4.4199 +/- 2.54e-5]  (outer err [1.74e-867 +/- 2.17e-870]) PASS
+filter 29 band 1.6: I <= [0.0007693188858 +/- 1.13e-14]  log2 margin [10.860 +/- 2.61e-4]  (outer err [3.37e-870 +/- 4.80e-873]) PASS
+filter 29 band 2: I <= [4.698190103e-6 +/- 2.38e-16]  log2 margin [18.216 +/- 4.07e-4]  (outer err [5.88e-873 +/- 1.43e-876]) PASS
+filter 29 band 2.6: I <= [2.249213177e-9 +/- 2.11e-19]  log2 margin [29.244 +/- 6.25e-5]  (outer err [9.03e-877 +/- 3.51e-880]) PASS
+filter 29 band 3.5: I <= [2.363187216e-14 +/- 7.57e-25]  log2 margin [45.782 +/- 3.90e-4]  (outer err [3.62e-882 +/- 3.13e-885]) PASS
+filter 29 band 5: I <= [1.194743536e-22 +/- 4.58e-32]  log2 margin [73.342 +/- 1.54e-4]  (outer err [8.03e-891 +/- 1.79e-894]) PASS
+filter 29 band 8: I <= [3.064613086e-39 +/- 5.33e-50]  log2 margin [128.46 +/- 4.38e-3]  (outer err [1.01e-907 +/- 4.15e-911]) PASS
+filter 29 band 15: I <= [5.971302565e-78 +/- 8.86e-90]  log2 margin [257.05 +/- 1.53e-3]  (outer err [1.13e-946 +/- 4.58e-949]) PASS
+filter 30 case1: I <= [1.429829273 +/- 3.50e-11]  log2 margin [0.00028711 +/- 4.04e-9]  (outer err [3.58e-1334 +/- 3.00e-1337]) PASS
+filter 30 band 1: I <= [1.429690143 +/- 4.30e-10]  log2 margin [0.00042750 +/- 4.90e-9]  (outer err [1.70e-1324 +/- 4.55e-1327]) PASS
+filter 30 band 1.25: I <= [0.06297592104 +/- 1.44e-12]  log2 margin [4.5052 +/- 1.42e-5]  (outer err [7.36e-904 +/- 2.39e-907]) PASS
+filter 30 band 1.6: I <= [0.0007280141195 +/- 4.96e-15]  log2 margin [10.940 +/- 1.25e-4]  (outer err [4.02e-914 +/- 1.05e-917]) PASS
+filter 30 band 2: I <= [4.457661346e-6 +/- 4.58e-16]  log2 margin [18.291 +/- 4.12e-4]  (outer err [2.32e-932 +/- 4.10e-935]) PASS
+filter 30 band 2.6: I <= [2.139021564e-9 +/- 4.70e-19]  log2 margin [29.317 +/- 4.69e-4]  (outer err [1.17e-937 +/- 1.12e-941]) PASS
+filter 30 band 3.5: I <= [2.251718758e-14 +/- 1.17e-24]  log2 margin [45.852 +/- 9.67e-5]  (outer err [2.52e-944 +/- 4.97e-947]) PASS
+filter 30 band 5: I <= [1.140216936e-22 +/- 2.75e-32]  log2 margin [73.409 +/- 2.40e-4]  (outer err [4.47e-954 +/- 3.78e-957]) PASS
+filter 30 band 8: I <= [2.928727885e-39 +/- 3.34e-49]  log2 margin [128.52 +/- 1.06e-3]  (outer err [6.16e-972 +/- 3.97e-975]) PASS
+filter 30 band 15: I <= [5.712414367e-78 +/- 4.68e-88]  log2 margin [257.11 +/- 2.43e-3]  (outer err [1.24e-1011 +/- 4.97e-1014]) PASS
+filter 31 case1: I <= [1.429856527 +/- 1.96e-10]  log2 margin [0.00025961 +/- 3.24e-9]  (outer err [5.17e-1335 +/- 4.16e-1338]) PASS
+filter 31 band 1: I <= [1.429657977 +/- 4.60e-10]  log2 margin [0.00045995 +/- 4.10e-9]  (outer err [3.18e-1316 +/- 2.96e-1319]) PASS
+filter 31 band 1.25: I <= [0.06306899949 +/- 3.54e-12]  log2 margin [4.5031 +/- 4.49e-5]  (outer err [2.39e-859 +/- 2.45e-863]) PASS
+filter 31 band 1.6: I <= [0.0007287953100 +/- 6.21e-15]  log2 margin [10.938 +/- 3.29e-4]  (outer err [2.14e-864 +/- 4.89e-867]) PASS
+filter 31 band 2: I <= [4.461313796e-6 +/- 4.43e-16]  log2 margin [18.290 +/- 2.30e-4]  (outer err [8.15e-869 +/- 1.84e-872]) PASS
+filter 31 band 2.6: I <= [2.140302984e-9 +/- 1.48e-20]  log2 margin [29.316 +/- 3.33e-4]  (outer err [3.68e-874 +/- 4.58e-878]) PASS
+filter 31 band 3.5: I <= [2.252656046e-14 +/- 3.35e-24]  log2 margin [45.851 +/- 4.97e-4]  (outer err [7.22e-881 +/- 3.57e-884]) PASS
+filter 31 band 5: I <= [1.140515850e-22 +/- 2.71e-32]  log2 margin [73.409 +/- 1.39e-4]  (outer err [1.18e-890 +/- 4.33e-893]) PASS
+filter 31 band 8: I <= [2.929111005e-39 +/- 1.62e-49]  log2 margin [128.52 +/- 8.63e-4]  (outer err [1.51e-908 +/- 1.93e-911]) PASS
+filter 31 band 15: I <= [5.712590591e-78 +/- 3.60e-88]  log2 margin [257.11 +/- 2.38e-3]  (outer err [2.88e-948 +/- 2.78e-951]) PASS
+filter 32 case1: I <= [1.429862290 +/- 4.96e-10]  log2 margin [0.00025379 +/- 1.73e-9]  (outer err [1.03e-1339 +/- 2.19e-1342]) PASS
+filter 32 band 1: I <= [1.429631752 +/- 4.54e-10]  log2 margin [0.00048642 +/- 1.53e-9]  (outer err [5.52e-1321 +/- 4.21e-1324]) PASS
+filter 32 band 1.25: I <= [0.06343127847 +/- 4.67e-12]  log2 margin [4.4948 +/- 8.24e-6]  (outer err [2.21e-826 +/- 3.13e-829]) PASS
+filter 32 band 1.6: I <= [0.0007333382132 +/- 1.65e-14]  log2 margin [10.929 +/- 3.64e-4]  (outer err [1.08e-834 +/- 2.98e-837]) PASS
+filter 32 band 2: I <= [4.490543946e-6 +/- 1.21e-16]  log2 margin [18.281 +/- 1.92e-4]  (outer err [9.09e-841 +/- 1.51e-844]) PASS
+filter 32 band 2.6: I <= [2.154903305e-9 +/- 3.04e-19]  log2 margin [29.306 +/- 1.41e-4]  (outer err [1.24e-847 +/- 1.64e-850]) PASS
+filter 32 band 3.5: I <= [2.268502484e-14 +/- 1.85e-24]  log2 margin [45.841 +/- 3.84e-4]  (outer err [1.23e-855 +/- 4.92e-858]) PASS
+filter 32 band 5: I <= [1.148733886e-22 +/- 4.02e-32]  log2 margin [73.399 +/- 4.97e-4]  (outer err [1.53e-866 +/- 3.16e-869]) PASS
+filter 32 band 8: I <= [2.950624003e-39 +/- 2.84e-50]  log2 margin [128.51 +/- 3.06e-4]  (outer err [2.09e-885 +/- 4.63e-888]) PASS
+filter 32 band 15: I <= [5.755125805e-78 +/- 8.10e-89]  log2 margin [257.10 +/- 1.68e-3]  (outer err [6.99e-926 +/- 1.04e-929]) PASS
+filter 33 case1: I <= [1.429822254 +/- 3.83e-10]  log2 margin [0.00029419 +/- 2.28e-9]  (outer err [6.58e-1324 +/- 9.87e-1328]) PASS
+filter 33 band 1: I <= [1.429675694 +/- 3.09e-10]  log2 margin [0.00044207 +/- 4.87e-9]  (outer err [2.02e-1285 +/- 9.00e-1289]) PASS
+filter 33 band 1.25: I <= [0.06684487770 +/- 4.32e-12]  log2 margin [4.4192 +/- 3.09e-5]  (outer err [3.34e-686 +/- 2.90e-689]) PASS
+filter 33 band 1.6: I <= [0.0007686350083 +/- 4.88e-14]  log2 margin [10.862 +/- 4.57e-4]  (outer err [4.86e-688 +/- 2.57e-691]) PASS
+filter 33 band 2: I <= [4.689656362e-6 +/- 1.70e-16]  log2 margin [18.218 +/- 2.17e-4]  (outer err [3.21e-690 +/- 2.77e-693]) PASS
+filter 33 band 2.6: I <= [2.243332551e-9 +/- 1.44e-21]  log2 margin [29.248 +/- 1.61e-4]  (outer err [1.55e-693 +/- 3.14e-696]) PASS
+filter 33 band 3.5: I <= [2.355489645e-14 +/- 7.03e-26]  log2 margin [45.787 +/- 9.64e-5]  (outer err [1.57e-698 +/- 5.59e-702]) PASS
+filter 33 band 5: I <= [1.190221566e-22 +/- 1.50e-32]  log2 margin [73.347 +/- 3.19e-4]  (outer err [7.41e-707 +/- 4.42e-710]) PASS
+filter 33 band 8: I <= [3.051667926e-39 +/- 3.80e-49]  log2 margin [128.46 +/- 1.73e-3]  (outer err [1.75e-723 +/- 2.05e-726]) PASS
+filter 33 band 15: I <= [5.944122732e-78 +/- 4.46e-88]  log2 margin [257.06 +/- 4.95e-3]  (outer err [3.14e-762 +/- 8.55e-766]) PASS
+filter 34 case1: I <= [1.429862290 +/- 4.96e-10]  log2 margin [0.00025379 +/- 1.73e-9]  (outer err [2.16e-1332 +/- 7.33e-1336]) PASS
+filter 34 band 1: I <= [1.429757513 +/- 4.69e-10]  log2 margin [0.00035951 +/- 3.93e-9]  (outer err [5.32e-1320 +/- 1.55e-1323]) PASS
+filter 34 band 1.25: I <= [0.06469909660 +/- 1.56e-12]  log2 margin [4.4662 +/- 4.07e-5]  (outer err [5.89e-576 +/- 2.50e-579]) PASS
+filter 34 band 1.6: I <= [0.0007463835427 +/- 4.93e-14]  log2 margin [10.904 +/- 7.49e-5]  (outer err [6.78e-582 +/- 3.58e-585]) PASS
+filter 34 band 2: I <= [4.563689016e-6 +/- 3.40e-16]  log2 margin [18.257 +/- 4.99e-4]  (outer err [5.99e-587 +/- 2.31e-590]) PASS
+filter 34 band 2.6: I <= [2.187132637e-9 +/- 3.53e-19]  log2 margin [29.284 +/- 4.43e-4]  (outer err [7.06e-593 +/- 3.57e-596]) PASS
+filter 34 band 3.5: I <= [2.299925516e-14 +/- 3.34e-24]  log2 margin [45.822 +/- 4.64e-4]  (outer err [4.40e-600 +/- 3.53e-603]) PASS
+filter 34 band 5: I <= [1.163577856e-22 +/- 1.74e-32]  log2 margin [73.380 +/- 1.99e-5]  (outer err [2.66e-610 +/- 4.95e-613]) PASS
+filter 34 band 8: I <= [2.986416150e-39 +/- 2.54e-49]  log2 margin [128.49 +/- 2.92e-3]  (outer err [1.43e-628 +/- 1.46e-631]) PASS
+filter 34 band 15: I <= [5.821473314e-78 +/- 3.99e-88]  log2 margin [257.09 +/- 4.87e-3]  (outer err [1.39e-668 +/- 2.13e-671]) PASS
+filter 35 case1: I <= [1.429836395 +/- 8.71e-11]  log2 margin [0.00027992 +/- 4.53e-11]  (outer err [2.63e-1335 +/- 2.35e-1338]) PASS
+filter 35 band 1: I <= [1.429708440 +/- 3.17e-10]  log2 margin [0.00040903 +/- 1.68e-9]  (outer err [4.45e-1326 +/- 2.32e-1329]) PASS
+filter 35 band 1.25: I <= [0.06215973482 +/- 1.96e-12]  log2 margin [4.5240 +/- 5.85e-6]  (outer err [3.37e-929 +/- 1.89e-933]) PASS
+filter 35 band 1.6: I <= [0.0007194937097 +/- 3.61e-14]  log2 margin [10.957 +/- 1.40e-4]  (outer err [1.72e-934 +/- 5.16e-938]) PASS
+filter 35 band 2: I <= [4.409439320e-6 +/- 1.90e-16]  log2 margin [18.307 +/- 1.04e-4]  (outer err [4.40e-939 +/- 2.30e-944]) PASS
+filter 35 band 2.6: I <= [2.117584924e-9 +/- 3.65e-19]  log2 margin [29.331 +/- 6.31e-5]  (outer err [1.50e-944 +/- 3.86e-948]) PASS
+filter 35 band 3.5: I <= [2.230641618e-14 +/- 3.76e-25]  log2 margin [45.866 +/- 3.36e-4]  (outer err [2.81e-951 +/- 4.52e-954]) PASS
+filter 35 band 5: I <= [1.130179110e-22 +/- 2.73e-33]  log2 margin [73.422 +/- 3.6e-6]  (outer err [4.38e-961 +/- 1.14e-964]) PASS
+filter 35 band 8: I <= [2.904334047e-39 +/- 6.44e-50]  log2 margin [128.53 +/- 3.12e-3]  (outer err [5.41e-979 +/- 1.44e-983]) PASS
+filter 35 band 15: I <= [5.666894274e-78 +/- 1.09e-88]  log2 margin [257.12 +/- 3.97e-3]  (outer err [1.00e-1018 +/- 2.64e-1021]) PASS
+filter 36 case1: I <= [1.429854982 +/- 3.76e-10]  log2 margin [0.00026117 +/- 4.55e-9]  (outer err [2.22e-1328 +/- 8.89e-1332]) PASS
+filter 36 band 1: I <= [1.429720280 +/- 8.53e-12]  log2 margin [0.00039708 +/- 3.85e-9]  (outer err [7.89e-1295 +/- 2.95e-1298]) PASS
+filter 36 band 1.25: I <= [0.06410035584 +/- 8.49e-13]  log2 margin [4.4797 +/- 4.62e-5]  (outer err [5.28e-529 +/- 4.57e-532]) PASS
+filter 36 band 1.6: I <= [0.0007393588954 +/- 4.07e-14]  log2 margin [10.918 +/- 4.33e-4]  (outer err [3.75e-546 +/- 1.72e-549]) PASS
+filter 36 band 2: I <= [4.520438325e-6 +/- 9.54e-18]  log2 margin [18.271 +/- 2.36e-4]  (outer err [4.70e-559 +/- 2.37e-562]) PASS
+filter 36 band 2.6: I <= [2.166348089e-9 +/- 3.04e-19]  log2 margin [29.298 +/- 2.18e-4]  (outer err [2.16e-571 +/- 4.95e-574]) PASS
+filter 36 band 3.5: I <= [2.278115075e-14 +/- 8.63e-25]  log2 margin [45.835 +/- 2.83e-4]  (outer err [5.25e-579 +/- 4.43e-582]) PASS
+filter 36 band 5: I <= [1.152610459e-22 +/- 3.45e-32]  log2 margin [73.394 +/- 3.58e-4]  (outer err [1.53e-589 +/- 1.19e-592]) PASS
+filter 36 band 8: I <= [2.958507416e-39 +/- 2.74e-49]  log2 margin [128.51 +/- 3.55e-3]  (outer err [4.67e-608 +/- 3.37e-611]) PASS
+filter 36 band 15: I <= [5.767545122e-78 +/- 2.36e-88]  log2 margin [257.10 +/- 1.44e-3]  (outer err [3.05e-648 +/- 1.34e-651]) PASS
+filter 37 case1: I <= [1.429862290 +/- 4.96e-10]  log2 margin [0.00025379 +/- 1.73e-9]  (outer err [2.23e-1333 +/- 2.16e-1336]) PASS
+filter 37 band 1: I <= [1.429713190 +/- 4.73e-10]  log2 margin [0.00040424 +/- 2.27e-9]  (outer err [2.88e-1320 +/- 3.99e-1323]) PASS
+filter 37 band 1.25: I <= [0.06580397663 +/- 2.17e-12]  log2 margin [4.4418 +/- 1.15e-5]  (outer err [4.56e-581 +/- 3.55e-585]) PASS
+filter 37 band 1.6: I <= [0.0007589213005 +/- 2.97e-14]  log2 margin [10.880 +/- 1.08e-4]  (outer err [1.09e-593 +/- 4.70e-596]) PASS
+filter 37 band 2: I <= [4.639792935e-6 +/- 9.65e-17]  log2 margin [18.234 +/- 3.62e-4]  (outer err [3.22e-598 +/- 3.95e-601]) PASS
+filter 37 band 2.6: I <= [2.223499386e-9 +/- 2.20e-20]  log2 margin [29.261 +/- 3.50e-4]  (outer err [2.19e-604 +/- 3.49e-607]) PASS
+filter 37 band 3.5: I <= [2.338092509e-14 +/- 1.11e-24]  log2 margin [45.798 +/- 2.09e-4]  (outer err [9.99e-613 +/- 4.36e-616]) PASS
+filter 37 band 5: I <= [1.182852608e-22 +/- 3.43e-32]  log2 margin [73.356 +/- 2.78e-4]  (outer err [6.26e-624 +/- 9.57e-628]) PASS
+filter 37 band 8: I <= [3.035805305e-39 +/- 2.58e-49]  log2 margin [128.47 +/- 7.54e-4]  (outer err [4.65e-643 +/- 8.31e-647]) PASS
+filter 37 band 15: I <= [5.917621632e-78 +/- 6.05e-90]  log2 margin [257.06 +/- 1.51e-3]  (outer err [9.69e-684 +/- 1.25e-687]) PASS
+filter 38 case1: I <= [1.429862290 +/- 4.96e-10]  log2 margin [0.00025379 +/- 1.73e-9]  (outer err [5.57e-1335 +/- 1.57e-1338]) PASS
+filter 38 band 1: I <= [1.429743817 +/- 3.98e-10]  log2 margin [0.00037333 +/- 3.86e-9]  (outer err [7.00e-1321 +/- 2.71e-1324]) PASS
+filter 38 band 1.25: I <= [0.06417016852 +/- 9.87e-13]  log2 margin [4.4781 +/- 1.66e-5]  (outer err [2.19e-569 +/- 8.45e-573]) PASS
+filter 38 band 1.6: I <= [0.0007411765137 +/- 1.37e-14]  log2 margin [10.914 +/- 2.53e-5]  (outer err [1.38e-587 +/- 1.15e-590]) PASS
+filter 38 band 2: I <= [4.535550960e-6 +/- 2.79e-16]  log2 margin [18.266 +/- 4.21e-4]  (outer err [2.68e-601 +/- 2.21e-604]) PASS
+filter 38 band 2.6: I <= [2.175210402e-9 +/- 3.79e-19]  log2 margin [29.292 +/- 3.28e-4]  (outer err [3.80e-615 +/- 9.30e-619]) PASS
+filter 38 band 3.5: I <= [2.288740340e-14 +/- 1.76e-24]  log2 margin [45.829 +/- 4.31e-4]  (outer err [4.37e-629 +/- 3.23e-632]) PASS
+filter 38 band 5: I <= [1.158490781e-22 +/- 1.05e-32]  log2 margin [73.386 +/- 3.02e-4]  (outer err [4.22e-645 +/- 4.14e-648]) PASS
+filter 38 band 8: I <= [2.974600576e-39 +/- 3.34e-49]  log2 margin [128.50 +/- 1.38e-3]  (outer err [2.06e-668 +/- 2.88e-671]) PASS
+filter 38 band 15: I <= [5.800269007e-78 +/- 3.51e-88]  log2 margin [257.09 +/- 4.02e-4]  (outer err [2.51e-712 +/- 4.67e-715]) PASS
+filter 39 case1: I <= [1.429862290 +/- 4.96e-10]  log2 margin [0.00025379 +/- 1.73e-9]  (outer err [2.94e-1334 +/- 1.57e-1337]) PASS
+filter 39 band 1: I <= [1.429713844 +/- 3.85e-10]  log2 margin [0.00040358 +/- 2.11e-9]  (outer err [1.35e-1309 +/- 3.34e-1312]) PASS
+filter 39 band 1.25: I <= [0.06614679961 +/- 4.47e-12]  log2 margin [4.4343 +/- 1.49e-5]  (outer err [1.21e-578 +/- 4.50e-581]) PASS
+filter 39 band 1.6: I <= [0.0007615356258 +/- 1.13e-14]  log2 margin [10.875 +/- 6.92e-5]  (outer err [1.31e-581 +/- 2.42e-584]) PASS
+filter 39 band 2: I <= [4.650341918e-6 +/- 2.86e-16]  log2 margin [18.230 +/- 3.62e-4]  (outer err [1.53e-584 +/- 2.31e-587]) PASS
+filter 39 band 2.6: I <= [2.226274697e-9 +/- 2.98e-19]  log2 margin [29.259 +/- 1.49e-4]  (outer err [1.64e-588 +/- 1.34e-591]) PASS
+filter 39 band 3.5: I <= [2.339139053e-14 +/- 2.07e-24]  log2 margin [45.797 +/- 1.46e-4]  (outer err [4.87e-594 +/- 1.60e-597]) PASS
+filter 39 band 5: I <= [1.182637621e-22 +/- 4.64e-32]  log2 margin [73.357 +/- 4.61e-4]  (outer err [8.34e-603 +/- 2.28e-606]) PASS
+filter 39 band 8: I <= [3.033730362e-39 +/- 3.19e-49]  log2 margin [128.47 +/- 2.33e-4]  (outer err [8.39e-620 +/- 3.28e-623]) PASS
+filter 39 band 15: I <= [5.911449812e-78 +/- 4.11e-88]  log2 margin [257.06 +/- 3.01e-3]  (outer err [7.93e-659 +/- 1.17e-662]) PASS
+filter 40 case1: I <= [1.429840161 +/- 3.87e-10]  log2 margin [0.00027612 +/- 3.95e-10]  (outer err [9.46e-1329 +/- 1.74e-1332]) PASS
+filter 40 band 1: I <= [1.429744004 +/- 1.61e-10]  log2 margin [0.00037314 +/- 4.93e-9]  (outer err [5.12e-1315 +/- 3.54e-1319]) PASS
+filter 40 band 1.25: I <= [0.06418482884 +/- 2.47e-12]  log2 margin [4.4778 +/- 4.62e-5]  (outer err [2.18e-582 +/- 1.43e-585]) PASS
+filter 40 band 1.6: I <= [0.0007410777335 +/- 3.05e-14]  log2 margin [10.914 +/- 2.18e-4]  (outer err [7.28e-588 +/- 2.31e-591]) PASS
+filter 40 band 2: I <= [4.534483395e-6 +/- 5.24e-17]  log2 margin [18.267 +/- 2.40e-4]  (outer err [1.41e-592 +/- 1.02e-595]) PASS
+filter 40 band 2.6: I <= [2.174734094e-9 +/- 5.51e-21]  log2 margin [29.293 +/- 3.57e-4]  (outer err [4.04e-600 +/- 3.31e-603]) PASS
+filter 40 band 3.5: I <= [2.288363750e-14 +/- 4.81e-25]  log2 margin [45.829 +/- 1.94e-4]  (outer err [8.27e-618 +/- 4.31e-621]) PASS
+filter 40 band 5: I <= [1.158364915e-22 +/- 4.00e-32]  log2 margin [73.386 +/- 4.59e-4]  (outer err [8.93e-636 +/- 4.60e-639]) PASS
+filter 40 band 8: I <= [2.974439076e-39 +/- 4.56e-49]  log2 margin [128.50 +/- 1.30e-3]  (outer err [8.54e-661 +/- 2.01e-664]) PASS
+filter 40 band 15: I <= [5.800219166e-78 +/- 2.80e-88]  log2 margin [257.09 +/- 4.15e-4]  (outer err [4.84e-706 +/- 4.19e-709]) PASS
+filter 41 case1: I <= [1.429860082 +/- 2.26e-10]  log2 margin [0.00025602 +/- 1.83e-10]  (outer err [3.31e-1329 +/- 2.21e-1332]) PASS
+filter 41 band 1: I <= [1.429713808 +/- 3.25e-11]  log2 margin [0.00040361 +/- 4.58e-9]  (outer err [2.70e-1310 +/- 4.01e-1314]) PASS
+filter 41 band 1.25: I <= [0.06298091417 +/- 3.28e-12]  log2 margin [4.5051 +/- 2.86e-5]  (outer err [1.57e-344 +/- 2.89e-347]) PASS
+filter 41 band 1.6: I <= [0.0007277879842 +/- 2.24e-15]  log2 margin [10.940 +/- 3.25e-4]  (outer err [4.86e-344 +/- 3.13e-347]) PASS
+filter 41 band 2: I <= [4.455166183e-6 +/- 2.83e-16]  log2 margin [18.292 +/- 2.20e-4]  (outer err [1.18e-344 +/- 3.13e-347]) PASS
+filter 41 band 2.6: I <= [2.137351350e-9 +/- 9.71e-21]  log2 margin [29.318 +/- 3.42e-4]  (outer err [1.66e-346 +/- 2.01e-349]) PASS
+filter 41 band 3.5: I <= [2.249557609e-14 +/- 1.48e-24]  log2 margin [45.853 +/- 4.83e-4]  (outer err [2.30e-351 +/- 2.36e-354]) PASS
+filter 41 band 5: I <= [1.138985547e-22 +/- 4.07e-32]  log2 margin [73.411 +/- 2.02e-4]  (outer err [1.78e-361 +/- 8.57e-365]) PASS
+filter 41 band 8: I <= [2.925272934e-39 +/- 3.59e-49]  log2 margin [128.52 +/- 2.76e-3]  (outer err [5.97e-380 +/- 3.54e-383]) PASS
+filter 41 band 15: I <= [5.705246763e-78 +/- 1.46e-89]  log2 margin [257.11 +/- 4.24e-3]  (outer err [4.03e-420 +/- 1.42e-423]) PASS
+filter 42 case1: I <= [1.429851058 +/- 3.02e-10]  log2 margin [0.00026512 +/- 4.78e-9]  (outer err [5.82e-1334 +/- 4.83e-1338]) PASS
+filter 42 band 1: I <= [1.429664632 +/- 1.68e-10]  log2 margin [0.00045324 +/- 1.88e-9]  (outer err [2.30e-1318 +/- 3.44e-1321]) PASS
+filter 42 band 1.25: I <= [0.06357728074 +/- 9.43e-13]  log2 margin [4.4915 +/- 2.52e-5]  (outer err [5.77e-899 +/- 4.27e-902]) PASS
+filter 42 band 1.6: I <= [0.0007342780912 +/- 1.91e-14]  log2 margin [10.928 +/- 4.85e-4]  (outer err [1.12e-902 +/- 1.51e-905]) PASS
+filter 42 band 2: I <= [4.493192765e-6 +/- 1.08e-16]  log2 margin [18.280 +/- 4.25e-5]  (outer err [3.77e-906 +/- 6.28e-910]) PASS
+filter 42 band 2.6: I <= [2.154858951e-9 +/- 1.45e-19]  log2 margin [29.306 +/- 1.11e-4]  (outer err [1.27e-910 +/- 3.27e-913]) PASS
+filter 42 band 3.5: I <= [2.267314920e-14 +/- 4.91e-24]  log2 margin [45.842 +/- 1.39e-4]  (outer err [1.38e-916 +/- 4.78e-920]) PASS
+filter 42 band 5: I <= [1.147648791e-22 +/- 3.89e-32]  log2 margin [73.400 +/- 1.34e-4]  (outer err [9.88e-926 +/- 9.89e-930]) PASS
+filter 42 band 8: I <= [2.946784335e-39 +/- 1.36e-49]  log2 margin [128.51 +/- 2.19e-3]  (outer err [4.61e-943 +/- 1.89e-946]) PASS
+filter 42 band 15: I <= [5.746082513e-78 +/- 2.09e-89]  log2 margin [257.10 +/- 3.95e-3]  (outer err [2.40e-982 +/- 3.32e-985]) PASS
+worst log2 margin [0.00025379 +/- 1.73e-9] at filter 28 case1
+ALL CERTIFICATES PASS
+EXIT 0
