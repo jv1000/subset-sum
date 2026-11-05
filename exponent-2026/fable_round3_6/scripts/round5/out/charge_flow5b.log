@@ -1,0 +1,6 @@
+control (must fail, 0.900): YP=0.9000 YPQx=0.9000 YPQ=0.9000
+m=8 [-3,3]: 3003/3003 multisets, 15015 (k,t)-cases (183s, peak rss 47 MB): failures: free=0, YP=0, YPQx=0, YPQ=0; skipped by edge cap: 0; worst YP routed = (0.9999999997671696, ((2, 2, 2, 2, 2, 2, 2, 2), 1, 2))
+m=9 [-2,2]: 715/715 multisets, 3575 (k,t)-cases (213s, peak rss 67 MB): failures: free=0, YP=0, YPQx=0, YPQ=0; skipped by edge cap: 0; worst YP routed = (0.999999999788997, ((2, 2, 2, 2, 2, 2, 2, 2, 2), 1, 2))
+m=10 [-2,2]: 86/1001 multisets, 688 (k,t)-cases (360s, peak rss 241 MB): failures: free=0, YP=0, YPQx=0, YPQ=0; skipped by edge cap: 5; worst YP routed = (0.9999999998399289, ((-2, -2, -2, -2, -2, -2, -2, -2, -2, -2), 1, 2))
+   skipped: [((0, 0, 0, 0, 0, 0, 0, 0, 0, 2), 2, 5, 'YPQx', 3643920), ((-1, -1, -1, -1, -1, -1, -1, -1, -1, 0), 2, 5, 'YPQx', 3643920), ((-2, 1, 1, 1, 1, 1, 1, 1, 1, 1), 2, 5, 'YPQx', 3643920), ((-1, -1, -1, -1, -1, -1, -1, -1, -1, 1), 2, 5, 'YPQx', 3643920), ((-2, -2, -2, -2, -2, -2, -2, -2, -2, -2), 2, 5, 'YPQx', 5745600)]
+total [758s]

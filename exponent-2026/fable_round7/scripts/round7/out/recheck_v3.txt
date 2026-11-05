@@ -1,0 +1,17 @@
+1. sha256(candidate_ternary.json) = ea2f10e89ea5f0073479e1e41cc5e22ffda31a5655966ee3f458e8cff25c422b MATCH
+2. checker lines recorded/new: 40 40 IDENTICAL
+   PASS 33 FAIL 0 | final line: ALL CONDITIONS PASS
+3. Astra-named scalar checks (arb 200 bits) vs SCALAR_SLACKS.md intervals:
+   preliminary            [0.012659447200000000000 +/- 3e-26]      inside positive
+   exact-M-merge          [0.012661047300000000000 +/- 1e-26]      inside positive
+   small-prime-total      [0.46035201421973377277 +/- 5.01e-21]    inside positive
+   right-key-sort-total   [0.43336318560000000000 +/- 1e-25]       inside positive
+   large-prime-draw       [0.22934204505000000000 +/- 1e-25]       inside positive
+   cap-margin             [9.7944610694028886217e-7 +/- 3.52e-27]  inside positive
+   A4R-after-guard        [0.45871419888288432306 +/- 1.21e-21]    inside positive
+   small-prime-vs-eps0    [0.46035101477362683249 +/- 3.87e-21]    inside positive
+   right-sort-vs-eps0     [0.43336218615389305971 +/- 1.14e-21]    inside positive
+   all inside and positive: True
+   eps0 (least slack of C1R..A4R-domain, lower end) = [9.9944611e-7 +/- 3.07e-15]
+4. CONTROL tau0-2e-6: sha256 263925d12843067b... differs | FAIL conditions: ['C2R', 'C3', 'C4R', 'C5R', 'ThmA', 'M1', 'M2'] | final line: SOME CONDITION FAILS
+R7-C1 RESULT: ALL PREDICTIONS MET

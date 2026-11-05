@@ -1,0 +1,12 @@
+exhaustive [-3,3] m=4..8: 6315 multisets, max ratios (must be <= 1): {'a': 1.0, 'b': 1.0, 'c': 1.0}, violations 0  [2s]
+plus random m=9,10 in [-20,20]: total 6435, max ratios {'a': 1.0, 'b': 1.0, 'c': 1.0}, violations 0  [2s]
+control generic m=9: ratios {'a': 1.0, 'b': 1.0, 'c': 1.0}; (a) tight at (k,t) pairs: [(1, 1), (2, 2)]
+  loss of (a) at m=20, k=1, t=10: C(m-k,t-k)/C(m,t-k) = 2^-0.86  (2^-k = 2^-1)
+  loss of (a) at m=20, k=2, t=10: C(m-k,t-k)/C(m,t-k) = 2^-1.53  (2^-k = 2^-2)
+  loss of (a) at m=20, k=5, t=10: C(m-k,t-k)/C(m,t-k) = 2^-2.37  (2^-k = 2^-5)
+  loss of (a) at m=40, k=1, t=20: C(m-k,t-k)/C(m,t-k) = 2^-0.93  (2^-k = 2^-1)
+  loss of (a) at m=40, k=4, t=20: C(m-k,t-k)/C(m,t-k) = 2^-3.10  (2^-k = 2^-4)
+  loss of (a) at m=40, k=10, t=20: C(m-k,t-k)/C(m,t-k) = 2^-4.82  (2^-k = 2^-10)
+  loss of (a) at m=100, k=1, t=50: C(m-k,t-k)/C(m,t-k) = 2^-0.97  (2^-k = 2^-1)
+  loss of (a) at m=100, k=11, t=50: C(m-k,t-k)/C(m,t-k) = 2^-8.40  (2^-k = 2^-11)
+  loss of (a) at m=100, k=25, t=50: C(m-k,t-k)/C(m,t-k) = 2^-12.17  (2^-k = 2^-25)

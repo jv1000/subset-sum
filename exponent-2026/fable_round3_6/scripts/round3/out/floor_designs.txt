@@ -1,0 +1,13 @@
+control (round-1 model): base, share 0 at Delta of the certified point -> {'tau0': 0.48757415090800627, 'mu': 0.47515851964205513, 'a': 0.008239041005323333, 'c2': 0.48757415090800427, 'c3': 0.4875741509080043, 'c4': 0.48757415090800627, 'c5': 0.4875327241432447, 'l': 0.48363584003642607}  (round 1: 0.4875741)
+floor (share 1, overhead removed) -> {'tau0': 0.48565153115, 'mu': 0.2357428571432829, 'a': 0.030185714285820727, 'c2': 0.48425293842103706, 'c3': 0.48425293842103706, 'c4': 0.48565153115, 'c5': 0.36756134403185636, 'l': 0.47697707527836364}  (1-Delta)/2 = 0.4856515
+D1/D4 ceiling: no per-class operation at all (c4 dropped; C2/C3/C5 + list sizes remain) -> {'tau0': 0.4521547490064235, 'mu': 0.4119719128938516, 'a': 0.08011428571417929, 'c2': 0.4521547490064235, 'c3': 0.4521547490064235, 'c4': 0.0, 'c5': 0.4521547490064088, 'l': 0.41707381213989836}
+D3 sqrt-aggregation (2^{(1-eta)n/2} operations, if group phase sums were free) -> {'tau0': 0.4521547490064235, 'mu': 0.4119719128938516, 'a': 0.08011428571417929, 'c2': 0.4521547490064235, 'c3': 0.4521547490064235, 'c4': 0.24968039607137277, 'c5': 0.4521547490064088, 'l': 0.41707381213989836}
+D3 coarse matching at modulus eta - 0.005: -> 0.48966943861420026 (worse by shift/2, as expected)
+D3 coarse matching at modulus eta - 0.01: -> 0.491788189685942 (worse by shift/2, as expected)
+D3 coarse matching at modulus eta - 0.02: -> 0.4961081434466352 (worse by shift/2, as expected)
+D2 estimator with capacity Delta = 0.03 (Lemma-1 cap at tau=0.485 is 0.0415): base share 0 -> 0.4870317367834311  floor (1-Delta)/2 = 0.485
+D2 estimator with capacity Delta = 0.035 (Lemma-1 cap at tau=0.485 is 0.0415): base share 0 -> 0.4849639359076563  floor (1-Delta)/2 = 0.4825
+D2 estimator with capacity Delta = 0.0415 (Lemma-1 cap at tau=0.485 is 0.0415): base share 0 -> 0.4823069507592354  floor (1-Delta)/2 = 0.47925
+reference: ternary certified point tau0 = 0.4873405528; Section 8 point 0.4875752036; floor at D0: 0.4856515
+Delta needed for tau0 = 0.485 at the floor: 0.0300
+Delta needed for tau0 = 0.4845 at the floor: 0.0310

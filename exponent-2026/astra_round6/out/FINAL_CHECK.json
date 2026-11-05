@@ -1,0 +1,36 @@
+{
+  "status": "PROVED finite checks passed; provenance hashes do not authenticate the claimed commit",
+  "scalar_checks": 43,
+  "moment_grids": [
+    4096,
+    8192
+  ],
+  "exact_threshold_fraction": "609175941/1250000000",
+  "summary_whitespace_words": 482,
+  "negative_control_Q": "29/28",
+  "outputs": [
+    "A_bounds_4096.json",
+    "A_certificate_4096.json",
+    "A_certificate_8192.json",
+    "B_CONTROLS.json",
+    "B_EXAMPLES.json",
+    "b_examples.py",
+    "B_SEARCH.json",
+    "BASE_CORE_ASTRA.md",
+    "BASE_CORE_COMPARISON.md",
+    "BASE_CORE_CONSTANTS.json",
+    "base_core_constants.py",
+    "BLIND_BASE_CORE.md",
+    "final_check.py",
+    "INPUT_SHA256.json",
+    "PROFILE_OBSTRUCTION.json",
+    "profile_obstruction.py",
+    "REFEREE_SECTION_T.md",
+    "REGISTER.md",
+    "ROUND6_ASTRA_SUMMARY.md",
+    "SCALAR_SLACKS.md",
+    "verify_a.py",
+    "YP_HALL_K1_ASTRA.md",
+    "yp_k1.py"
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "status": "EVIDENCE for general conjectures; exact rational finite-instance certificates",
+  "cases": 3371,
+  "elapsed_seconds": 15.311999999918044,
+  "failures": [],
+  "local_cancellation_failures": [],
+  "proportional_failures": [],
+  "max_Q": {
+    "weights": [
+      -2,
+      -2,
+      -1,
+      -1
+    ],
+    "t": 2,
+    "s_t": 3,
+    "C": 3,
+    "Q": "1",
+    "Hall_ratio": "1",
+    "Hall_cut": {
+      "values": [
+        -2,
+        -1
+      ],
+      "supply": "6",
+      "capacity": "6"
+    },
+    "local_ratio": "1",
+    "local_cut": {
+      "values": [
+        -2,
+        -1
+      ],
+      "supply": "6",
+      "capacity": "6"
+    },
+    "Prop1_load": "1",
+    "Prop1_Y": [
+      -2,
+      -1
+    ],
+    "classes": [
+      {
+        "value": -2,
+        "n": 2,
+        "M": "3",
+        "N": "3/2",
+        "S_class": "3",
+        "L_class": "3",
+        "K_element": "3"
+      },
+      {
+        "value": -1,
+        "n": 2,
+        "M": "3",
+        "N": "3/2",
+        "S_class": "3",
+        "L_class": "3",
+        "K_element": "3"
+      }
+    ]
+  },
+  "max_Prop1": {
+    "weights": [
+      -2,
+      -2,
+      -1,
+      -1
+    ],
+    "t": 2,
+    "s_t": 3,
+    "C": 3,
+    "Q": "1",
+    "Hall_ratio": "1",
+    "Hall_cut": {
+      "values": [
+        -2,
+        -1
+      ],
+      "supply": "6",
+      "capacity": "6"
+    },
+    "local_ratio": "1",
+    "local_cut": {
+      "values": [
+        -2,
+        -1
+      ],
+      "supply": "6",
+      "capacity": "6"
+    },
+    "Prop1_load": "1",
+    "Prop1_Y": [
+      -2,
+      -1
+    ],
+    "classes": [
+      {
+        "value": -2,
+        "n": 2,
+        "M": "3",
+        "N": "3/2",
+        "S_class": "3",
+        "L_class": "3",
+        "K_element": "3"
+      },
+      {
+        "value": -1,
+        "n": 2,
+        "M": "3",
+        "N": "3/2",
+        "S_class": "3",
+        "L_class": "3",
+        "K_element": "3"
+      }
+    ]
+  }
+}

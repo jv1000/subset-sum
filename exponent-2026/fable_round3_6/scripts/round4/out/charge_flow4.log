@@ -1,0 +1,68 @@
+== controls
+CONTROL(must fail) w=(-3, -3, -2, -2, 0, 0) (k,t)=(2,3) m-t-2k=-1 Qw=1.0357 free=NO  YP=0.900 YPQx=0.900 YPQ=0.900 propYPQ=1.304 [48 src, 108 tgt]
+equality w=(0, 0, 1000000, 3000000) (k,t)=(1,2) m-t-2k=+0 Qw=1.0000 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=1.000 [2 src, 4 tgt]
+YAA-failure w=(-3, -3, -3, 0, 1, 2, 3) (k,t)=(2,3) m-t-2k=+0 Qw=0.9095 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.953 [34 src, 108 tgt]
+== curated (t+2k<=m)
+w=(-6, -5, -5, -3, -3, -2, 4, 5) (k,t)=(1,2) m-t-2k=+4 Qw=0.7174 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.380 [4 src, 64 tgt]
+w=(-6, -5, -5, -3, -3, -2, 4, 5) (k,t)=(1,3) m-t-2k=+3 Qw=0.4851 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.151 [24 src, 438 tgt]
+w=(-6, -5, -5, -3, -3, -2, 4, 5) (k,t)=(1,4) m-t-2k=+2 Qw=0.5143 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.210 [60 src, 928 tgt]
+w=(-6, -5, -5, -3, -3, -2, 4, 5) (k,t)=(2,3) m-t-2k=+1 Qw=0.7404 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.560 [64 src, 298 tgt]
+w=(-6, -5, -5, -3, -3, -2, 4, 5) (k,t)=(2,4) m-t-2k=+0 Qw=0.7900 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.694 [300 src, 1152 tgt]
+w=(-8, -6, -6, -2, -2, 0, 1, 3) (k,t)=(1,2) m-t-2k=+4 Qw=0.7174 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.380 [4 src, 64 tgt]
+w=(-8, -6, -6, -2, -2, 0, 1, 3) (k,t)=(1,3) m-t-2k=+3 Qw=0.4635 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.138 [24 src, 444 tgt]
+w=(-8, -6, -6, -2, -2, 0, 1, 3) (k,t)=(1,4) m-t-2k=+2 Qw=0.4929 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.197 [60 src, 960 tgt]
+w=(-8, -6, -6, -2, -2, 0, 1, 3) (k,t)=(2,3) m-t-2k=+1 Qw=0.7092 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.529 [64 src, 304 tgt]
+w=(-8, -6, -6, -2, -2, 0, 1, 3) (k,t)=(2,4) m-t-2k=+0 Qw=0.7563 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.654 [300 src, 1200 tgt]
+w=(-3, -3, -3, -2, -2, -2, 1, 1) (k,t)=(1,2) m-t-2k=+4 Qw=0.5714 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.250 [14 src, 204 tgt]
+w=(-3, -3, -3, -2, -2, -2, 1, 1) (k,t)=(1,3) m-t-2k=+3 Qw=0.4392 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.220 [84 src, 1356 tgt]
+w=(-3, -3, -3, -2, -2, -2, 1, 1) (k,t)=(1,4) m-t-2k=+2 Qw=0.3929 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.211 [210 src, 2856 tgt]
+w=(-3, -3, -3, -2, -2, -2, 1, 1) (k,t)=(2,3) m-t-2k=+1 Qw=0.7963 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.667 [204 src, 906 tgt]
+w=(-3, -3, -3, -2, -2, -2, 1, 1) (k,t)=(2,4) m-t-2k=+0 Qw=0.7600 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.658 [960 src, 3504 tgt]
+w=(-4, -4, -4, -3, -2, 0, 4, 4) (k,t)=(1,2) m-t-2k=+4 Qw=0.7143 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.283 [8 src, 72 tgt]
+w=(-4, -4, -4, -3, -2, 0, 4, 4) (k,t)=(1,3) m-t-2k=+3 Qw=0.6190 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.342 [48 src, 384 tgt]
+w=(-4, -4, -4, -3, -2, 0, 4, 4) (k,t)=(1,4) m-t-2k=+2 Qw=0.6286 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.403 [120 src, 768 tgt]
+w=(-4, -4, -4, -3, -2, 0, 4, 4) (k,t)=(2,3) m-t-2k=+1 Qw=0.8509 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.783 [72 src, 216 tgt]
+w=(-4, -4, -4, -3, -2, 0, 4, 4) (k,t)=(2,4) m-t-2k=+0 Qw=0.8970 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=1.038 [348 src, 840 tgt]
+w=(0, 0, 0, 0, 1, 1, 1, 1) (k,t)=(1,2) m-t-2k=+4 Qw=0.4286 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.118 [24 src, 456 tgt]
+w=(0, 0, 0, 0, 1, 1, 1, 1) (k,t)=(1,3) m-t-2k=+3 Qw=0.2857 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.120 [144 src, 3024 tgt]
+w=(0, 0, 0, 0, 1, 1, 1, 1) (k,t)=(1,4) m-t-2k=+2 Qw=0.2857 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.175 [360 src, 6480 tgt]
+w=(0, 0, 0, 0, 1, 1, 1, 1) (k,t)=(2,3) m-t-2k=+1 Qw=0.6667 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.423 [456 src, 2040 tgt]
+w=(0, 0, 0, 0, 1, 1, 1, 1) (k,t)=(2,4) m-t-2k=+0 Qw=0.6667 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.554 [2124 src, 8064 tgt]
+w=(0, 0, 1, 1, 1, 1, 1, 1) (k,t)=(1,2) m-t-2k=+4 Qw=0.4286 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.194 [32 src, 492 tgt]
+w=(0, 0, 1, 1, 1, 1, 1, 1) (k,t)=(1,3) m-t-2k=+3 Qw=0.2381 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.077 [192 src, 3360 tgt]
+w=(0, 0, 1, 1, 1, 1, 1, 1) (k,t)=(1,4) m-t-2k=+2 Qw=0.2143 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.098 [480 src, 7280 tgt]
+w=(0, 0, 1, 1, 1, 1, 1, 1) (k,t)=(2,3) m-t-2k=+1 Qw=0.6111 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.341 [492 src, 2280 tgt]
+w=(0, 0, 1, 1, 1, 1, 1, 1) (k,t)=(2,4) m-t-2k=+0 Qw=0.5556 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.407 [2310 src, 9060 tgt]
+w=(0, 0, 0, 1, 1, 1, 1000000, 3000000) (k,t)=(1,2) m-t-2k=+4 Qw=0.6071 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.180 [12 src, 144 tgt]
+w=(0, 0, 0, 1, 1, 1, 1000000, 3000000) (k,t)=(1,3) m-t-2k=+3 Qw=0.5132 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.273 [72 src, 792 tgt]
+w=(0, 0, 0, 1, 1, 1, 1000000, 3000000) (k,t)=(1,4) m-t-2k=+2 Qw=0.5000 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.333 [180 src, 1584 tgt]
+w=(0, 0, 0, 1, 1, 1, 1000000, 3000000) (k,t)=(2,3) m-t-2k=+1 Qw=0.8148 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.667 [144 src, 468 tgt]
+w=(0, 0, 0, 1, 1, 1, 1000000, 3000000) (k,t)=(2,4) m-t-2k=+0 Qw=0.8190 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.891 [684 src, 1800 tgt]
+w=(0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(1,2) m-t-2k=+4 Qw=0.5306 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.061 [20 src, 180 tgt]
+w=(0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(1,3) m-t-2k=+3 Qw=0.3810 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.118 [120 src, 960 tgt]
+w=(0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(1,4) m-t-2k=+2 Qw=0.4000 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.224 [300 src, 1920 tgt]
+w=(0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(2,3) m-t-2k=+1 Qw=0.6667 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.423 [180 src, 540 tgt]
+w=(0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(2,4) m-t-2k=+0 Qw=0.7333 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.832 [870 src, 2100 tgt]
+w=(0, 0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(2,3) m-t-2k=+2 Qw=0.5714 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.260 [390 src, 1590 tgt]
+w=(0, 0, 0, 0, 0, 0, 1000000, 3000000, 9000000) (k,t)=(2,4) m-t-2k=+1 Qw=0.5238 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.435 [2250 src, 8010 tgt]
+w=(-3, -3, -3, -3, -2, -2, -2) (k,t)=(1,2) m-t-2k=+3 Qw=0.5000 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.178 [18 src, 246 tgt]
+w=(-3, -3, -3, -3, -2, -2, -2) (k,t)=(1,3) m-t-2k=+2 Qw=0.4000 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.218 [90 src, 1170 tgt]
+w=(-3, -3, -3, -3, -2, -2, -2) (k,t)=(2,3) m-t-2k=+0 Qw=0.8000 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.642 [246 src, 756 tgt]
+w=(-3, -3, -2, -2, 0, 1, 1) (k,t)=(1,2) m-t-2k=+3 Qw=0.7060 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.393 [6 src, 86 tgt]
+w=(-3, -3, -2, -2, 0, 1, 1) (k,t)=(1,3) m-t-2k=+2 Qw=0.5277 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.285 [30 src, 396 tgt]
+w=(-3, -3, -2, -2, 0, 1, 1) (k,t)=(2,3) m-t-2k=+0 Qw=0.8453 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.874 [86 src, 252 tgt]
+w=(-3, -3, -3, -2, -1, -1, 3, 3, 3) (k,t)=(2,3) m-t-2k=+2 Qw=0.7524 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.596 [218 src, 1110 tgt]
+w=(-3, -3, -3, -2, -1, -1, 3, 3, 3) (k,t)=(2,4) m-t-2k=+1 Qw=0.6867 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.602 [1248 src, 5766 tgt]
+w=(-3, -3, -3, -3, -2, -1, -1, 3, 3, 3) (k,t)=(2,3) m-t-2k=+3 Qw=0.6583 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.421 [388 src, 2504 tgt]
+w=(-3, -3, -3, -3, -2, -1, -1, 3, 3, 3) (k,t)=(2,4) m-t-2k=+2 Qw=0.5500 free=ok  YP=ok  YPQx=ok  YPQ=ok  propYPQ=0.422 [2602 src, 16950 tgt]
+Traceback (most recent call last):
+  File "D:\Claude Projects\SubsetSum\Fable_review\Fable_round2\scripts\round4\charge_flow4.py", line 45, in <module>
+    if t + 2 * k <= m and (m <= 8 or k >= 2): run(w, t, k, P=P)
+                                              ^^^^^^^^^^^^^^^^^
+  File "D:\Claude Projects\SubsetSum\Fable_review\Fable_round2\scripts\round4\charge_flow4.py", line 22, in run
+    res = {r: I.flow(r)[0] for r in RULES}
+              ^^^^^^^^^
+  File "D:\Claude Projects\SubsetSum\Fable_review\Fable_round2\scripts\round4\charge_flow.py", line 91, in flow
+    for j in set(adj[i]): D.add(2 + i, 2 + ns + j, 1 << 62)
+             ^^^^^^^^^^^
+MemoryError

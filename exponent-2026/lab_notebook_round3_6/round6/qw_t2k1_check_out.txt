@@ -1,0 +1,5 @@
+control (2,3): 29/28
+exhaustive cases 56408 max 1 bad []
+total cases 59408 max 1 violations/lemma failures 0 []
+Q=1 with a repeated class (first few): [(-4, -4, -3, -3), (-4, -4, -3, -2), (-4, -4, -3, -1), (-4, -4, -3, 0), (-4, -4, -3, 1), (-4, -4, -3, 2), (-4, -4, -3, 3), (-4, -4, -3, 4), (-4, -4, -2, -2), (-4, -4, -2, -1), (-4, -4, -2, 0), (-4, -4, -2, 1)]
+elapsed 14 s

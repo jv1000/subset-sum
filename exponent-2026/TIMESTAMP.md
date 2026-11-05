@@ -24,3 +24,37 @@ Fingerprint = SHA-256 of `MANIFEST_2.sha256`:
 To verify: `sha256sum -c MANIFEST_2.sha256`, then `sha256sum MANIFEST_2.sha256`.
 
 Public timestamp record: MANIFEST_2.sha256.ots
+
+---
+
+# Snapshot 3 fingerprint
+
+Snapshot 3: 2026-11-04 (frozen ~22:40 US Eastern). Adds Fable rounds 3–6 (Conjecture Q, P2, YP-Hall evidence, k = 1
+families, Section T v2, independent re-derivation of Base's core) with scripts; Claude's reviews (round 3, round 6),
+the rebuilt k = 1 family check, the blind re-derivation of Corollary D and the check of Astra's t = 2 theorem; Astra
+round 6 (fresh referee of Section T v2 and the ternary point, Base-core re-derivation, YP-Hall at k = 1, t = 2); and
+the LaTeX preprint (paper.tex and PDF of 2026-11-04). No snapshot-1 or snapshot-2 file was changed, so both still verify.
+Fingerprint = SHA-256 of `MANIFEST_3.sha256`:
+
+    2c00b258515a5fa1c214430ffa65e23de5ab87a228ed764b9106e560d46a27d4
+
+To verify: `sha256sum -c MANIFEST_3.sha256`, then `sha256sum MANIFEST_3.sha256`.
+
+Public timestamp record: MANIFEST_3.sha256.ots
+
+---
+
+# Snapshot 4 fingerprint
+
+Snapshot 4: 2026-11-05 (frozen ~07:10 US Eastern). Adds Section T v3 (fresh referee's repairs applied; no number
+changed) with its changelog and round-7 re-check scripts; Claude's check of the v2 → v3 diff; and the revised preprint
+of 2026-11-05 (paper_2026-11-05.tex and PDF: computational scope stated, Section 10 restructured around [S],
+verification ledger, structural results first, conservative gaps) with its number audit and edit script. Files only
+added; no file of snapshots 1–3 was changed, so all three still verify.
+Fingerprint = SHA-256 of `MANIFEST_4.sha256`:
+
+    d156aa10cb74074ab209668ddff005097cf3e7bdd49f109b100d1de41bf3e198
+
+To verify: `sha256sum -c MANIFEST_4.sha256`, then `sha256sum MANIFEST_4.sha256`.
+
+Public timestamp record: MANIFEST_4.sha256.ots

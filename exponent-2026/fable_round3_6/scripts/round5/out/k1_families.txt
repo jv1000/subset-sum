@@ -1,0 +1,13 @@
+== control: closed forms vs lay4.qw
+   F1 (3, 4) t=2: closed form Q = 1/2 = 0.500000000000; lay4.qw = 0.500000000000
+   F1 (3, 4) t=3: closed form Q = 2/5 = 0.400000000000; lay4.qw = 0.400000000000
+   F1 (2, 6) t=4: closed form Q = 3/14 = 0.214285714286; lay4.qw = 0.214285714286
+   F2 (3, 4) t=2: closed form Q = 25/33 = 0.757575757576; lay4.qw = 0.757575757576
+   F2 (3, 4) t=3: closed form Q = 97/135 = 0.718518518519; lay4.qw = 0.718518518519
+   F2 (4, 5) t=3: closed form Q = 27/52 = 0.519230769231; lay4.qw = 0.519230769231
+   F2 (4, 5) t=4: closed form Q = 1763/3472 = 0.507776497696; lay4.qw = 0.507776497696
+== (F1) two-valued, a <= b, a + b <= 40, 2 <= t <= m/2
+   4940 cases: violations [] (0); equality cases [(2, 2, 2)]
+== (F2) one class of n >= 2 plus G >= 1 generics, n + G <= 40, 2 <= t <= m/2
+   9329 cases: violations [] (0); equality cases [(2, 2, 2)]
+   per-m maximum of sum M^2 / (C t s): m=4: 1.0000 at (n,G,t)=(2, 2, 2); m=5: 0.9286 at (n,G,t)=(2, 3, 2); m=6: 0.9333 at (n,G,t)=(2, 4, 3); m=7: 0.9062 at (n,G,t)=(2, 5, 2); m=8: 0.9091 at (n,G,t)=(2, 6, 2); m=9: 0.9138 at (n,G,t)=(2, 7, 2); m=10: 0.9189 at (n,G,t)=(2, 8, 2); m=11: 0.9239 at (n,G,t)=(2, 9, 2); m=12: 0.9286 at (n,G,t)=(2, 10, 2); m=13: 0.9328 at (n,G,t)=(2, 11, 2); m=14: 0.9367 at (n,G,t)=(2, 12, 2); m=15: 0.9402 at (n,G,t)=(2, 13, 2); m=16: 0.9434 at (n,G,t)=(2, 14, 2); m=24: 0.9606 at (n,G,t)=(2, 22, 2); m=32: 0.9700 at (n,G,t)=(2, 30, 2); m=40: 0.9757 at (n,G,t)=(2, 38, 2)

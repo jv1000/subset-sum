@@ -1,0 +1,638 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.15}
+\setlist{itemsep=2pt}
+\setlength{\emergencystretch}{3em}
+
+\DeclareMathOperator{\mean}{mean}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\KL}{\mathrm{KL}}
+\newcommand{\poly}{\mathrm{poly}}
+
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem*{conjecture*}{Conjecture}
+
+\hypersetup{
+  pdftitle={A certified 0.48758 for worst-case Subset Sum, and why the alias-checksum architecture stalls near 0.4876},
+  pdfauthor={Jennifer Voitle}
+}
+
+\begin{document}
+
+\title{A certified 0.48758 for worst-case Subset Sum, and why the alias--checksum architecture stalls near 0.4876}
+\author{Jennifer Voitle\\ Independent researcher}
+\date{Draft, 4 November 2026}
+
+\maketitle
+
+\begin{abstract}
+Worst-case Subset Sum fell below the meet-in-the-middle exponent $1/2$ in October 2026, with OpenAI's $2^{0.49n}$ algorithm and Ye and Li's $2^{(1/2 - 1/450000)n}$. Follow-up work on the OpenAI algorithm reached 0.4877 (Base, which modifies the construction) and 0.487676 (JoshuaQFEX, a retuning of Base, conditional). We show that this line of work has structural limits, not only a best parameter point. Any design that enumerates every alias class modulo the checksum prime needs exponent at least $(1 - \Delta)/2$, where $\Delta$ is the capacity of the checksum, which gives about 0.4857 at the current capacity of about 0.029. A lower bound on the first filtering moment, valid for every filter, rules out exponent 0.48 in the original OpenAI construction for every choice of parameters. Within these limits, we give a parameter point with exponent 0.4875754036, so randomized running time $O(2^{0.4875755n})$ on inputs of polynomial bit length, about $1.0\times10^{-4}$ below JoshuaQFEX. Inside Base's construction, a single asymmetric filter with 16 cosine and 16 sine terms replaces Base's family of 43 cosine-only filters, and all alias parameters are re-optimized. All 33 numerical conditions, including both filtering moments, are certified in ball arithmetic and were rechecked by two independent referees. Like JoshuaQFEX, the result is conditional on Base's written proof. Within the original OpenAI construction we also certify a 16-block point at 0.4894616.
+
+We then explain why this line of work stalls near 0.4876. Base's alias constraints reduce to three closed-form bounds whose balance reproduces our point to within $10^{-6}$. One of them counts the aliases themselves and gives the floor $(1 - \Delta)/2$; exponent 0.48 would need $\Delta \ge 0.040$ even with a perfect list side. The rest of that bound is exactly the share of mask pairs that overlap. Pre-registered experiments show that the small filter families we tested, ternary masks in the style of Becker--Coron--Joux (under Base's small-layer bound) and colour-coding do not help, each for an identified reason. The moment bound is $\log_2 M_1 \ge 1 + p\Delta + (1+p) \log_2 \E[(1+\cos x)^{1/(1+p)}]$ for every filter. We also independently certify the 430 moment premises of the JoshuaQFEX bound, and we state the open lemmas that would move the exponent.
+\end{abstract}
+
+%======================================================================
+\section{Introduction}
+
+Worst-case Subset Sum fell below the meet-in-the-middle exponent $1/2$ in October 2026. This paper asks how far one of the two new approaches, OpenAI's, can be pushed: we improve the best exponent in that line of work, explain why it stalls near 0.4876, and state the open problems that would move it further. Two of our results concern the architecture as a whole rather than one parameter point (the terms are explained below). Any design that enumerates every alias class modulo the checksum prime needs exponent at least $(1 - \Delta)/2$, where $\Delta$ is the capacity of the checksum, about 0.4857 at present (Section~9). A lower bound on the first filtering moment, valid for every filter, rules out exponent 0.48 in the original OpenAI construction for every choice of parameters (Section~5). We begin with background for readers outside the area.
+
+\subsection*{The problem in brief}
+Given $n$ integers and a target, Subset Sum asks whether some subset of the integers adds up to the target. Trying every subset takes about $2^n$ steps. An algorithm with \emph{exponent} $c$ runs in time $2^{cn}$, up to smaller factors, so a lower exponent is faster, and even a small change in $c$ matters for large $n$. Subset Sum is NP-complete~\cite{karp}: logic circuits and many other problems can be translated into it, so improvements in its exponent are of broad interest.
+
+\subsection*{A short history}
+\begin{itemize}
+\item \textbf{Meet in the middle (1974).} Horowitz and Sahni~\cite{hs} split the integers into two halves, list the $2^{n/2}$ subset sums of each half, sort the lists, and look for a pair that adds up to the target. This takes time about $2^{n/2}$, exponent $1/2$. Schroeppel and Shamir~\cite{ss} kept the time and reduced the memory to about $2^{n/4}$.
+\item \textbf{The representation technique (2010--2011).} For \emph{random} instances, Howgrave-Graham and Joux~\cite{hgj} reached exponent about 0.337 by noticing that a solution can be split into two halves in many ways (``representations'') and keeping only a few of them. Becker, Coron and Joux~\cite{bcj} lowered this to about 0.291 by allowing coefficients $-1$ as well as $0$ and $1$. These results do not apply to the worst case.
+\item \textbf{Worst case, polynomial factors (2023).} Chen, Jin, Randolph and Servedio~\cite{cjrs23} gave the first worst-case improvement on meet in the middle, by a polynomial factor, to $2^{n/2}/\poly(n)$, after their work on average-case subset balancing problems~\cite{cjrs22}. Randolph and W\k{e}grzycki~\cite{rw} then beat meet in the middle for a broad family of related subset balancing problems.
+\item \textbf{Below exponent $1/2$ (October 2026).} OpenAI~\cite{openai} proved exponent 0.49, and Ye and Li~\cite{yeli}, independently and by a different method (partial match and integer circuits, building on~\cite{rw}), proved $1/2 - 1/450000$. Base~\cite{base} modified the OpenAI construction and claims 0.4877; JoshuaQFEX~\cite{joshua} retuned Base's parameters to 0.487676, conditional on 430 numerical inequalities.
+\end{itemize}
+
+\subsection*{How the OpenAI algorithm works, in outline}
+Choose a random prime $P$ of about $\eta n$ bits. A subset whose sum agrees with the target modulo $P$ is either a solution or an \emph{alias}, a false positive modulo $P$; for typical inputs there are about $2^{(1-\eta)n}$ aliases. The algorithm has two sides. The \emph{list side} enumerates the alias classes within a budget of about $2^{\tau n}$ operations, using shared blocks of the input and sparse ``masks'' in the spirit of the representation technique. The \emph{checksum side} computes a filtered Fourier phase sum modulo $P$, from which the contribution of the enumerated aliases is subtracted. The checksum works only while the gap $\Delta = \eta - \tau$ stays below a \emph{capacity} set by two filtering moments $M_1$ and $M_2$, integrals that depend on a pair of densities (the ``filter'') on the circle. A preliminary search handles inputs with many coinciding subset sums. The running-time exponent is essentially $\tau$, so the whole question is how small $\tau$ can be made while every constraint still holds. Base keeps this architecture but changes the list side (one large shared block with sparse masks) and uses a family of 43 filters.
+
+\subsection*{Where the results stand}
+The table lists the exponents discussed in this paper; lower is faster. For the unmodified OpenAI construction, Astra's landscape study~\cite{astra} found a certified point at 0.4897736 and a floor of 0.4895156 for its 17-block budget.
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{2.6cm} L L}
+\toprule
+Exponent & Work & Construction & Status \\
+\midrule
+0.5 & Horowitz--Sahni 1974~\cite{hs} & meet in the middle & classical \\
+0.5 (time $2^{n/2}/\mathrm{poly}(n)$) & Chen--Jin--Randolph--Servedio 2023~\cite{cjrs23} & meet in the middle, improved by a polynomial factor & proved (RANDOM 2023) \\
+0.4999978 & Ye--Li~\cite{yeli} & partial match, integer circuits & preprint, proved \\
+0.489995 (stated 0.49) & OpenAI~\cite{openai} & aliases, preliminary search, filtered checksum & preprint \\
+0.4897736 & Astra's tuning & OpenAI, retuned parameters & numerics certified \\
+0.4894616 & this paper & OpenAI with 16 blocks and asymmetric densities & two certificates; conditional on the OpenAI proof \\
+0.4877 & Base~\cite{base} & modified lists (mask density) and 43 filters in 10 regions & claimed; its 430 moment premises certified here \\
+0.487676 & JoshuaQFEX~\cite{joshua} & Base with retuned parameters & conditional on Base \\
+0.4875754036 & this paper (Section~8) & Base with one asymmetric filter (16 cosine + 16 sine terms) in place of 43 & certified and refereed; conditional on Base \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Base changes both the list construction and the estimator. Our analysis of the original construction (Sections~5--7) indicates that both changes are needed to get below about 0.4895. Combining Base's list construction with our asymmetric filter reaches 0.4875754036 (Section~8). Section~9 shows why further progress in this architecture is bounded: at the current checksum capacity no change on the list side can go below about 0.4857.
+
+This paper contributes:
+
+\begin{enumerate}
+\item A certified and refereed point at 0.4875754036 (time $O(2^{0.4875755n})$) in Base's construction with a single asymmetric filter, $1.0\times10^{-4}$ below JoshuaQFEX (Section~8).
+\item An explanation of the values near 0.4876: three closed-form bounds, the floor $(1 - \Delta)/2 \approx 0.4857$ of the architecture, the identification of the remaining list overhead as overlapping mask pairs, and pre-registered negative results for filter families, ternary masks and colour-coding (Section~9).
+\item A lower bound on the first filtering moment valid for all densities, which blocks exponent 0.48 in the OpenAI construction (Section~5).
+\item A source-level audit showing that the block count 17 can be any $K$ (Section~4), and a certified 16-block point at 0.4894616 with asymmetric densities (Section~7).
+\item A backward analysis from 0.48 that prices each constraint of the OpenAI budget (Section~6).
+\item An independent rigorous certification of the 430 moment premises of the 0.487676 bound (Section~3).
+\item Precise open problems: a joint bound on the moment capacity, Corollary D beyond the half-block, and designs that avoid enumerating every alias class (Section~10).
+\end{enumerate}
+
+\subsection*{How the results were obtained and checked}
+We treated the published constructions as precise mathematical objects and asked how far their parameters can be pushed, using several independent kinds of evidence:
+\begin{itemize}
+\item \textbf{Reading the sources.} Every constraint the proofs impose was extracted from the authors' \TeX{} with line citations (Section~2), and each extraction was repeated independently.
+\item \textbf{Modelling and optimization.} The full parameter budget was written as a nonlinear program and optimized in floating point with automatic differentiation. Shadow prices (the Karush--Kuhn--Tucker multipliers) show which constraint limits the exponent and by how much (Section~9).
+\item \textbf{Analysis.} Lemma~1 is a short proof using Jensen's and H\"older's inequalities. The moment capacity was studied with the calculus of variations (Euler--Lagrange equations solved by a relaxation iteration) and with a large-deviation formula (Donsker--Varadhan). The combinatorial conjecture of Section~10 was studied with maximum-entropy asymptotics and with exhaustive and adversarial computer searches.
+\item \textbf{Certification.} A numerical claim is \emph{certified} when it is computed in ball arithmetic (Arb, through python-flint): every number is carried as a midpoint with a guaranteed error radius, and every operation, including the quadrature errors of the integrals~\cite{tw}, enlarges the radius so that the true value is always inside. An inequality is certified when the whole ball lies on the correct side, which makes it a proof, not an approximation. Every certified claim was computed by at least two independent implementations.
+\item \textbf{Pre-registration.} Before each experiment we wrote down the prediction, a control that must reproduce a known result, and the rule for stopping. Results were recorded whether or not they matched the prediction, so the negative results of Section~9 are not a selection of convenient runs.
+\item \textbf{Independent review.} Each main claim was rechecked by a reviewer that saw only the claim's inputs and the source papers, never our code, and that derived the conditions and recomputed the numbers on its own (Section~11).
+\end{itemize}
+Every claim in the paper is labelled as proved, certified, conditional or floating, and the paragraph below summarizes the labels. A certified claim is a proof of the stated numerical inequalities; the non-numerical lemmas of the OpenAI and Base papers are taken as given, so results built on them inherit their conditionality. Floating results are evidence, not proof. Section~11 lists, claim by claim and premise by premise, how each was checked.
+
+% STATUS-BEGIN
+\subsection*{Status of the results}
+\textbf{Certified or refereed.} The exponent 0.4875754036 (time $O(2^{0.4875755n})$) in Base's construction with one asymmetric filter, $1.0\times10^{-4}$ below JoshuaQFEX (Section~8): rigorous certificate (33 conditions) and two independent referees; conditional on Base's written proof and the OpenAI proof. Base's probabilistic core (Lemma A5, Corollary D and the region analysis of its Theorem B) was re-derived independently; one repairable step was found, which our point satisfies (Section~11). The 16-block point at 0.4894616 in the OpenAI construction (Section~7): two independent rigorous certificates; conditional on the OpenAI proof and our block-count audit. Lemma~1, a lower bound on the first moment for all densities (Section~5): proved; independently refereed; interval-evaluated. The blocking of 0.48 in the OpenAI construction (Section~5): rigorous for all parameters given Lemma~1 (with the list and pair bounds it is infeasible for every $\tau \le 0.484$); the sharper floor 0.4852 is a floating estimate. The certification of the 430 premises of the 0.487676 bound (Section~3): two routes plus an outside check (Astra).
+
+\textbf{Conditional.} The exponent 0.4873407528 (time $O(2^{0.4873408n})$) with ternary left masks, if small slices are robust ([S]) (Sections~8, 10): not a result yet. 33 conditions certified in arb; written proof (Section~T) reviewed and independently refereed; [S] unproved (Section~10 reduces it to a chain of combinatorial statements and records what is proved).
+
+\textbf{Floating.} The three closed-form bounds and the floor $\tau \ge (1 - \Delta)/2 \approx 0.4857$ of the architecture (Section~9): exact algebra on Base's constraints; numbers from floating, pre-registered runs. The overlap identity for the list overhead and the negative results for filter families, ternary masks and colour-coding (Section~9): floating, pre-registered; mechanisms identified. The joint $M_1 + M_2$ capacity of about 0.029 (Sections~6, 10): floating exploration; no proof yet.
+% STATUS-END
+
+%======================================================================
+\section{The OpenAI architecture and its parameter budget}
+
+Throughout, running times are for randomized algorithms that answer correctly with probability at least $2/3$, in the word-RAM model of the OpenAI paper, on inputs whose integers and target have bit length $b \le n^c$ for an arbitrary fixed $c$; the constant in the $O(\cdot)$ depends on $c$. This is the setting of the OpenAI and Base theorems, and every bound below inherits it.
+
+The algorithm's running time is $2^{(T+o(1))n}$ with $T = \max(\tau + 20\eps, \mathrm{cap}, \mu + 1/4, \eta/2)$. A parameter point is valid when the inequalities below hold. Here $\eta n$ is the bit length of a random prime $P$, $\tau n$ the list and enumeration budget, $\mu = m/n$ the shared block size, $\gamma$ the smaller-modulus rate, $d$ the local deficiency, $K$ the number of disjoint half-blocks (17 in the paper), $\eps = 10^{-8}$ and guard $g = 10^{-5}$.
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{3.2cm} L >{\raggedright\arraybackslash}p{3.6cm}}
+\toprule
+Constraint & Inequality & Source (TeX) \\
+\midrule
+Block fit & $K\mu < 1$ & aliases l.79 \\
+Filtered list & $\tau \ge 1/2 + (h(1/4) - 1/2 - \gamma)\mu$ & aliases l.201--211 \\
+Visited pairs & $\tau \ge 1 + (2h(1/4) - 1 - \gamma)\mu - \eta + g$ & aliases l.244--253 \\
+Sparse distinctions & $\eta > h(\mu) + \mu + g$ & aliases l.296--309 \\
+Setup work & $T \ge \mu + 1/4$ & aliases l.163--169 \\
+Many weights & $1/2 - d > \gamma$ & aliases l.354--399 \\
+Useful block (Markov) & $1 - d_0/(K d \mu) > c_0 > 0$ & aliases l.336--352 \\
+Preliminary search & $d_1 < d_0$, $\mathrm{cap} > 1/2 - d_1$ (strict) & setup l.157--219 \\
+Trial division & $T > \eta/2$ & implementation l.283--285 \\
+Checksum balance & $\Delta = \eta - \tau > 0$, $\Gamma = 2\tau - \eta > 0$ & checksum l.180--199 \\
+Domination, case 1 & $1 \le p$, $3p \le 30$ & checksum l.443--449 \\
+Domination, case 2 & $1 \le q_m$, $q_m(4a + 3) \le 30$, $a = \Delta/\Gamma$ & checksum l.451--458 \\
+Error decay & $\rho_c < \rho_f < \eta - 48\eps$ & checksum l.487--495; filtering l.116--155 \\
+Filtering moments & $M_1, M_2 < 2^{\rho_c}$ & filtering l.90--103 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The two moments are integrals over the circle with normalized measure. For positive densities $f, g$ and $\kappa > 0$, with $K_x(w) = f(x+w)g(w)/Q(x)$ and $Q(x) = \mean_w f(x+w)g(w)$, the paper's scores are $u = A + E - D$ and $v = 2D - A - E$, where $D = \KL(K_x \,\|\, \mathrm{uniform})$, $A = \E_K \log_2 f^*(x+w)$, $E = \E_K \log_2 g^*(w)$, and $f^* = f^\kappa / \mean f^\kappa$ (likewise $g^*$).
+\begin{gather*}
+M_1 = \int_{\mathbb T} (2+2\cos x)\, 2^{\,p(\Delta - u(x))}\, dx, \qquad M_2 = \int_{\mathbb T} (2+2\cos x)\, 2^{\,q_m(a\, v(x) - u(x))}\, dx
+\end{gather*}
+The pair $(x, w)$ enters through $y - \theta = x + w$ (correlation, not convolution). With symmetric densities this convention is invisible; with asymmetric ones it matters (Section~7).
+
+%======================================================================
+\section{Certifying the premises of the conditional 0.487676 bound}
+
+All 430 continuous moment inequalities that the JoshuaQFEX bound assumes hold, certified twice. The tightest, filter 28 in region $\rho_0$, clears its assumed margin 0.00025 by $3.79\times10^{-6}$ in $\log_2$.
+
+Each inequality has the form below, for filters $v = 0,\dots,42$ and regions $\rho_0,\dots,\rho_9$, with required margins 0.00025 ($\rho_0$, $\rho_1$), 4 ($\rho_2$--$\rho_8$) and 17 ($\rho_9$).
+\begin{gather*}
+I_b(v,\rho) = \int_{\mathbb T} (2+2\cos x)\, 2^{\,z\cdot G(x)}\, dx \;<\; 2^{\,\eta_b - m_\rho}, \qquad \eta_b = 0.51613
+\end{gather*}
+
+\begin{itemize}
+\item \textbf{Route A:} python-flint arb at 200 bits; analytic-strip trapezoid error bounds~\cite[Thm.~3.2]{tw} for the inner and outer quadratures; a strip bound on the integrand from a contour split, Cauchy--Schwarz and Parseval monotonicity. Outer error $1.8\times10^{-218}$.
+\item \textbf{Route B:} an independently written mpmath interval implementation with different node counts and strip widths. It agrees with Route A to $< 5\times10^{-13}$ in $\log_2$ margin on 422 of 430 inequalities; the remaining 8 have looser but still passing enclosures.
+\item \textbf{Least margins} reproduce Base \S8.2 to every printed digit: 0.000253791727569 ($\rho_0$), 0.000359513928220 ($\rho_1$), 4.15582444577 ($\rho_2$).
+\item \textbf{The paper's own transferred certificates}, evaluated directly at $\tau = 0.48767595$ and $\eta = 0.51612858$, all exceed the required $10^{-6}$; the least is $1.3154\times10^{-4}$, about 48 times the paper's uniform worst case.
+\item \textbf{Controls:} reproduction of earlier rigorous moments to $10^{-19}$; rejection of a false threshold and of a perturbed $\Delta$; doubled resolution identical to 15 digits.
+\item \textbf{Exported decimals} use directed rounding (lower bounds rounded down, upper bounds up), verified in interval arithmetic.
+\end{itemize}
+
+\textbf{Scope.} This certifies the numerical premises of the bound. Its non-numerical premises (finite-circle convergence, the isolation and alias lemmas, and the word-RAM accounting) are those of the OpenAI and Base papers, which we take as given here; Section~10 lists their independent verification as an open task.
+
+%======================================================================
+\section{Changing the block count}
+
+The constant 17 enters the OpenAI proof in two places, and both hold verbatim for any $K$ with $K\mu < 1$. Every other dependence on block size runs through $\mu = m/n$, and the checksum section is generic in $(\eta, \tau)$.
+
+\begin{enumerate}
+\item \textbf{Block fit (aliases l.79).} The paper needs $17 m/2 \le \lfloor n/2 \rfloor$; in general $K m/2 \le \lfloor n/2 \rfloor$, which holds for large $n$ when $K\mu < 1$.
+\item \textbf{Partition and Markov (aliases l.336--352).} A uniform $\lfloor n/2 \rfloor$-set is partitioned into $K$ disjoint sets of size $m/2$, each with the law of $S$. Superadditivity and nonnegativity of deficiency give $K\, \E\, d(S) \le d_0 n$. Markov then gives $\Pr[d(S) \le d m] \ge 1 - d_0/(K d \mu) - o(1)$, which must exceed a fixed $c_0 > 0$. The later product $c_0/(m+1) \cdot 1/2 \cdot 1/(4 K_0 n^2) \ge n^{-4}$ holds for any fixed $c_0 > 0$.
+\end{enumerate}
+
+The remaining replacements are mechanical: 0.0567 becomes $\mu$ throughout, so the sparse-distinction count becomes $2^{(h(\mu)+\mu)n}$ (valid for $\mu \le 1/2$), the setup bound becomes $T \ge \mu + 1/4$, and $0.4894 > \gamma$ becomes $1/2 - d > \gamma$. In the checksum, the fixed 0.5168/0.5169 thresholds become $\rho_c < \rho_f < \eta - 48\eps$, and the error decay $2^{-0.0007n}$ becomes $2^{-(\eta - \rho_f - 48\eps)n}$, which still absorbs the $2^{O(\sqrt{n})}$ pattern count.
+
+The constraints that do not depend on $K$ are isolation, the prime-collision lemma, the deficiency lemmas, alias subtraction and the word-RAM accounting. The old moment certificate does not transfer: new densities need a new numerical appendix (Section~7).
+
+\textbf{Verification.} This section rests on a line-by-line reading of the OpenAI source; an independent referee re-derived the full constraint list from the \TeX{} and found nothing missing. The partition step (item~2) and the coupling with the preliminary search were verified by careful reading against the source; a fully written independent proof of these two steps is left to future work.
+
+%======================================================================
+\section{A lower bound on the first moment for all densities}
+
+\begin{lemma}
+For all strictly positive continuous densities $f, g$ on the circle, every $\kappa > 0$, $\Delta \ge 0$ and $p > 0$:
+\begin{gather*}
+\log_2 M_1 \;\ge\; \Phi(p) := 1 + p\,\Delta + (1+p)\log_2 \int_{\mathbb T} (1+\cos x)^{1/(1+p)}\,dx, \\ \int_{\mathbb T} (1+\cos x)^b\,dx = \frac{2^b\,\Gamma(b+\tfrac12)}{\sqrt{\pi}\;\Gamma(b+1)}
+\end{gather*}
+\end{lemma}
+
+\begin{proof}
+\leavevmode
+\begin{enumerate}
+\item \textbf{Jensen.} Since $K_x$ is a probability density in $w$, $u(x) = \E_K \log_2[f^*(x+w)\, g^*(w) / K_x(w)] \le \log_2 Q^*(x)$, where $Q^*(x) = \mean_w f^*(x+w)\, g^*(w)$. By shift invariance $Q^*$ is itself a probability density on the circle.
+\item \textbf{Rewrite.} With $w(x) = 1 + \cos x$, also a probability density, $M_1 = 2^{1+p \Delta}\, \E_w[2^{-p u}] \ge 2^{1+p \Delta}\, \E_w[{Q^*}^{-p}]$.
+\item \textbf{H\"older.} Write $w^{1/(1+p)} = (w\, {Q^*}^{-p})^{1/(1+p)}\, {Q^*}^{p/(1+p)}$ and use exponents $1+p$ and $(1+p)/p$. Since $\mean Q^* = 1$, $\E[w^{1/(1+p)}] \le (\E_w[{Q^*}^{-p}])^{1/(1+p)}$, which is the claim. \qedhere
+\end{enumerate}
+\end{proof}
+
+\textbf{Tightness.} Equality in step 1 needs $\kappa = 1$, and in step 3 needs $Q^*$ proportional to $w^{1/(1+p)}$. Densities with $g$ sharply peaked and $f$ proportional to $w^{1/(1+p)}$ approach the bound, with gaps down to $5.8\times10^{-7}$ in $\log_2$; at $\kappa = 1.1$ a fixed positive gap remains. The function $g(p) = (1+p) \log_2 \E[w^{1/(1+p)}]$ is a log power mean of $w$, so it is nonincreasing in $p$; this makes minimizing $\Phi$ over $p$ rigorous on monotone cells.
+
+\textbf{Finite circle.} On $\mathbb{Z}/P\mathbb{Z}$ the same argument holds with the discrete average of $w^{1/(1+p)}$. For even $P$ that average is smaller than the closed form, so the closed form alone is false there (a referee counterexample at $P = 4$ has gap $-0.154$; the gap shrinks roughly like $P^{-1-2/(1+p)}$). The algorithm uses $P \sim 2^{\eta n}$, so the correction is negligible, and the paper's premise is the continuous inequality anyway.
+
+\textbf{Consequence 1: the eight-block point fails.} Astra's eight-block scalar point ($\eta = 0.67$, $\Delta = 0.1900002$) passes all twelve scalar inequalities. Lemma~1 gives $\log_2 M_1 \ge 0.885370$ for every $p$ in $[1, 10]$ (interval-evaluated on 9000 monotone cells), against the 0.669998 required: a shortfall of 0.215 bits for every possible filter.
+
+\textbf{Consequence 2: 0.48 is out of reach.} Writing $\eta = \tau + \Delta$, the $M_1$ constraint forces $\Delta \le D_{\max}(\tau)$ = max over $p$ in $(1, 10]$ of $(\tau - 1 - g(p))/(p - 1)$, about 0.0403 at $\tau = 0.48$. The list bound forces $\mu \ge (1/2 - \tau)/(\gamma + 1/2 - h(1/4))$, and the pair bound with $\gamma < 1/2$ then forces $\Delta \ge 2.6494(1/2 - \tau) + g$, about 0.053 at $\tau = 0.48$. These three constraints are jointly infeasible for every $\tau \le 0.484$ and every $K$ (checked in interval arithmetic by the second referee), so 0.48 is out of reach in the OpenAI construction for all parameters, given Lemma~1. Combining Lemma~1 with the full scalar budget gives a sharper floor near 0.4852 ($K = 11$), but only as a floating, grid-based estimate.
+
+\textbf{Verification.} An independent referee checked each step of the proof and found no counterexample in 300 random and 16 adversarial instances (minimum gaps $+0.107$ and $+0.0009$).
+
+%======================================================================
+\section{Working backward from 0.48 in the OpenAI construction}
+
+OpenAI's paper proves exponent 0.49. A natural question is whether the same construction, with better parameters, can reach a full hundredth lower; we take 0.48 as the target that tests this. The answer is no. Lemma~1 already rules out 0.48 for every choice of parameters (Section~5), and the analysis below shows why: one resource, the joint capacity of the two moments, limits everything else, and at the best capacity we found the construction cannot go much below 0.4895. This is why the improvements of Section~8 needed Base's modified construction.
+
+The binding resource is not the block count but the joint capacity of the two moments: the largest $\Delta = \eta - \tau$ at which some densities keep both $M_1$ and $M_2$ below $2^\eta$. At $\tau = 0.4898$ that capacity is about 0.029, whatever density family we try (floating exploration).
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{L >{\raggedright\arraybackslash}p{2.4cm} >{\raggedright\arraybackslash}p{2.0cm} L}
+\toprule
+Density family & Moments imposed & Capacity ($\Delta$) & What binds \\
+\midrule
+6 cosines (Astra's family) & $M_1$ and $M_2$ & 0.02810 & both moments \\
+6 cos + 6 sin, $\kappa \in [0.5, 2]$ & $M_1$ and $M_2$ & 0.02841 & both moments \\
+16 or 32 cos + sin, Astra-basin starts & $M_1$ and $M_2$ & 0.02864 & both moments \\
+16 cos + 16 sin, random starts & $M_1$ and $M_2$ & 0.02908 & both moments \\
+6 cosines & $M_2$ only & 0.03226 & rounding cap $q_m(4a+3) \le 30$ \\
+6 cosines & $M_1$ only & 0.0396 & $M_1$ (Lemma~1 ceiling 0.0427) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Two consequences follow.
+
+\begin{itemize}
+\item \textbf{Fewer blocks alone do not help.} With real densities, every $K$ from 9 to 13 is worse than 17 (best 0.48978 at $K = 13$). A continuation that grows the block toward $1/K$ at $K = 11$ and 12 raises $T$ monotonically, because the moments pin $\Delta$ near 0.0284 and the pair bound then charges for every extra unit of $\mu$.
+\item \textbf{Each unit of capacity is worth about 0.35 in the exponent.} The floor of the audited budget, optimized over $K$, falls as capacity rises (floating, optimistic closure):
+\end{itemize}
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Joint capacity $\Delta$ & Floor on $T$ & Best $K$ \\
+\midrule
+0.0281 (the 6-term family) & 0.48977 & 17 \\
+0.032 & 0.48840 & 15 \\
+0.036 & 0.48703 & 13 \\
+0.0396 ($M_1$'s own capacity) & 0.48579 & 12 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At the current capacity this reproduces Astra's certified basin, which is the control. A further 0.001 of capacity, which richer asymmetric densities do supply, already moves the best $K$ from 17 to 16; Section~7 certifies that point.
+
+%======================================================================
+\section{A certified 16-block point at 0.4894616}
+
+\begin{theorem*}[conditional on the OpenAI proof and Section~4]
+With the parameters below, the OpenAI algorithm (randomized, word-RAM, inputs of bit length at most $n^c$ for any fixed $c$) decides Subset Sum in time $O(2^{T' n})$ for every $T' > 0.4894615727$, in particular $O(2^{0.4894616 n})$.
+\end{theorem*}
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{3.3cm} L >{\raggedright\arraybackslash}p{3.6cm}}
+\toprule
+Parameter & Value & Replaces \\
+\midrule
+Half-blocks $K$ & 16 & 17 \\
+Block size $\mu$ & 0.0593373017 & 0.0567 \\
+$\eta$ & 0.5184804040 & 0.51772 \\
+$\tau$ & 0.4894613727 & 0.48996 \\
+$\gamma$ & 0.4888978551 & 0.48925 \\
+$\kappa$ & 1.03489429 & 1.0315 \\
+$p$, $q_m$ & 8.38520435, 8.19573911 & 8.5, 8.3 \\
+Densities $r$, $s$ & 16 cosine + 16 sine terms each (64 coefficients, 8 decimals) & 6 cosine terms \\
+Coverage constant $c_0$ & 0.0001 & 0.005 \\
+$d$, $d_0$, $d_1$ & $1/2 - \gamma - 10^{-8}$; $(1-c_0)K d \mu (1-10^{-7})$; $d_0 - 10^{-9}$ & 0.0106, 0.01004, 0.010025 \\
+cap; $\rho_f$; $\rho_c$ & $\tau + 20\eps$; $\eta - 48\eps - 5\times10^{-7}$; $\rho_f - 10^{-6}$ & 0.489985; 0.5169; 0.5168 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The exact coefficients are in \texttt{candidate\_K16.json} in the repository (Section~11).
+
+\textbf{Certificates.}
+
+\begin{itemize}
+\item \textbf{Ours} (python-flint arb, 200 bits): inner trapezoid with $N_{\mathrm{in}} = 256$ on a strip of half-width 0.3, outer $N = 8192$ on a strip of half-width 0.2. $q_0 = 0.372$, so $\log_2 Q$ is analytic on the strip. Quadrature errors are below $10^{-27}$. Result: $\log_2 M_1 = 0.518477576190$ and $\log_2 M_2 = 0.518477347232$, against $\rho_c = 0.5184784240$. All 20 interval margins are positive; the moment margins are $8.48\times10^{-7}$ and $1.08\times10^{-6}$. Doubled resolution agrees to 20 digits.
+\item \textbf{Referee's} (independent agent; saw only the parameter file and the TeX): its own constraint list with line citations, nothing missing; its own rigorous moment bound by an exact-ball DFT with aliasing and tail bounds. It agrees with ours to 16 digits.
+\item \textbf{Controls:} the same certifier passes Astra's certified 17-block point below its own threshold and rejects that point with $\Delta$ raised by 0.001.
+\end{itemize}
+
+\textbf{Conventions the result depends on.}
+
+\begin{itemize}
+\item \textbf{Orientation.} The densities are asymmetric, so the correlation convention $y - \theta = x + w$ ($P(x) = \mean_w F(x+w)G(w)$) is load-bearing. Reflecting one density gives $\log_2 M \sim 3.28$, a catastrophic failure. Swapping $f$ and $g$, or $x \to -x$, is harmless because the weight is even.
+\item \textbf{Admissibility.} filtering.tex l.16 allows any strictly positive continuous densities; nothing in the proof uses symmetry. The old numerical appendix used the $j \leftrightarrow 64-j$ symmetry and is replaced by either certifier.
+\item \textbf{Thin slacks.} Several margins are $10^{-9}$ to $10^{-6}$. They only make the cutoff $n_*$ astronomically large: Chebyshev with $d_0 - d_1 = 10^{-9}$ makes the preliminary-search bound meaningful only for $n$ of order $10^{18}$ or more. Nothing fails asymptotically.
+\end{itemize}
+
+At $\mu = 0.0593 > 1/17$, seventeen blocks would not fit: the gain comes from trading one block for a larger shared block, which the extra moment capacity of the new densities pays for.
+
+%======================================================================
+\section{Below JoshuaQFEX: Base's construction with one asymmetric filter}
+
+Base changes both halves of the OpenAI algorithm. On the list side it uses one large shared block (about $0.475n$) with sparse masks of density $a \approx 0.008$, returns alias phase sums instead of alias lists, and replaces the 17-block Markov step by an averaged small-layer bound, Base's Corollary~D. That corollary is what makes each trial of the alias step productive: for a uniformly random half $S$ of the block, it bounds from below the average fraction of distinct values among the $k$-element subset sums of $S$, by $2^{-g}/(v+1)$ with $v = m - 2k$, where $2^{g}$ is at most the number of trials, so that enough distinct masks are found to cover every alias class. On the checksum side it uses a family of 43 filters, each with 8 cosine terms, certified in 10 regions of the pattern space. Base reports that its filter search stalls near 0.4876 and that ``further progress needs a new idea.'' JoshuaQFEX retunes Base's parameters to 0.487676.
+
+\textbf{Observation.} With a family of $J = 1$ filters, Base's Theorem B certificates collapse to OpenAI's two moments: region $\rho_0$ uses the multiplier vector $z = (p, 0)$ and regions $\rho_1$--$\rho_9$ use $z = (q, 0, 0)$, so the 10 certificates are exactly $M_1$ and $M_2$. Our asymmetric filters (Section~7) therefore drop into Base's construction unchanged, and Base's 43-filter family has to compete with one filter that carries sine terms and 16 harmonics.
+
+\textbf{Price, then optimization.} In Base's alias budget each $+0.001$ of moment capacity lowers $\tau_0$ by about 0.00039 (control: zero extra capacity recovers 0.4876826, within $7\times10^{-6}$ of JoshuaQFEX). We then optimized Base's alias parameters ($\eta$, $\mu$, $a$, $\gamma$, $l$), one filter (16 cosine + 16 sine terms per density, and $\kappa$) and the multipliers $p$, $q$ jointly, under all of Base's alias constraints and both moment constraints. Four of four starts reached $\tau_0 = 0.4875749$, matching the pre-registered prediction $0.48757 \pm 0.0001$.
+
+\textbf{The frozen point} (exact decimals, in \texttt{candidate\_base.json}):
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+Parameter & Value \\
+\midrule
+$\tau_0$ & 0.4875752036 \\
+$\eta$ & 0.5162721413 \\
+$\mu$ & 0.4752421539 \\
+$a$ & 0.0082379228 \\
+$\gamma$ & 0.0605824120 \\
+$l$ & 0.4836347962 \\
+$\kappa$, $p$, $q_m$ & 1.03465831, 8.45902160, 8.27015425 \\
+$\eps$, $\zeta$, input guard & $10^{-8}$, $10^{-8}$, $10^{8}$ \\
+$\rho_f$, $\rho_c$ & $\eta - 1.5\times10^{-6}$, $\rho_f - 10^{-6}$ \\
+exponent $T = \tau_0 + 20\eps$ & 0.4875754036 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Certificate.} All 33 conditions (34 checks; our certifier also tests an implied one) were checked in ball arithmetic (python-flint arb, 200 bits) and all margins are positive: Base's alias constraints C1--C8, the size conditions S1--S5, Lemma A5 ($1/2 - \tau_0 + \zeta < \delta$), the Lemma A7 conditions, the Theorem A cap $1/\mathrm{guard} + \zeta < \eps_0$, the prime draw $\eta/2 < \tau_0$ (enough primes of that size by~\cite[Cor.~3]{rs}, as in~\cite{openai}), the Lemma B1--B3 bookkeeping, and both moments. The tightest margins are B3 ($8.1\times10^{-7}$), $M_1$ ($1.315\times10^{-6}$), C4 ($1.316\times10^{-6}$) and $M_2$ ($1.494\times10^{-6}$). The moments are $\log_2 M_1 = 0.51626832585128515$ and $\log_2 M_2 = 0.51626814726466969$, with rigorous error radii below $10^{-20}$; doubling the quadrature resolution changes nothing in 20 digits.
+
+\textbf{Independent referee.} A separate agent that saw only the candidate file and the Base and OpenAI sources derived every condition from the text with line citations, recomputed both moments with its own rigorous code (agreement to 20 digits), and checked that $J = 1$ and sine terms are legitimate: Lemma 3.2 of the OpenAI paper uses only uniform and derivative bounds, which change from 2.433 and 4.010 to 3.20, and nothing in the entropy order, the pattern grid or the joint moment uses evenness. Its verdict: the claim survives, with no fatal issue. Its list includes Lemma A7 items 1, 3 and 4, S2, S5, the prime draw and the row-error condition $a_\Gamma \le 3/4$; all are slack and are part of the certificate above.
+
+\textbf{Second referee.} A further independent review, working only from this paper, the two parameter files and the Base and OpenAI sources, derived 33 conditions from the TeX with line citations and found all of them to hold in arb at 200 bits. Its own moment evaluator reproduces the OpenAI paper's Appendix A table to every printed digit and gives $\log_2 M_1 = 0.51626832585128515$ and $\log_2 M_2 = 0.51626814726466969$ (ball radius below $4\times10^{-55}$), unchanged across resolutions and strip widths; an independent floating implementation agrees to 12 digits. It also passed the 16-block point of Section~7, Lemma~1 and the algebra of Section~9.
+
+\textbf{A conditional improvement to 0.4873408.} Section~9 describes ternary left masks: $k_1$ entries $+1$ inside the alias's half-block $S$ and $k_2$ entries $-1$ outside it, with a plain right mask and the expansion rule ``$X^+$ disjoint from $Y$, $X^-$ contained in $Y$''. A full replacement for Base's alias step in Base's style (soundness, counts, a trial count computed exactly as $C_S\, n^8\, 2^{d(M)}$, a global distinctness lemma in place of Base's $\delta$, coverage through the counting identity of Section~10, and the cost items, with Base line numbers) is in the repository as Section~T. The trial count carries the polynomial constant $C_S$ of [S] below, which does not change the exponent. At the optimum, frozen as $\tau_0 = 0.4873405528$, $\eta = 0.5159974155$, $\mu = 0.4746795055$, $a = c = 0.0035141538$, $\gamma = 0.0603737099$, $l = 0.4840025845$ with one 16 + 16 filter, all 33 conditions hold in arb at 200 bits (tightest margin $8.1\times10^{-7}$; $\log_2 M_1 = 0.51599187405865779$, $\log_2 M_2 = 0.51599162047014794$). We re-derived each step of Section~T and recomputed every slack and both moments with independent code; the moments agree to 20 digits. A fresh referee, working only from the candidate file, Section~T and the Base and OpenAI sources, derived its own list of conditions with line citations and certified both moments with its own interval code, bounding the quadrature error analytically (a trapezoid bound on a strip of analyticity); its enclosures agree with ours to 35 digits. It found no fatal defect, only expository repairs to Section~T, including the bit-length scope of Section~2.
+
+Here [S] (``small slices are robust'') is the statement: there is a polynomial $C_S$ such that for every integer weighting of an $m$-element block $M$ and every $k \le 0.11m$, $a_k(M) \ge 2^{-d(M)}/C_S(m)$, where $a_k(M)$ is the fraction of distinct values among the $k$-element subset sums and $2^{-d(M)}$ is the fraction of distinct values among all subset sums (Section~10).
+
+\begin{theorem*}[conditional on {[S]}, on Base's written proof and on the OpenAI paper]
+Subset Sum can be solved by a randomized word-RAM algorithm, on inputs of bit length at most $n^c$ for any fixed $c$, in time $O(2^{T' n})$ for every $T' > 0.4873407528$, in particular in time $O(2^{0.4873408n})$.
+\end{theorem*}
+
+This is $2.34\times10^{-4}$ below the point above and $3.35\times10^{-4}$ below JoshuaQFEX. We present it as conditional until [S] is proved. [S] is open; Section~10 reduces it to a sharper, purely combinatorial statement and gives the evidence for it.
+
+\textbf{Status and caveats.} The proved exponent is $T = \tau_0 + 20\eps = 0.4875754036$, so, in the setting of Section~2, the algorithm runs in time $O(2^{T' n})$ for every $T' > T$, in particular $O(2^{0.4875755n})$; $T$ is $1.005\times10^{-4}$ below JoshuaQFEX and $1.14\times10^{-4}$ below Base's $\tau_0$. It is conditional on Base's written proof (its alias-step cost accounting, Lemma A5 and its checksum changes) and on the OpenAI paper, exactly as JoshuaQFEX is. The constants $\zeta$ and the input guard are free in Base; ours ($10^{-8}$) only raise the cutoff $n$ beyond which the bound applies: Base's Proposition P then needs $n > 10^8$, and its Chebyshev term $4/(\zeta^2 n)$ is small only for $n$ of order $10^{17}$. Using our point in Base's proof changes some of Base's stated numerical constants, all of which remain valid: $\delta = 0.0698$ (Base: $> 0.0706$; still far above the 0.0124 it is compared with), S3's 0.129 $\to$ 0.1308, $\eps_0 = 1.3157\times10^{-6}$ (Base $5.37\times10^{-6}$), the guard constant $10^8$, $c_z = 6p \approx 50.8$ (Base $\le 2511$) and the B3 error exponent $8.1\times10^{-7}$ (Base 0.00017). The OpenAI rounding caps $3p \le 30$ and $q(4a + 3) \le 30$ are not required under Base, whose Lemma B2 accounts for rounding through $6\eps\Sigma z$; they hold anyway. Base's filter definition and verification script assume cosine-only filters and need the corresponding extension to sine terms; the affected lines are listed in the repository.
+
+%======================================================================
+\section{Why the exponents stall near 0.4876}
+
+This section analyses Base's parameter budget at our Section~8 point. The closed forms are exact algebra on Base's constraints (C1)--(C8). The numbers come from floating, pre-registered runs (our experiments C13--C17); nothing in this section is certified.
+
+\textbf{Shadow prices.} Loosening each constraint by one bit and re-optimizing every parameter, filter included, gives the exponent saved per bit:
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.2cm} L >{\raggedright\arraybackslash}p{4.2cm}}
+\toprule
+Constraint & What it counts & Exponent saved per bit \\
+\midrule
+C4 & matching visits & 0.389 \\
+C1 & small prime $P'$ against the number of representations & 0.258 \\
+C2 & left records & 0.077 \\
+C3 & right class records & 0.077 \\
+C5 & right masks times trials & 0.001 \\
+$M_1$, $M_2$ & checksum moments, per bit of $\log_2 M$ & 0.051 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The list side carries 0.80 of the exponent, and the prices add. Weighted by each constraint's coefficient of $\tau_0$ ($p \approx 8.5$ for the moments), they sum to 1 within 2.5\%, as the Karush--Kuhn--Tucker conditions require.
+
+\textbf{Three closed-form bounds.} Write $\eta = \tau_0 + \Delta$, where $\Delta$ is the gap the checksum allows, and use $l + r = 1 - \mu$. Adding C2 and C3, and rearranging C4 and C5, gives
+
+\begin{itemize}
+\item[(i)] $\tau_0 > 1/2 - \mu(\gamma - h(a)/2)$, from left records times right classes, where more representations help;
+\item[(ii)] $2\tau_0 > 1 - \Delta + \mu[(h(a) - \gamma) + (h(1/2 - a) - 1)]$, from the matching visits together with the checksum, where smaller masks help;
+\item[(iii)] $\tau_0 > (1/2 + \mu h(1/2 - a))/2$, from the right masks times the number of trials.
+\end{itemize}
+
+At the floating optimum behind our Section~8 point the three right sides are 0.4875739, 0.4875744 and 0.4875744, against $\tau_0 = 0.4875749$ (the gap is the $10^{-6}$ slack we imposed). At the frozen, certified point they are 0.4875739, 0.4875745 and 0.4875745 against $\tau_0 = 0.4875752$: (ii) and (iii) bind, and (i) sits $6.6\times10^{-7}$ lower. Our point and Base's are therefore a balance of these bounds. Bound (i) wants a larger mask fraction $a$, because $\gamma \le h(2a)/2$ grows faster than $h(a)/2$; bound (ii) wants a smaller one; bound (iii) holds the block size $\mu$ in place.
+
+\textbf{The floor of the architecture.} In (ii), $1 - \eta$ is $\log_2$ of the number of aliases, $2^n/P$, for generic inputs, and Theorem~A inserts every alias class into a dictionary. Hence any design that enumerates the alias classes modulo a prime of $\eta n$ bits and certifies the rest with a checksum of capacity $\Delta$ (so $\eta - \tau_0 \le \Delta$) has $\tau_0 \ge 1 - \eta \ge 1 - \tau_0 - \Delta$, that is
+\[
+\boldsymbol{\tau_0 \ge (1 - \Delta)/2.}
+\]
+Precisely: for inputs with distinct subset sums every alias class is a single alias, there are about $2^{(1-\eta)n}$ of them per target, and Theorem~A spends at least one counted step on each; the checksum at the same modulus costs $2^{\tau n}$ with $\eta - \tau \le \Delta$. The statement says nothing about designs that do not enumerate every alias class, that use different moduli, or whose checksum is not of the moment form. At the certified point's $\Delta = 0.0287$ the floor is 0.48565. Exponent 0.48 would need $\Delta \ge 0.040$ even with no list overhead at all; Lemma~1 caps the first moment's capacity near that value, and the joint capacity reached in practice is about 0.029. The floor is attained in the model when the overhead in (ii) is removed. The table re-optimizes the filter at each step, so $\Delta$ drifts to 0.0284 and the floor it reaches is 0.4858; with the filter held fixed, the second referee's model gives 0.4875741, 0.4871563, 0.4867011, 0.4862020 and 0.4856515.
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+Share of the C4 overhead removed & $\tau_0$ \\
+\midrule
+none (Section~8 point) & 0.4875749 \\
+25\% & 0.4871858 \\
+50\% & 0.4867641 \\
+75\% & 0.4863049 \\
+all & $0.4858019 = (1 - \Delta)/2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{What the overhead is.} The rest of (ii) is $\mu[(h(a) - \gamma) + (h(1/2 - a) - 1)] = 0.003846$ per $n$ at our point. It equals $-\log_2$ of the probability that a uniform left mask of $k$ elements and a uniform right mask of $\sigma - k$ elements of the block are disjoint, 0.003845 per $n$; at $\gamma = h(2a)/2$ the two entropy expressions agree. So the overhead is exactly the visited tuples with overlapping masks, which the expansion step tests and discards. It costs about one bit per left-mask element, because each element of a left mask lies in the alias's half-block $S$ with probability $1/2$.
+
+\textbf{Colour-coding~\cite{ayz} does not remove it.} Confining the left masks to a random region $R$ of the block with $|R| = \rho m$ leaves $S$ covering half of $R$. The left-mask part of the overhead becomes $a + a^2/(2\rho \ln 2) + O(a^3)$; the right-mask part, $h(1/2 - a) - 1 = -2a^2/\ln 2 + O(a^4)$, does not depend on $\rho$. So the total (0.00809 per element of the block at $\rho = 1$) is smallest at $\rho = 1$. In the full model every $\rho < 1$ is worse: by $1.4\times10^{-4}$ at $\rho = 0.75$, $4.0\times10^{-4}$ at 0.5 and $1.2\times10^{-3}$ at 0.25. Removing the waste needs partial knowledge of $S$ or a different source of representations, not a filter on the masks.
+
+\textbf{Ternary masks need a stronger Corollary D} (the small-layer bound described in Section~8). Following the representation technique of Howgrave-Graham and Joux~\cite{hgj} and its ternary refinement by Becker, Coron and Joux~\cite{bcj}, let the left mask also carry $-1$ entries outside $S$. On the block outside $S$ the trial's signed weights are the negatives of the alias's own signing, so these entries add plain subset sums of that signing. In the floating model this reaches $\tau_0 = 0.4873403$, $2.35\times10^{-4}$ below our point, from four of four starts; the optimum splits Base's representations evenly between inside and outside $S$. The model assumes that Base's Corollary D holds for this two-part family essentially without loss. Losing 10\% of the outside representations removes the gain entirely, and the break-even is about 2\%. Base's proof of Corollary D starts from a layer $t \le v/2$ where many sums are distinct and descends to layer $k$ by a covering argument, which limits the support of the representations to $m/2 + k$. Under that limit a ternary mask with fractions $(a, c)$ is no better, in every constraint, than Base's own mask with fraction $a + c$. Under Base's Corollary D we therefore count ternary masks as a negative result. Under the stronger statement [S] of Section~8 they give the conditional theorem stated there ($T = 0.4873407528$); [S] is open (Section~10).
+
+\textbf{The filter families we tested add almost nothing.} We tested families of two and three asymmetric filters in Base's format, with its comparison rows $u_v - u_l$. Base's own family is worth about $6.4\times10^{-4}$ bits of moment margin over its best single filter, which sets the scale. On top of our filter, the best two-filter family the optimizer found pairs the filter with its mirror image $x \to -x$, which covers the mirror of the filter's own critical type: $6.7\times10^{-5}$ bits of margin, lowering the exponent by only $3.3\times10^{-6}$. Twelve random second filters reach either that pair or nothing, and a third filter adds $4.6\times10^{-6}$ bits. In these tests, asymmetry and family diversity buy largely the same thing; larger or differently structured families remain untested. We did not certify the $3\times10^{-6}$ improvement.
+
+\textbf{Summary.} At the current checksum capacity this architecture cannot go below about 0.4857, the list side can contribute at most $1.77\times10^{-3}$ of the remaining distance, and the tools we tested for that contribution (two- and three-filter families, ternary masks under Base's Corollary D, colour-coding) do not supply it. Each of these conclusions is a pre-registered experiment with a control that reproduced the Section~8 point.
+
+%======================================================================
+\section{Open problems}
+
+The central open problem on the checksum side is to prove an upper bound on the joint capacity of the two moments. Every density family we optimized stalls near $\Delta \approx 0.029$. A theorem showing that this is optimal for the moment format, or a family that exceeds it, would settle how far this architecture can go.
+
+\textbf{Beyond the floor of Section~9.} Below about 0.4857 the architecture itself must change: either the checksum capacity rises (which is the joint bound question above, read in reverse), or the algorithm stops enumerating every alias class. Two narrower questions remain on the list side.
+
+\begin{itemize}
+\item \emph{Corollary D beyond the half-block.} Let $S$ be a uniform half of the block and consider the family $\{U : |U \cap S| = k_1,\ |U \setminus S| = k_2\}$. Is the average fraction of distinct sums $w(U)$ at least $2^{-g}/\poly(n)$, with $g$ inside the trial budget (at most $d(L)$, $d(M)$ and $(1/2 - \tau_0 + \zeta)n$)? Within the support $m/2 + k$ this follows from Base's proof. Beyond it, a sumset argument is the natural attempt: a sum of two pieces can collapse only if both pieces are structured, and structure costs deficiency. Essentially lossless, the lemma is worth about $2.34\times10^{-4}$ through ternary masks. A cleaner sufficient statement exists. On the block outside $S$ the trial's signed weights are the negatives of the alias's own signing, so the family's sums are plain $k'$-subset sums ($k' = k_1 + k_2$) of one fixed signing, and a counting identity gives $\E_S[\text{fraction of distinct sums}] \ge a_{k'}(M)$, the fraction of distinct $k'$-subset sums of the whole block. So it suffices that small layers are robust, which is the statement [S] of Section~8; the subsection below reduces it to a chain of purely combinatorial statements and records what is proved.
+\item \emph{A different source of representations.} The overlap waste of Section~9 is intrinsic to representations drawn from a uniform half $S$. A construction that knows part of $S$ in advance would remove it; we estimate that this would be worth up to $1.77\times10^{-3}$, the full overhead measured in Section~9.
+\end{itemize}
+
+\subsection*{The small-layer statement [S] behind the conditional exponent}
+
+The conditional exponent of Section~8 needs [S] only at $k' = k_1 + k_2 \approx 0.0070m$; Section~8 states it for $k \le 0.11m$ because that is the range reached by the reduction below. Base's Corollary D and its size conditions are then not needed, and its cost bounds still hold if $\mu < l$. Write $s_j$ for the number of distinct $j$-subset sums of the block and $a_j = s_j/\binom{m}{j}$. The table lists a chain of statements, each of which would imply the one above it, and the status of each; the paragraphs after it give the definitions and the evidence.
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.6cm} L >{\raggedright\arraybackslash}p{4.7cm}}
+\toprule
+Statement & Content & Status \\
+\midrule
+{[S]} & $a_k \ge 2^{-d(M)}/C_S(m)$ for every weighting and $k \le 0.11m$ & Open; $a_k\,2^{d(M)} \ge 1.00$ in all 2,655 tested instances ($m = 12$ to $16$) \\
+{Lemma S} & M$'$ with constant $P(m)$ implies [S] with $C_S = P + 2$ & Proved \\
+{Exact monotonicity} & $a_{k+1} \le a_k$ for $k + 1 \le m/2$ & False (130 counterexamples at $m = 8$, all at the middle step) \\
+{Conjecture M$'$} & $a_t \le P(m)\, a_k$ for $t \in [k, m-k]$, $k \le 0.11m$ & Open; proved with a loss of about $2^k$ (Proposition P2) \\
+{Conjecture Q} & $Q_w(t,k) \le 1$ for $k \le m/4$; implies M$'$ with $P = 1$ & Open; no violation for $k < m/3$ in about $10^5$ instances; false at $k = m/3$ \\
+{YP-Hall} & a Hall condition for $t + 2k \le m$; implies Conjecture Q & Open; feasible in about 35,700 exact flow computations \\
+{Case $k = 1$} & $Q_w(t,1) \le 1$ & Proved for $t = 2$ and for two families of weights; open for $t \ge 3$ \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\emph{Lemma S.} If $a_t \le P(m)\, a_k$ for all $t \in [k, m-k]$ and $k \le 0.11m$, then [S] holds with $C_S = P + 2$. Indeed $2^{-d(M)} \le \E_{t\sim\mathrm{Bin}(m,1/2)}[a_t]$, since $|\Sigma| \le \sum_t |\Sigma_t|$; the layers inside $[k, m-k]$ contribute at most $P a_k$, and the layers outside carry mass at most $2\cdot 2^{-m(1-h(\alpha))}$ with $\alpha = k/m$, which is at most $2a_k$ because $a_k \ge 1/\binom{m}{k} \ge 2^{-mh(\alpha)}$ and $h(\alpha) \le 1/2$ for $\alpha \le 0.11$.
+
+\emph{Exact monotonicity fails, but only at the middle.} An exhaustive sweep over all value multisets in $[-8, 8]$ at $m = 8$ finds 130 counterexamples to $a_{k+1} \le a_k$, all at the middle step $k + 1 = m/2$, for example $w = (-6, -5, -5, -3, -3, -2, 4, 5)$ with $a_3 = 19/56 < a_4 = 24/70$ (verified independently). Away from the middle the comparison looks exact: in exhaustive sweeps at $m = 9$ to 12 (about 11 million multisets) the maximum of $a_t$ over $t \ge k$ was attained at $t = k$ for every $k \le m/4$. The tight cases are sharp: with half the weights equal to 1 and half to 2, $a_k/a_{k+1} = (m - k)/(k + 2)$, exactly 1 at $k = m/2 - 1$. Monotonicity also has an exact combinatorial form: the map $(y, e) \mapsto (e, y - w_e)$ is a bijection between pairs with $y$ a $(k+1)$-sum and $e$ in the union $U(y)$ of its witness sets, and pairs with $x$ a $k$-sum and $e$ outside the intersection $C(x)$ of its witness sets, so $a_k \ge a_{k+1}$ is equivalent to $\sum_y (|U(y)| - (k+1)) \ge \sum_x (k - |C(x)|)$ (verified on 39 instances).
+
+\begin{proposition*}[P2]
+For $k \le t \le m - k$, $s_t\binom{t}{k} \le s_k\binom{m}{t-k}$, that is, $a_t \le a_k\,\binom{m}{t-k}\big/\binom{m-k}{t-k}$.
+\end{proposition*}
+Fix one witness $X_y$ for each $t$-sum $y$; the map $(y, A) \mapsto (w(A), X_y \setminus A)$ over $k$-subsets $A \subseteq X_y$ is injective. The loss is about $2^k$ at $t = m/2$; it is exactly the support barrier $m/2 + k$ of Base's Corollary D seen as a statement about layers. At $k = 0.007m$ it costs about $0.0033$ in the exponent, fourteen times the ternary gain, so the application needs the comparison essentially without loss. M$'$ is trivial for bounded $k$ ($P = \binom{m}{k}$); its content is $k \to \infty$ with $m$.
+
+\emph{A sharper target.} Draw a $t$-sum $y$ uniformly, a witness $X$ of $y$ uniformly, and a uniform $k$-subset $A \subseteq X$, and let $\mu$ be the law of $w(A)$. By Cauchy--Schwarz $s_k \ge 1/\mathrm{cp}(\mu)$, where $\mathrm{cp}$ is the collision probability, so $Q_w(t,k) := \mathrm{cp}(\mu)\, a_t \binom{m}{k} \le 1$ implies $a_t \le a_k$. Always $Q_w \ge a_t/a_k$, with $Q_w = 1$ for generic weights.
+
+\begin{conjecture*}[Q]
+$Q_w(t,k) \le 1$ for all integer weightings, $k \le m/4$ and $k < t \le m/2$.
+\end{conjecture*}
+With $s_t = s_{m-t}$ this gives $a_t \le a_k$ on all of $[k, m-k]$, hence M$'$ with $P = 1$ and [S] with $C_S = 3$. The range is part of the statement: $Q_w$ exceeds 1 at $k = m/3$ ($w = (-3,-3,-2,-2,0,0)$ at $(k,t) = (2,3)$: $Q_w = 29/28$) and at the middle step ($1.079$ for the $m = 8$ counterexample above). Below $m/3$ we found no violation: exhaustive in $[-3,3]$ for $m \le 10$, about $10^5$ random instances, targeted two- and three-valued families up to $m = 20$, and hill-climbs at $m = 18$ and 20 whose controls recover the known middle-step violations. In these searches the supremum of $Q_w$ for $k < m/3$ is 1, attained by generic weights and approached by a single repeated pair among generic values; every few-valued instance stays below 0.72.
+
+\emph{A charging formulation.} $Q_w \le 1$ is equivalent to a weighted inequality between \emph{near misses} (a $t$-set $X$ and two $k$-sets $A \subseteq X$, $A' \ne A$ with $w(A) = w(A')$ and $A' \setminus A$ meeting $X$) and \emph{collisions} of $t$-sets. Call the rule YP: a near miss may be charged to any collision whose $t$-set contains $A \setminus A'$.
+
+\begin{conjecture*}[YP-Hall]
+For $t \le m/2$ and $t + 2k \le m$, the Hall condition of the bipartite charging rule YP holds.
+\end{conjecture*}
+By max-flow/min-cut it is equivalent to a fractional charging map, and it implies $Q_w \le 1$ on $t + 2k \le m$, which with the symmetry above covers the range $k \le m/4$ of Conjecture~Q. Exact max-flow computations found the rule feasible in every one of about 35,700 (instance, $k$, $t$) cases with $t + 2k \le m$ that we tried (exhaustive in $[-3,3]$ for $m \le 8$ and in $[-2,2]$ for $m = 9$, partial at $m = 10$, and the dense two- and three-valued shapes), while the control $(-3,-3,-2,-2,0,0)$ at $(2,3)$, outside the range, stays infeasible. Rules that keep the relation $(A \setminus A', A' \setminus A)$ fail, and the natural closed-form (proportional) map exceeds load 1 on one instance at $m = 7$, so the certificate is a flow, not a formula.
+
+\begin{proposition*}[the case $k = 1$]
+Group the elements into classes of equal weight, with sizes $n_c$, and put $M_c = \sum_X |X \cap c|/f(X)$, the sum over $t$-sets $X$, where $f(X)$ is the number of $t$-sets with the same sum as $X$. Then $Q_w(t,1) \le 1$ if and only if $\sum_c M_c (M_c - C) \le 0$, where $C = \binom{m-1}{t-1}$. The inequality holds
+(i) for $t = 2$ and every integer weighting with $m \ge 4$, and so does YP-Hall;
+(ii) for every two-valued weighting and every $2 \le t \le m/2$, with equality only at $(0,0,1,1)$, $t = 2$;
+(iii) for one repeated pair among generic values and every $2 \le t \le m/2$, with equality only at $(0,0,g_1,g_2)$, $t = 2$.
+\end{proposition*}
+A class can be over-represented ($M_c > C$) only if the whole class lies in a $t$-set whose sum has fewer than $n_c$ witnesses, so the content of the case $k = 1$ is that such excesses are paid by the deficits of the other classes. For (i), comparing each orbit of class profiles with its fiber gives $M_c \le r - 1$ for a singleton class and $M_c \le r + 1$ for a repeated class, where $r$ is the number of classes. So every $M_c \le m - 1 = C$ unless exactly one pair of weights coincides and its sum is unique; then the pair has $M_0 \le m$, each singleton has $M_i \le m - 2$, there are at least $m$ distinct 2-sums, and the singletons' deficits $\sum_i M_i (C - M_i) \ge \sum_i M_i \ge 2m - M_0$ pay the pair's excess $M_0(M_0 - C)$. Family (iii) is asymptotically tight at $(k,t) = (1,2)$ as the number of generic values grows, so any proof must handle it with no slack. All three parts were also checked by exhaustive computation from the definition of $Q_w$ (for (i), 59,408 instances up to $m = 14$; maximum exactly 1). The case $k = 1$, $t \ge 3$ is open. The obstruction is that the excess of an over-represented class must be paid by deficits on collisions of \emph{different} sums that merely share an element of the class, so no charging that stays inside a fiber or an orbit suffices; an induction from $k$ to $k + 1$ would also need a weighted form of YP-Hall and a separate treatment of near misses with $A \cap A' = \emptyset$.
+
+\subsection*{The checksum side and other questions}
+
+\textbf{A large-deviation form of the moment conditions.} By the Donsker--Varadhan variational formula, $\log_2 \mean 2^h$ = max over densities $t$ of $(\E_t h - \KL(t \,\|\, \mathrm{uniform}))$. Each moment condition therefore says that every frequency type $t$ (a distribution of coordinates on the circle) whose pattern $(\E_t u, \E_t v)$ would be sampled satisfies
+\begin{gather*}
+\mathbb E_t[\lambda] + \varphi(\mathbb E_t u, \mathbb E_t v) - \mathrm{KL}(t \,\|\, \mathrm{unif}) \le \eta, \qquad \lambda(x) = \log_2(2+2\cos x)
+\end{gather*}
+that is, amplitude plus target minus rarity is at most the budget. This is exact; maximizing over types under linear constraints returns the affine-form moments by duality. At a floating 16-block point of the OpenAI construction with $\tau = 0.4898$ and $\Delta = 0.02906$, the binding type satisfies four corner equations at once:
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Quantity at the critical type & Value & Equals \\
+\midrule
+$\E_t[u]$ & 0.02906 & $\Delta$ \\
+$\E_t[v]$ & 0.46036 & $\Gamma$ (0.46074) \\
+$\E_t[u + v] = \E_t[D]$ & 0.48942 & $\tau$ (0.4898) \\
+$\E_t[\lambda] - \KL(t)$ & 0.51882 & $\log_2 M_1$, which is $\eta$ at capacity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All the checksum's budgets bind at one type, the corner where the sampling boundary meets the case switch. The missing ingredient for the joint bound is an ``amplitude costs entropy'' inequality: a lower bound on $\E_t[v]$, valid for every density pair, in terms of $\E_t[\lambda]$, $\KL(t)$ and $\E_t[u]$. With it, the critical type would certify that every $\Delta$ above the bound fails.
+
+\begin{enumerate}
+\item \textbf{A joint moment bound.} Lemma~1 alone allows $\Delta$ up to 0.0427. A natural first attempt fails: the pointwise relations $u \le \log_2 Q^*$ and $v \ge \max(0, -u)$ (from $v = (D-A) + (D-E) \ge 0$ and $u + v = D \ge 0$) define a convex relaxation whose capacity is 0.0426, no better than Lemma~1. A useful bound must use how $u$ and $v$ arise from the same pair $(f, g)$. The mechanism is concentration: at the densities that are best for $M_1$ alone, the entropy cost is large ($\E_w v = 2.18$ against $\Gamma = 0.45$) and $\log_2 M_2$ exceeds $\eta$ by 0.49 bit. A coupled relaxation helps. Writing $a = f^*$, $b = g^*$, R\'enyi monotonicity gives $v \ge -2 \log_2 \mathrm{BC}(x)$, where $\mathrm{BC}(x) = \mean_w \sqrt{a(x+w)\, b(w)}$ is the Bhattacharyya overlap. Together with $u \le \log_2 (a \star b)$, this gives lower bounds $M_1'$ and $M_2'$ on the moments in terms of one density pair, for every $\kappa$. Their joint capacity is 0.0382 (floating; six starts agree to 0.0006). So the joint capacity at $\tau = 0.4898$ is bracketed: about 0.029 is achieved, at most 0.0382 follows from the relaxation if its optimization is global, and at most 0.0427 is proved. The remaining gap has a clean source: the relaxation lets $u$ use $\kappa = 1$ and $v$ use $\kappa = 2$ (whose kernel is proportional to $\sqrt{ab}$), while the algorithm must use a single $\kappa$. Making the 0.0382 rigorous needs a global certificate for this two-density problem, or an inequality that keeps the single-$\kappa$ coupling. At $\kappa = 1$ the problem is exact, and we derived its Euler--Lagrange equations; they agree with automatic differentiation to $5\times10^{-16}$. The equations are linear in $\ln f(y)$, so they rearrange into a fixed point, which a safeguarded relaxation (SOR) iteration can solve. Three pieces of evidence agree. The best $\kappa = 1$ pair in a 24-term family has capacity 0.02854, the same from four starts. It satisfies the full nonparametric equations up to a relative residual of $2.2\times10^{-5}$. The SOR iteration, working on unrestricted grid densities, cannot improve it. Freeing $\kappa$ adds about 0.0005, giving 0.0291. We therefore conjecture that the joint capacity of this moment format is about 0.029 for all densities. By the price list in Section~6, the architecture's floor would then be about 0.48946, essentially the point certified in Section~7. At $\kappa = 1$, $v = \E_K[\log_2 f(x+w)g(w)] - 2u$ exactly. For indicator-like densities $v = 2(\KL(f) - u)$, so $M_2$ acts as a second $M_1$-type constraint with gap $2a \KL(f)/(1+2a)$: peaked densities help $M_1$ but raise $\KL(f)$, which hurts $M_2$.
+\item \textbf{The rounding caps.} On its own, $M_2$ is limited by $q_m(4a+3) \le 30$, a $30\eps$ rounding allowance in the checksum's domination step. Enlarging that allowance costs only $O(\eps)$ in the error exponent. It is not binding at the current joint optimum, but it would be after any capacity gain.
+\item \textbf{A rigorous all-$K$ floor.} The 0.4852 floor of Section~5 and the price list of Section~6 come from grid searches over the scalar budget. Interval sweeps, or dual certificates, would make them bounds.
+\item \textbf{Other domination steps.} Lemma~1 bounds this proof's sufficient moment format, not Subset Sum. More cases in the domination step do not help: with up to 32 general affine forms $c_0 + c_1 u + c_2 v$ in place of the paper's two, each dominating its own strip of patterns, and with the patterns restricted to the convex hull of the score curve $(u(x), v(x))$, which is all that real frequencies can reach, the capacity is unchanged in every case, at 0.02810 for Astra's densities and 0.02906 for ours. The binding patterns sit at the case switch $W = \Gamma$, where the target is $\Delta - U$ for both cases, and the paper's $p(\Delta - u)$ is already the best affine form on that slice. Escaping the wall therefore needs a change of the target itself: the choice of $\alpha$, the sampling/direct split, or the match-count bound $L_\pi \le 2^{(\eta - \alpha U)n}$. A H\"older-type lower bound for affine forms on the slice $W = \Gamma$ (a ``slice lemma'') is the natural route to the joint bound of item~1. None of the estimator variations we modelled within this checksum design helps. A separate sampling budget gains nothing, because the error exponent is $\rho - \tau_s + \tau_l - \eta$ while $T$ is the larger of the two budgets. Enlarging the enumeration threshold by $\delta$ makes both moments cheaper by about $7.4\delta$ bits but costs $\delta$ in $T$, a net loss. Stratifying patterns by amplitude $\Lambda$ (the block average of $\log_2(2+2\cos x)$) adds a free tilt $c_3$ on that coordinate. A minimax argument shows it can beat the paper's $c_3 = 1$ only if the largest amplitude reachable in the sampling region falls below $\psi'(1)$, the average amplitude of $M_1$'s dominant contributors. That can never happen at the optimal multiplier. There $d \log M_1/dp = \Delta - \E_t[u] = 0$ under the moment's own tilt $t$, so the tilted mean is a realizable sampling pattern (rarity 0.055 bits, far below $\eta$) whose amplitude is exactly $\psi'(1)$. A joint optimization of densities, tilts, cutoffs and the LP-dual certificates confirms this, returning $c_3 = 1$ from every start. Both moments' tilted means sit at the same critical pattern $(U, W) = (\Delta, \Gamma)$, the corner where the sampling boundary meets the case switch. By the Donsker--Varadhan formula the moment conditions are equivalent to one statement about frequency types: every type $t$ that would be sampled must satisfy $\E_t[\lambda] + \varphi - \KL(t \,\|\, \mathrm{uniform}) \le \eta$, that is, amplitude plus target minus rarity is at most the budget. Proving the joint bound then means exhibiting one violating type for any given densities, for example the critical type. Getting past about 0.4895 otherwise needs a different variance argument, a list or pair improvement, or a different route.
+\item \textbf{Verifying the non-numerical premises.} All results here inherit the non-numerical lemmas of the OpenAI paper (isolation, the alias lemmas, alias subtraction, the word-RAM accounting) and, from Section~8 on, Base's probabilistic core (its Lemma A5, Corollary D and the region analysis of its Theorem B). These have so far been checked only by reading. An independent written re-derivation, or a formal proof in a proof assistant such as Lean, would remove that conditionality; the OpenAI repository formalizes several of its other results, but not this one.
+\item \textbf{Relation to Ye--Li.} The floor of Section~9 does not apply to Ye and Li's algorithm, which has no modulus, aliases or checksum; but its own gain is only about $2.2\times10^{-6}\, n$, from an integer-circuit improvement on a fixed partial-match matrix. An exploratory analysis by our second referee indicates that the two methods do not compose at the level of these constructions. At our Section~8 point the left records, right records and visited pairs are equally numerous, so a partial-match compatibility test has nothing to save; it would pay only with much larger masks ($a \approx 0.03$--$0.12$), where it would need a per-coordinate cost below 0.107, while the best known (Fredman--Volper~\cite{fv}) cover for that sparse-row matrix costs 0.13--0.29 and Ye--Li's improvement over it is $4\times10^{-5}$. A circuit would also return multiplicity-weighted sums, whereas Theorem~A needs each alias class counted once across trials. Interestingly, Ye and Li use the same ternary representation as Section~9's ternary masks, and their ``many correct keys'' step is the existence half (Base's Lemma 3.3) of the layer question below.
+\end{enumerate}
+
+%======================================================================
+\section{Methods, reproducibility and AI collaboration}
+
+Every experiment was pre-registered before it ran, with predictions, controls and stopping rules, and negative results were kept. The work was done by the author with AI systems, as described under \emph{Use of AI tools} below.
+
+\begin{itemize}
+\item \textbf{Labels.} Each claim is marked as a rerun, reading audit, floating exploration, interval certificate or proof. Floating results are never presented as certified.
+\item \textbf{Independence.} Each certified claim has at least two implementations. Independent referees were fresh agent contexts that saw only the claim's inputs and the source TeX, never the author's code.
+\item \textbf{Errors.} Every error found during the work, including those found by the referees, is logged with its correction in the repository. None changed a certified claim.
+\item \textbf{Use of AI tools.} The research was carried out by the author with AI systems: Claude (Anthropic) for the certifications, the block-count audit, Lemma~1, the 16-block point, the Section~8 point and the analysis of Section~9; Astra (an OpenAI-based assistant) for the landscape study, the 17-block floor, the 0.48 constraint audit and outside checks of Section~3; and Claude Fable 5.1 as the second independent referee, as a collaborator on the ternary alias step and on the reduction of [S] (Conjecture~Q, the charging formulation and the families of the case $k = 1$), and for one re-derivation of Base's probabilistic core. Astra also refereed the ternary point and Section~T, gave a second re-derivation of Base's core, and proved part~(i) of the case $k = 1$; a further fresh Claude context re-derived Corollary D from its statement alone. Independent referees were fresh AI agent contexts that saw only the claim's inputs and the source papers. Every certified claim has at least two independent implementations, and all experiments were pre-registered. The author takes full responsibility for the content of this paper.
+\item \textbf{Files.} The scripts, inputs, outputs and pre-registrations are in the repository \url{https://github.com/jv1000/subset-sum}, folder \texttt{exponent-2026}: the Section~3 premises in \texttt{joshuaqfex\_premises}, and everything else in \texttt{lab\_notebook}, including the Section~7 point \texttt{candidate\_K16.json}, the Section~8 point \texttt{candidate\_base.json} with its certificates and referee reports, and the Section~9 experiments C13--C17; the later work (the ternary alias step and its referee reports, the re-derivations of Base's core and the evidence for Section~10) is in \texttt{round2\_fable}, \texttt{fable\_round3\_6}, \texttt{lab\_notebook\_round3\_6} and \texttt{astra\_round6}.
+\end{itemize}
+
+\subsection*{Verification ledger}
+For each claim and each premise, the table records how it was checked. ``Re-derived'' means an independent written proof compared afterwards with the source; ``read'' means checked only by reading.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{8.7cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+Claim or premise & How it was checked & Status \\
+\midrule
+\endfirsthead
+\toprule
+Claim or premise & How it was checked & Status \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+The 33 numerical conditions of the Section~8 point (0.4875754036), including both moments & Ball arithmetic with analytic quadrature error bounds; two independent referees, each deriving the conditions from the \TeX{} and recomputing with its own code & Certified \\
+The 16-block point of Section~7 (0.4894615727) & Two independent rigorous certificates; block-count audit & Certified \\
+Lemma~1 and the blocking of 0.48 (Section~5) & Written proof; independent referee; interval evaluation & Proved \\
+The 430 moment premises of the 0.487676 bound (Section~3) & Ball arithmetic by two routes; outside check & Certified \\
+The 33 numerical conditions of the conditional point (0.4873407528) & Ball arithmetic; independent recomputation (moments agree to 20 digits); fresh referee with its own condition list and interval code (35 digits) & Certified \\
+The ternary alias step (Section~T) & Written proof in Base's style; co-author review; fresh referee: no fatal defect, expository repairs only & Refereed; needs [S] \\
+Base: Lemmas 3.1--3.3 and Corollary D & Two independent re-derivations (each had seen part of Base's proof of Corollary D) and a third from the statements alone, without Base's proof; all agree with Base & Re-derived \\
+Base: Lemma A5 and the region analysis of Theorem B & Two independent re-derivations (one had seen Base's bad-set step); one repairable step, Lemma B2's row error, which needs $a_\Gamma \le 3/4$ (ours is about 0.0625) & Re-derived \\
+Base: the rest of the proof (preliminary search, alias-step cost accounting, checksum changes) & Read; the referees derived its numerical conditions from the text & Premise \\
+OpenAI: isolation, the alias lemmas, alias subtraction, finite-circle convergence, word-RAM accounting & Read & Premise \\
+The floor $(1 - \Delta)/2$ and the closed-form bounds (Section~9) & Exact algebra on Base's constraints; numbers from pre-registered floating runs & Floating \\
+The joint capacity near 0.029 and the negative results of Section~9 & Pre-registered floating optimization with controls & Floating \\
+{[S]} and the chain of Section~10 & Partial proofs; exhaustive, random and adversarial searches with controls & Open \\
+\end{longtable}
+}
+
+%======================================================================
+\begin{thebibliography}{99}
+
+\bibitem{hs}
+E.~Horowitz and S.~Sahni. Computing partitions with applications to the knapsack problem. \emph{J. ACM} 21(2):277--292, 1974. doi:10.1145/321812.321823.
+
+\bibitem{karp}
+R.~M. Karp. Reducibility among combinatorial problems. In \emph{Complexity of Computer Computations}, pp.~85--103. Plenum, 1972.
+
+\bibitem{ss}
+R.~Schroeppel and A.~Shamir. A $T = O(2^{n/2})$, $S = O(2^{n/4})$ algorithm for certain NP-complete problems. \emph{SIAM J. Comput.} 10(3):456--464, 1981. doi:10.1137/0210033.
+
+\bibitem{cjrs23}
+X.~Chen, Y.~Jin, T.~Randolph and R.~A. Servedio. Subset Sum in time $2^{n/2}/\mathrm{poly}(n)$. In \emph{APPROX/RANDOM 2023}. \href{https://arxiv.org/abs/2301.07134}{arXiv:2301.07134} [cs.DS].
+
+\bibitem{cjrs22}
+X.~Chen, Y.~Jin, T.~Randolph and R.~A. Servedio. Average-case subset balancing problems. In \emph{SODA 2022}, pp.~743--778. SIAM, 2022.
+
+\bibitem{rw}
+T.~Randolph and K.~W\k{e}grzycki. Beating meet-in-the-middle for subset balancing problems. In \emph{STOC 2026}, pp.~1314--1325. ACM, 2026. doi:10.1145/3798129.3800841.
+
+\bibitem{yeli}
+L.~Ye and B.~Li. Subset Sum via Partial Match. \href{https://arxiv.org/abs/2610.10446v1}{arXiv:2610.10446v1} [cs.DS], 7 Oct 2026.
+
+\bibitem{openai}
+OpenAI. Subset Sum in time $O(2^{0.49n})$. OpenAI Math Release preprint, 4 Oct 2026. \url{https://github.com/openai/math/tree/main/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026}.
+
+\bibitem{base}
+A.~Kapila (a-kapila). \texttt{subset-sum/PROOF\_0.4877.tex}, \url{https://github.com/a-kapila/maths-proofs}, commit 44c34961, 14 Oct 2026. Cited as Base.
+
+\bibitem{joshua}
+J.~Wharton (JoshuaQFEX). subset-sum-bound, \url{https://github.com/JoshuaQFEX/subset-sum-bound}, commit bed8e18, 20 Oct 2026.
+
+\bibitem{astra}
+Astra (an OpenAI-based assistant working with the author). Round~5 landscape (\texttt{E2\_LANDSCAPE.md}) and the 0.48 constraint audit (\texttt{target\_048}), Nov 2026. Internal reports, available on request.
+
+\bibitem{tw}
+L.~N. Trefethen and J.~A.~C. Weideman. The exponentially convergent trapezoidal rule. \emph{SIAM Review} 56(3):385--458, 2014. doi:10.1137/130932132.
+
+\bibitem{rs}
+J.~B. Rosser and L.~Schoenfeld. Approximate formulas for some functions of prime numbers. \emph{Illinois J. Math.} 6:64--94, 1962.
+
+\bibitem{hgj}
+N.~Howgrave-Graham and A.~Joux. New generic algorithms for hard knapsacks. In \emph{EUROCRYPT 2010}, LNCS 6110, pp.~235--256. Springer, 2010. doi:10.1007/978-3-642-13190-5\_12.
+
+\bibitem{bcj}
+A.~Becker, J.-S. Coron and A.~Joux. Improved generic algorithms for hard knapsacks. In \emph{EUROCRYPT 2011}, LNCS 6632, pp.~364--385. Springer, 2011. doi:10.1007/978-3-642-20465-4\_21.
+
+\bibitem{ayz}
+N.~Alon, R.~Yuster and U.~Zwick. Color-coding. \emph{J. ACM} 42(4):844--856, 1995.
+
+\bibitem{fv}
+M.~L. Fredman and D.~J. Volper. The complexity of partial match retrieval in a dynamic setting. \emph{J. Algorithms} 3(1):68--78, 1982.
+
+\end{thebibliography}
+
+\end{document}

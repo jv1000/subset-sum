@@ -1,0 +1,15 @@
+CONTROL 0
+  (-3,-3,-2,-2,0,0) (2,3): Q_w = 29/28 = 1.0357142857142858
+  generic, k=1: all exactly 1? True
+  CONTROL 0 PASS
+A  two-valued 0^a 1^b
+  cases 280 max 1 cases with Q_w >= 1: [(2, 2, 2, Fraction(1, 1))]
+  A PASS
+B/C  0^2 + G generic
+  max 1 cases with Q_w >= 1: [(2, 2, Fraction(1, 1))]
+  B PASS
+  C PASS
+D  0^n + G generic, n = 3, 4 (evidence)
+  max 750/871 0.8610792192881745 cases with Q_w >= 1: []
+  D PASS
+elapsed 7.2 s
