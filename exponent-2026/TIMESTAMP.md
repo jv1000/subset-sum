@@ -58,3 +58,21 @@ Fingerprint = SHA-256 of `MANIFEST_4.sha256`:
 To verify: `sha256sum -c MANIFEST_4.sha256`, then `sha256sum MANIFEST_4.sha256`.
 
 Public timestamp record: MANIFEST_4.sha256.ots
+
+---
+
+# Snapshot 5 fingerprint
+
+Snapshot 5: 2026-11-05 (frozen ~16:05 US Eastern). Adds the round-8 whole-paper referee report by a fresh reviewer
+(Astra) with its scripts, independent numerical results and follow-up review; the revision of the preprint through
+rev8f (sources rev8c, rev8e, rev8f; PDFs rev8–rev8f; Astra's rev8d source and verification snapshot), its edit
+scripts, semantic and number audits and the review of rev8d; the two figures and their script; the Section T
+companion (v3.1, Markdown and PDF); the arXiv submission package; the directed certificate exports; and a research
+memo on reaching 0.485. No exponent or theorem statement changed. Files only added; snapshots 1–4 still verify.
+Fingerprint = SHA-256 of `MANIFEST_5.sha256`:
+
+    50d27310e70a3d68e168d923c6c596c93987a872934d117c587de03df6aaf756
+
+To verify: `sha256sum -c MANIFEST_5.sha256`, then `sha256sum MANIFEST_5.sha256`.
+
+Public timestamp record: MANIFEST_5.sha256.ots

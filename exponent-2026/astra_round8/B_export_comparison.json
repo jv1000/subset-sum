@@ -1,0 +1,31 @@
+{
+  "ball_comparisons": {
+    "base_M1": "PASS: enclosures overlap; independently established moment inequality survives",
+    "base_M2": "PASS: enclosures overlap; independently established moment inequality survives",
+    "K16_M1": "PASS: enclosures overlap; independently established moment inequality survives",
+    "K16_M2": "PASS: enclosures overlap; independently established moment inequality survives"
+  },
+  "proved_bad_bound_exports": [
+    {
+      "file": "cert_base_512.json",
+      "field": "margins_lower/C8",
+      "display": "13965164495327373/100000000000000000",
+      "issue": "claimed lower bound is above independent upper endpoint",
+      "own_interval": "[0.13965164495327371651381293553496415, 0.13965164495327371651381293553496416]"
+    },
+    {
+      "file": "cert_K16_512x32.json",
+      "field": "moments/1/log2_upper",
+      "display": "2592386736159707/5000000000000000",
+      "issue": "claimed upper bound is below independent lower endpoint",
+      "own_interval": "[0.51847734723194144144065695331465011, 0.51847734723194144144065695749614263]"
+    }
+  ],
+  "base_gap_field": {
+    "reported": "286991/2500000000",
+    "true_T_gap": "286491/2500000000",
+    "difference": "1/5000000",
+    "interpretation": "reported field compares internal tau0, not final threshold T"
+  },
+  "status": "PROVED: these two exported bounds are invalid as directed decimal bounds; ball comparisons pass. Not a failure of the mathematical candidate."
+}

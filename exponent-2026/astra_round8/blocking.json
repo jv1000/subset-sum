@@ -1,0 +1,15 @@
+{
+  "status": "PROVED for the stated continuous-circle sufficient budget and p in [1,10]",
+  "tau_upper": ".484",
+  "p_interval": [
+    "1",
+    "10"
+  ],
+  "cells": 9000,
+  "Delta_min": "[0.04240042229244709282919933346200010, 0.04240042229244709282919933346200011]",
+  "coefficient_C": "[2.64940139327794330182495834137500634, 2.64940139327794330182495834137500635]",
+  "minimum_cell_lower_bound": "[0.00461138323631385258036194548894194, 0.00461138323631385258036194548894195]",
+  "p_equals_1_margin": "[0.21300774105536240391344140978398532, 0.21300774105536240391344140978398533]",
+  "controls": "PASS: elementary p=1 gamma identity and p=0 normalization",
+  "elapsed_seconds_evidence": 1.547000000020489
+}

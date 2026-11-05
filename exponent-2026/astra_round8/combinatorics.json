@@ -1,0 +1,18 @@
+{
+  "middle_counterexample": {
+    "3": "19/56",
+    "4": "12/35"
+  },
+  "excluded_k2_case": {
+    "Q": "29/28",
+    "a_t": "7/20",
+    "a_k": "2/5",
+    "status": "Must remain outside YP-Hall domain: t+2k=7>m=6"
+  },
+  "few_valued_counterexample_to_072": "1",
+  "status": "PROVED for exact enumerated cases only; general theorems require proofs",
+  "k1_t2_instances": 1946,
+  "two_special_family_instances": 52,
+  "generic_controls": "PASS",
+  "elapsed_seconds_evidence": 0.1720000000204891
+}
