@@ -1,0 +1,3 @@
+# Store every file byte for byte. The snapshot manifests (exponent-2026/MANIFEST_*.sha256) hash the exact bytes,
+# including Windows line endings; git's line-ending conversion would make them fail to verify after a clone.
+* -text

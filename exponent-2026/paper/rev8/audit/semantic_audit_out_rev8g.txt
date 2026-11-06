@@ -1,0 +1,31 @@
+OK  exponent T (base)                  printed 0.4875754036  true 0.4875754036           need eq   
+OK  time exponent (base)               printed 0.4875755     true 0.4875754036           need up   
+OK  title                              printed 0.48758       true 0.4875754036           need up   
+OK  exponent K16                       printed 0.4894615727  true 0.4894615727           need eq   
+OK  time exponent K16                  printed 0.4894616     true 0.4894615727           need up   
+OK  exponent ternary                   printed 0.4873407528  true 0.4873407528           need eq   
+OK  time exponent ternary              printed 0.4873408     true 0.4873407528           need up   
+OK  gap vs JoshuaQFEX                  printed 1.005e-4      true 0.0001005964           need down 
+OK  gap vs Bills                       printed 9.689e-5      true 9.68964e-5             need down 
+OK  gap ternary vs Bills               printed 3.315e-4      true 0.0003315472           need down 
+OK  gap vs Base tau0                   printed 1.14e-4       true 0.0001145964           need down 
+OK  gap ternary vs base                printed 2.34e-4       true 0.0002346508           need down 
+OK  gap ternary vs JQ                  printed 3.35e-4       true 0.0003352472           need down 
+OK  ternary a                          printed 0.0035141538  true 0.0035141538           need eq   
+OK  ternary c                          printed 0.0035141537  true 0.0035141537           need eq   
+OK  eps0 lower bound                   printed 1.3156e-6     true 1.3156702338416802e-06 need down 
+OK  C4 margin                          printed 1.3156e-6     true 1.3156702338416802e-06 need down 
+OK  M1 margin                          printed 1.315e-6      true 1.3154487148495622e-06 need down 
+OK  M2 margin                          printed 1.494e-6      true 1.494035330313609e-06  need down 
+OK  B3 margin                          printed 8.1e-7        true 8.12458704e-07         need down 
+OK  S3 left side (must be small)       printed 0.12946       true 0.129454739181         need up   
+OK  delta at our point (must be large) printed 0.0698        true 0.0698258224766        need down 
+OK  floor at our Delta                 printed 0.48565153115 true 0.48565153115          need down 
+OK  distance floor to T (rev8e)        printed 1.92e-3       true 0.00192387245          need down 
+OK  floor, abstract                    printed 0.4856        true 0.48565153115          need down 
+OK  our Delta                          printed 0.0286969377  true 0.0286969377           need eq~  
+OK  Psi(1) threshold                   printed 0.697         true 0.697007741055         need eq~  
+OK  pair-bound coefficient             printed 2.6494        true 2.64940139328          need eq~  
+OK  C1 slack times mu                  printed 6.3e-7        true 6.25446526732e-7       need about 
+
+29 rows, 0 problems
