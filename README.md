@@ -2,12 +2,25 @@
 
 Jennifer Voitle's research on worst-case Subset Sum.
 
-**Current paper:** [`Voitle_SubsetSum_certified-0.48758_2026-11-06_rev8g.pdf`](Voitle_SubsetSum_certified-0.48758_2026-11-06_rev8g.pdf)
+## Two papers, one exponent
+
+| Paper | What it establishes | Files |
+|---|---|---|
+| **A self-contained proof of the exponent threshold 0.4875754036 for worst-case Subset Sum** (preprint, November 2026) | The threshold *T = 0.4875754036* as a theorem with a complete written proof. Every non-numerical lemma is proved in the paper itself, so the result assumes no statement of another preprint. | [`selfcontained-2026/`](selfcontained-2026/) |
+| **A certified exponent of 0.48758 for worst-case Subset Sum, and limits of the alias–checksum analysis** (6 November 2026; hexagon:2611.00178) | The same threshold, **conditionally** on the non-numerical lemmas of the OpenAI paper and of A. Kapila's proof. Also: limits of the analysis, and a further conditional exponent. | [`Voitle_SubsetSum_certified-0.48758_2026-11-06_rev8g.pdf`](Voitle_SubsetSum_certified-0.48758_2026-11-06_rev8g.pdf), [`exponent-2026/`](exponent-2026/) |
+
+The self-contained paper is the later one. It does not lower the exponent: it removes the condition under which
+the earlier paper stated it. Its numerical premises are certified in ball arithmetic. It has been reviewed and
+audited by a second AI system with the sources open; Section 13 of the paper gives the verification status of every
+statement. **Neither paper has been refereed.**
+
+## The earlier paper: status (6 November 2026)
+
+**Paper:** [`Voitle_SubsetSum_certified-0.48758_2026-11-06_rev8g.pdf`](Voitle_SubsetSum_certified-0.48758_2026-11-06_rev8g.pdf)
 (draft, 6 November 2026; source [`exponent-2026/paper/rev8/paper_2026-11-06_rev8g.tex`](exponent-2026/paper/rev8/paper_2026-11-06_rev8g.tex)).
 Companion proof of the ternary alias step: [`SECTION_T_v3.pdf`](SECTION_T_v3.pdf).
-Not peer reviewed.
-
-## Status (6 November 2026)
+Not peer reviewed. This section describes that paper as it stood on 6 November; the lemmas it assumes are proved
+in the self-contained paper.
 
 **Main result (Theorem 1).** Assume the non-numerical lemmas of the OpenAI paper and of Base's written proof.
 Then there is a uniform randomized algorithm for Subset Sum in the word-RAM model that halts on every execution and
@@ -32,7 +45,21 @@ on the first filtering moment for every filter, which rules out the original Ope
 exponent 0.484; the counting floor (1 − Δ)/2 for designs that enumerate every alias class; and an independent
 certification of the 430 moment premises of the Base/Wharton bound (also certified independently by Bills).
 
-## Verify the main claim yourself
+## Verify the numerical claims yourself
+
+Self-contained paper (about ten seconds; Python 3.12 and python-flint 0.9.0):
+
+```
+pip install -r selfcontained-2026/requirements.txt
+cd selfcontained-2026/certificates
+python certify_selfcontained.py candidate_base.json 512 32 0.1 0.25 > my_run.json
+```
+
+The run exits with status 0 only if every premise holds, and `my_run.json` should equal the stored
+`cert_selfcontained_512.json` except for the running time and the Python version. Details are in
+[`selfcontained-2026/README.md`](selfcontained-2026/README.md).
+
+Earlier paper:
 
 ```
 pip install python-flint numpy
@@ -52,12 +79,14 @@ certified parameter point `lab_notebook/candidate_base.json`.
 
 Files are only ever added, never edited, after they are fingerprinted, so every snapshot still verifies
 (`cd exponent-2026 && sha256sum -c MANIFEST_5.sha256`). For that reason `exponent-2026/README.md` still describes the
-state of 4 November; this page is the current summary.
+state of 4 November; this page is the current summary. The folder `selfcontained-2026/` was added on 17 November
+2026 and is not part of those snapshots.
 
 ## Folders
 
 | Folder | What |
 |---|---|
+| `selfcontained-2026/` | The self-contained paper (PDF and LaTeX source) and its certificate: the parameter point, two scripts and their stored output. |
 | `exponent-2026/` | The research record: lab notebooks, pre-registrations, independent referee reports and their scripts, certificates, and every revision of the paper (`paper/rev8/` holds the current one). |
 | `references/` | Links to, and SHA-256 fingerprints of, the papers this work builds on. They are not redistributed. |
 
@@ -71,6 +100,7 @@ An independent route below 1/2: B. Li and L. Ye, *Subset Sum via Partial Match*,
 
 The research was carried out by Jennifer Voitle with AI systems: Claude (Anthropic), including Claude Fable 5.1 as an
 independent reviewer, and Astra (an OpenAI-based assistant). Their contributions are described in Section 11 of the
-paper; they are credited in the text, not as authors. The author takes full responsibility for the content.
+earlier paper. For the self-contained paper the systems were Claude Fable 5.2 (Anthropic) and GPT-6 Astra (OpenAI);
+Sections 1.2 and 13 of that paper say what each did. They are credited in the text, not as authors. The author takes full responsibility for the content.
 
 Questions and corrections are welcome as GitHub issues on this repository.

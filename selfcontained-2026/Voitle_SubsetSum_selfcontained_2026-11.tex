@@ -1,0 +1,2571 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{booktabs,longtable,array}
+\usepackage[hidelinks]{hyperref}
+\allowdisplaybreaks
+\emergencystretch=3em
+\tolerance=2000
+
+\newtheorem{theorem}{Theorem}
+\newtheorem*{thmA}{Theorem A}
+\newtheorem*{thmB}{Theorem B}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{corollary}[lemma]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[lemma]{Definition}
+\newtheorem{remark}[lemma]{Remark}
+\newtheorem{procedure}[lemma]{Procedure}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Tc}{\mathbb T}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\bc}{\bar c}
+\newcommand{\abs}[1]{\lvert #1\rvert}
+\newcommand{\floor}[1]{\lfloor #1\rfloor}
+\newcommand{\ceil}[1]{\lceil #1\rceil}
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\av}[1]{\langle #1\rangle}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\Ntr}{N_{\mathrm{tr}}}
+\newcommand{\key}{\mathsf k}
+\newcommand{\pat}{\operatorname{pat}}
+\DeclareMathOperator{\KL}{KL}
+
+\title{A self-contained proof of the exponent threshold $0.4875754036$ for worst-case Subset Sum\\[2pt]
+\large Preprint --- not refereed}
+\author{Jennifer Voitle\\ Independent researcher}
+\date{November 2026}
+\hypersetup{pdftitle={A self-contained proof of the exponent threshold 0.4875754036 for worst-case Subset Sum},
+ pdfauthor={Jennifer Voitle}}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+We give a complete written proof that Subset Sum on $n$ positive integers of polynomial bit length is decided by a
+randomized word-RAM algorithm in time $O(2^{T'n})$ for every fixed $T'>T=0.4875754036$, in particular in time
+$O(2^{0.4875755n})$. The threshold $T$ was reported earlier by the author, conditionally on the non-numerical
+lemmas of two preprints; the contribution of this paper is the derivation that removes that condition.
+The algorithm is the one introduced by OpenAI (isolation, a capped preliminary search, a
+filtered modular checksum, subtraction of aliases) with the alias step of A.~Kapila (one large shared block, sparse
+masks, alias phase sums) and a single asymmetric checksum filter. Those ideas are theirs. What is done here is
+different in kind: every non-numerical lemma that the result uses is stated with its hypotheses and proved in this
+text, so that the argument can be checked without accepting unproved statements from other preprints. The numerical
+inequalities that the proof uses are listed explicitly and matched one by one to a ball-arithmetic certificate,
+whose analytic error bounds are also proved here. The theorem has no mathematical hypothesis beyond two cited
+classical theorems and those certified inequalities.
+The manuscript also records, statement by statement, how each proof was obtained and which independent checks are
+still open. It has been reviewed and audited, with the sources open, by a second
+AI system; it has not been refereed.
+\end{abstract}
+
+\tableofcontents
+
+\section{Main result, provenance and credits}\label{sec:result}
+
+\paragraph{Related results.} From 1974 until October 2026 the best known exponent for worst-case Subset Sum was
+$1/2$, the exponent of the meet-in-the-middle algorithm of Horowitz and Sahni~\cite{HS}; the first worst-case
+improvement on that algorithm, by Chen, Jin, Randolph and Servedio~\cite{CJRS}, was by a polynomial factor. In
+October 2026 OpenAI~\cite{OAI} and, independently and by a different method, Li and Ye~\cite{LY} gave algorithms
+with exponent below $1/2$. Within a few weeks a sequence of manuscripts lowered the exponent of the OpenAI
+construction to about $0.4876$. The table lists these results. An algorithm with exponent $c$ runs in time about
+$2^{cn}$, so a smaller exponent is a stronger result.
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.21\linewidth}%
+>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}@{}}
+\toprule
+Exponent & Work & Method & Status of the proof\\
+\midrule
+$1/2$ & Horowitz and Sahni~\cite{HS}, 1974 & meet in the middle & published\\
+$1/2$, with time $2^{n/2}/\poly(n)$ & Chen, Jin, Randolph and Servedio~\cite{CJRS}, 2023 & meet in the middle,
+improved by a polynomial factor & published\\
+$1/2-1/450000$ $\approx0.4999978$ & Li and Ye~\cite{LY}, 7~October 2026 & representation technique; partial match
+by depth-2 linear circuits & preprint\\
+$0.49$ & OpenAI~\cite{OAI}, 4~October 2026 & isolation, preliminary search, filtered modular checksum, subtraction
+of aliases & manuscript\\
+$0.4877$ & Kapila~\cite{Base}, 14~October 2026 & OpenAI's construction with a new alias step and 43 filters & manuscript; uses
+lemmas of~\cite{OAI}\\
+$0.487676$ & Wharton~\cite{W}, 20~October 2026 & Kapila's construction with retuned parameters & manuscript; conditional
+on~\cite{Base}\\
+$0.4876723$ & Bills~\cite{B}, 21~October 2026 & Kapila's construction with the certificate boundary of one filter moved &
+manuscript; conditional on~\cite{Base}\\
+$0.4875754036$ & the author~\cite{V}, November 2026 & Kapila's construction with one asymmetric filter in place of 43 & preprint;
+numerical premises certified; conditional on the non-numerical lemmas of~\cite{OAI} and~\cite{Base}\\
+$0.4875754036$ & this paper & the algorithm and parameter point of~\cite{V} & every lemma proved in the text;
+numerical premises certified; not refereed\\
+\bottomrule
+\end{tabular}
+\end{center}
+In the last two rows the number is a threshold: the theorem gives every exponent above it.
+
+\paragraph{Why this paper was written.} The exponents below $0.49$ were obtained within a few weeks, and each rests
+on the ones before it. The proof in~\cite{Base} uses lemmas of~\cite{OAI}. The results of~\cite{W} and~\cite{B}
+retune the construction of~\cite{Base} and are conditional on its proof. The author's earlier preprint~\cite{V}
+certifies the numerical conditions at a new parameter point with a single filter, and states its theorem under the
+assumption that the non-numerical lemmas of~\cite{OAI} and~\cite{Base} hold. To the author's knowledge none of
+these manuscripts has been refereed, and they differ in notation and conventions. A reader who wants to check the
+exponent $0.4875754036$ therefore has to work through three manuscripts and to verify, wherever one relies on
+another, that the hypotheses of the cited statement are met at the new parameters.
+
+This paper removes that dependence. It does not lower the exponent and it introduces no new algorithmic idea: the
+algorithm and the parameter point are those of~\cite{V}, with the small changes recorded in
+Section~\ref{sec:sources}. What it adds is a single document in which the algorithm is specified in full, every
+non-numerical lemma that the result uses is stated with its hypotheses and proved in one notation, and the numerical
+premises are listed explicitly and certified. The threshold of~\cite{V} thereby becomes a theorem that assumes no
+statement of another preprint (Theorem~\ref{thm:main}). To the author's knowledge it is the smallest exponent
+claimed for worst-case Subset Sum at the date of this manuscript. A complete written proof is not the same as a
+verified one: Sections~\ref{sec:status} and~\ref{sec:verification} state what has been checked, by whom and how, and what
+has not.
+
+\subsection{The theorem}
+An instance of Subset Sum consists of $n\ge2$ positive integers $a_1,\dots,a_n$ and a nonnegative integer $t$; the
+question is whether some $I\subseteq[n]=\{1,\dots,n\}$ has $a(I):=\sum_{i\in I}a_i=t$. Equal integers and the empty
+set are allowed. Let $b\ge1$ be the largest bit length among $t,a_1,\dots,a_n$. The machine model is fixed in
+Section~\ref{sec:model}. Throughout, $\log$ is the logarithm to base $2$ and
+$h(x)=-x\log x-(1-x)\log(1-x)$ is the binary entropy.
+
+\begin{theorem}[main result]\label{thm:main}
+Let $T=0.4875754036$. There is a single randomized program for Subset Sum on the word RAM of
+Section~\ref{sec:model} with the following properties.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item On every input with $n\ge2$ it halts on every execution, and it returns the correct answer with probability at
+least $2/3$ over its own random words. This holds for \textsc{yes} instances and for \textsc{no} instances.
+\item For every fixed positive integer $c$ and every fixed real $T'>T$ there are constants $C$ and $N$ such that
+every input with $n\ge N$ and $b\le n^c$ is processed in at most $C\,2^{T'n}$ word operations, on every outcome of
+the random choices. In particular the running time is $O(2^{0.4875755\,n})$. The program depends on neither $c$ nor
+$T'$.
+\end{enumerate}
+\end{theorem}
+
+\paragraph{Status of the proof.} A complete written proof of Theorem~\ref{thm:main} is given in this paper and its
+numerical premises are certified. The written proof has had a cross-model review and audit, and it has not been
+refereed. Section~\ref{sec:status} says what was checked, by which system and how.
+
+The intermediate bound, valid on every execution on an input that passes the guard of Section~\ref{sec:params}, is
+$K_0\,2^{(\tau_0+20\eps)n+2n^{0.7}}(n+b+2)^{K}$ with $\tau_0+20\eps=T$ exactly (Proposition~\ref{prop:time}).
+The exponent is never rounded downward: $0.4875754$ would \emph{not} be a valid statement of the result. The
+number $T$ is a threshold: the theorem gives every exponent $T'>T$, not $T$ itself.
+
+\paragraph{Integer inputs of either sign.} The theorem is stated for positive $a_i$ and $t\ge0$. Arbitrary integers
+reduce to this case by a standard preprocessing step, which is not used elsewhere in the paper. Let
+$\mathcal N=\{i:a_i<0\}$. For $I\subseteq[n]$ one has $\sum_{i\in I\triangle\mathcal N}\abs{a_i}=a(I)-a(\mathcal N)$,
+and $I\mapsto I\triangle\mathcal N$ is a bijection of the subsets of $[n]$; so the instance $(a,t)$ is equivalent
+to the instance with weights $\abs{a_i}$ and target $t-a(\mathcal N)$, which is answered \textsc{no} at once if
+that target is negative. Indices with $a_i=0$ are deleted (if fewer than two weights remain the instance is decided
+by inspection). The bit length grows by at most $\ceil{\log(n+1)}$, so polynomial bit length is preserved.
+
+\paragraph{Structure of the proof.} The argument has four parts, and each depends only on the ones before it.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item \emph{A dichotomy.} Isolation (Lemma~\ref{lem:iso}) replaces the instance by polynomially many targets $t_s$,
+one of which, on a \textsc{yes} instance, has a unique solution with probability at least $11/12$. The calculus of
+deficiencies (Lemmas~\ref{lem:def}--\ref{lem:fmono}) shows that for each fixed choice of tie weights either the
+low-deficiency condition \textup{(LD)} holds, or the capped preliminary search returns a correct answer except with
+probability at most $8/(\zeta^2n)+n2^{-n^3}$, for $n>1/\zeta$ (Proposition~\ref{prop:P}).
+\item \emph{Theorem~A} (Section~\ref{sec:alias}). Under \textup{(LD)}, for a random prime $P$ the phase sums over all
+\emph{aliases} of every target (subsets whose sum agrees with the target modulo $P$ only) are computed within the
+work budget. The inputs are the averaged small-layer bound (Corollary~\ref{cor:D}), collisions modulo random primes
+(Lemma~\ref{lem:primes}) and the trial count (Lemma~\ref{lem:A3}).
+\item \emph{Theorem~B} (Sections~\ref{sec:filter}--\ref{sec:checksum}). For random phases, the phase sum over
+\emph{all} subsets in a residue class modulo $P$ is computed within the budget. The inputs are the bounds for the
+filter functions, the two certified moments \textup{(M1)}, \textup{(M2)} transferred to the finite circle
+(Lemma~\ref{lem:B1}), and the tables and inverse-multiplicity sampling of Section~\ref{sec:checksum}.
+\item \emph{Assembly} (Sections~\ref{sec:final}--\ref{sec:time}). The difference of the two sums is the phase sum
+over exact solutions (Lemma~\ref{lem:cancel}), which is $0$ on a \textsc{no} instance and has modulus $1$ for an
+isolated target. Caps on every loop turn the expected-work bounds into bounds valid on every execution.
+\end{enumerate}
+Section~\ref{sec:cert} certifies the numerical premises and Section~\ref{sec:limits} states the limits of the
+analysis.
+
+\subsection{What is proved here, what is certified, what is cited}\label{sec:status}
+The proof of Theorem~\ref{thm:main} has three kinds of ingredients.
+\begin{description}[leftmargin=1.5em]
+\item[Written proofs.] Every lemma, proposition and theorem in Sections~\ref{sec:model}--\ref{sec:time} is proved
+in the text. No step is of the form ``as shown in'' another preprint.
+\item[Certified numerics.] The proof uses the scalar inequalities \textup{(E0)}, \textup{(C1)--(C8)},
+\textup{(N1)--(N14)} and the
+two moment inequalities \textup{(M1)}, \textup{(M2)} of Section~\ref{sec:params}, at the frozen parameter point
+given there. They are verified in ball arithmetic by the certificate script supplied with this paper
+(Section~\ref{sec:cert}). The independently written implementations of the moment computation are those reported
+in~\cite{V}; they are historical checks and are not supplied here. The analytic bounds on which the moment certificate relies are proved in
+Lemma~\ref{lem:strip}. A certificate is a proof of a numerical inequality; it is not a proof of the lemmas.
+\item[Cited classical results.] Two published theorems are used and not re-proved: an explicit lower bound for the
+number of primes in $(x,2x]$ (Rosser and Schoenfeld~\cite{RS}; used in Lemma~\ref{lem:primes}) and, inside the
+certificate only, the trapezoid-rule error bound for analytic periodic functions (Trefethen and
+Weideman~\cite{TW}). Elementary inequalities (Markov, Chebyshev, Cauchy--Schwarz, Jensen) are used freely; the
+Azuma--Hoeffding inequality is proved in the form we need (Lemma~\ref{lem:azuma}). The proof of
+Lemma~\ref{lem:strip} also uses textbook analysis without citation: the Fourier series of an entire periodic
+function, Parseval's identity and Cauchy's theorem.
+\end{description}
+The open combinatorial statement called \textup{[S]} in~\cite{V} (``small slices are robust'') is \emph{not} used
+anywhere in this paper; the conditional exponent $0.4873407528$ of~\cite{V} is not claimed here.
+
+\paragraph{Logical status and verification status.} These are different things and we keep them apart.
+\emph{Logically}, Theorem~\ref{thm:main} has no hypothesis: its proof rests on the three ingredients above and on
+nothing else, and in particular it assumes no statement of~\cite{OAI} or~\cite{Base}. Whether the written proofs
+are correct is a question of \emph{verification}, and a review is evidence about that question, not a premise of
+the theorem. Section~\ref{sec:verification} gives the verification status of every statement group. In brief: all
+proofs in this text were reconstructed by an AI system, Claude Fable~5.2 (Anthropic; below ``Claude''), working from
+the sources~\cite{OAI,Base}, and then
+rewritten; three groups (the small-layer lemmas, the one-trial lemma, the domination step) had earlier been
+re-derived by two different AI systems with partial blindness. A source-aware reconstruction is not an independent
+proof. Blind re-derivations from statement-only
+packets were made for most statement groups (Section~\ref{sec:verification}). The manuscript was then reviewed by a different AI system, GPT-6
+Astra (OpenAI, at its high reasoning setting; below ``Astra''), with the sources open: it traced the main proof chain, checked the analytic basis of the certificate
+against the code and re-ran the certificate. It then re-derived the small-layer lemmas and the one-trial lemma
+from their statements and audited the rest of the proof chain with the manuscript open
+(Section~\ref{sec:verification}). None of this is a blind re-derivation or a formal verification, and no human referee
+has read the manuscript. That is the basis of the status stated after Theorem~\ref{thm:main}.
+
+\subsection{Credits}
+The architecture (tie weights and isolation, the capped preliminary search, the deficiency dichotomy, the
+random-phase modular checksum with block tables, patterns, inverse-multiplicity sampling, and alias subtraction) is
+due to OpenAI~\cite{OAI}; it builds on the isolation lemma of Mulmuley, Vazirani and Vazirani~\cite{MVV}, on meet in
+the middle~\cite{HS}, and on inverse-multiplicity sampling in the sense of Karp, Luby and Madras~\cite{KLM}. The alias step used here (one shared block with sparse masks, phase sums over alias
+classes, the sampled trial count, right classes, and the averaged small-layer bound, Corollary~\ref{cor:D}) and the
+treatment of the checksum error through nonnegative multipliers are due to A.~Kapila~\cite{Base}, whose manuscript
+proves the exponent $0.4877$. The parameter point and the single asymmetric filter are from~\cite{V}. The present
+text contributes the complete self-contained proof at that point, the explicit list of numerical premises, a small
+number of changes relative to the sources and explicit constants (Section~\ref{sec:sources}), and the disclosure of what has and has not
+been independently checked. No sentence of~\cite{OAI} or~\cite{Base} is reproduced; statements are re-expressed in
+the notation of this paper, which differs from both.
+
+\subsection{Parameters and numerical premises}\label{sec:params}
+The following decimals are exact rational numbers (the file \texttt{candidate\_base.json} of~\cite{V}, supplied
+again with this manuscript; its decimal strings are the authoritative values).
+\begin{center}
+\begin{tabular}{llp{0.56\linewidth}}
+\toprule
+Symbol & Value & Role\\
+\midrule
+$\tau_0$ & $0.4875752036$ & work exponent\\
+$\eta$ & $0.5162721413$ & the large prime $P$ has $\floor{\eta n}+1$ bits\\
+$\mu$ & $0.4752421539$ & the shared block $M$ has $m\approx\mu n$ elements\\
+$a$ & $0.0082379228$ & left masks have $k\approx am$ elements\\
+$\gamma$ & $0.0605824120$ & the small prime $P'$ has $\floor{\gamma m}+1$ bits\\
+$l$ & $0.4836347962$ & the left part $L$ has $\floor{ln}$ elements\\
+$r$ & $1-\mu-l=0.0411230499$ & the right part $R$ has about $rn$ elements\\
+$\kappa$ & $1.03465831$ & power applied to the filter densities\\
+$p_1,\ p_2$ & $8.45902160,\ 8.27015425$ & multipliers of the two moments ($p$ and $q_m$ in~\cite{V})\\
+$\eps,\ \zeta$ & $10^{-8},\ 10^{-8}$ & pattern accuracy; slack in the preliminary threshold\\
+$G_0$ & $10^{8}$ & guard coefficient\\
+$\rho_f,\ \rho_c$ & $\eta-1.5\cdot10^{-6},\ \rho_f-10^{-6}$ & finite-circle and continuous moment thresholds\\
+\bottomrule
+\end{tabular}
+\end{center}
+Derived constants: $\Delta=\eta-\tau_0=0.0286969377$, $\Gamma=2\tau_0-\eta=0.4588782659$, $a_\Gamma=\Delta/\Gamma$,
+$\delta=\tfrac12\bigl(\eta-\tfrac\mu2\log3\bigr)$, and $T=\tau_0+20\eps=0.4875754036$. The filter is the pair of real
+trigonometric polynomials $r,s$ of degree $16$ (sixteen cosine and sixteen sine coefficients each, eight decimals)
+listed in Appendix~\ref{app:filter}; Section~\ref{sec:filter} uses only the norms
+$\|r\|_{1}\le3.64$, $\|s\|_1\le3.60$ of their coefficient vectors, and the moment premises below depend on the
+coefficients themselves.
+
+\paragraph{Sizes.} For each $n$,
+\[
+ m=2\floor{\mu n/2},\quad \sigma=m/2,\quad k=\floor{am},\quad v=m-2k,\quad \abs L=\floor{ln},\quad \abs R=n-m-\abs L .
+\]
+
+\paragraph{Guard.} An input passes the guard if $G_0\ceil{\log(b+1)}\le n$. Then $b+2\le 2^{n/G_0+1}$. For each fixed
+$c$, every input with $b\le n^c$ passes the guard once $n\ge G_0\ceil{\log(n^c+1)}$.
+
+\paragraph{Scalar premises.} The proof uses exactly the following strict inequalities.
+\begin{align*}
+&\textup{(C1)}\ \gamma<\tfrac12h(2a) &&\textup{(C2)}\ l+(h(a)-\gamma)\mu<\tau_0\\
+&\textup{(C3)}\ r+(1-\gamma)\mu<\tau_0 &&\textup{(C4)}\ 1-\mu+\bigl(h(a)+h(\tfrac12-a)-\gamma\bigr)\mu-\eta<\tau_0\\
+&\textup{(C5)}\ h(\tfrac12-a)\mu+\tfrac12-\tau_0<\tau_0 &&\textup{(C6)}\ 0<r,\quad r<\tau_0,\quad l<\tau_0\\
+&\textup{(C7)}\ \mu(1-2a)<l &&\textup{(C8)}\ \tfrac\mu2\log3<\eta
+\end{align*}
+The \emph{slack} of an inequality is its right side minus its left side. Put
+\[
+ \eps_0=0.0000013156 ,
+\]
+an exact decimal. The proof uses \textup{(C1)--(C8)} in the following quantitative form.
+\begin{itemize}[leftmargin=3.2em]
+\item[\textup{(E0)}] Each of the inequalities \textup{(C1)--(C8)} has slack greater than $\eps_0$.
+\end{itemize}
+(Only \textup{(C2)--(C5)} and the last two parts of \textup{(C6)} are needed with the slack $\eps_0$; for the
+others positivity suffices.) The number $\eps_0$ is the least of these slacks, that of \textup{(C4)}, rounded down
+to five significant digits. It is fixed as a constant, rather than defined as the least slack, so that every
+inequality containing $\eps_0$ is an inequality between explicitly given numbers. Further:
+\begin{align*}
+&\textup{(N1)}\ \zeta+1/G_0<\eps_0 &&\textup{(N2)}\ \mu<\tau_0-\eps_0\\
+&\textup{(N3)}\ \tfrac12-\tau_0+\zeta<\delta &&\textup{(N4)}\ 4a<1\\
+&\textup{(N5)}\ \tfrac12h(2a)+h(a)<1-2a &&\textup{(N6)}\ \mu(1-2a)<\tfrac12\\
+&\textup{(N7)}\ h(a)<h(\tfrac12-a) &&\textup{(N8)}\ \tfrac12-\tau_0+\tfrac{\gamma\mu}2<\tau_0-\eps_0,\quad r+\tfrac12-\tau_0<\tau_0-\eps_0\\
+&\textup{(N9)}\ \eta/2<\tau_0 &&\textup{(N10)}\ \Delta>0,\quad\Gamma>0\\
+&\textup{(N11)}\ a_\Gamma\le\tfrac34 &&\textup{(N12)}\ p_1\ge1,\quad p_2\ge1\\
+&\textup{(N13)}\ \bigl(18+6\max(p_1,p_2)\bigr)\eps<\eta-\rho_f &&\textup{(N14)}\ \rho_c<\rho_f
+\end{align*}
+\paragraph{Moment premises.} With the functions $u,\omega$ of Section~\ref{sec:filter} on the continuous circle and
+$\Lambda(x)=2+2\cos x$,
+\[
+\textup{(M1)}\ \int_{\Tc}\Lambda(x)\,2^{p_1(\Delta-u(x))}\,dx<2^{\rho_c},\qquad
+\textup{(M2)}\ \int_{\Tc}\Lambda(x)\,2^{p_2(a_\Gamma\omega(x)-u(x))}\,dx<2^{\rho_c}.
+\]
+Section~\ref{sec:cert} reports the certified slacks; the least are $8.1\cdot10^{-7}$ for \textup{(N13)} and
+$1.3\cdot10^{-6}$ for \textup{(M1)} (as a logarithmic margin), \textup{(C4)} and \textup{(N1)}. (The margin of \textup{(E0)} is
+$7\cdot10^{-11}$ by construction; it is the distance from $\eps_0$ to the slack of \textup{(C4)} and plays no role
+in any threshold.) \textup{(N1)} and \textup{(N14)} are facts of exact decimal arithmetic:
+$\zeta+1/G_0=2\cdot10^{-8}$.
+Two consequences are used repeatedly. From \textup{(N3)} and $\tau_0<\tfrac12$: $\delta>\zeta=1/G_0$. From
+\textup{(E0)} for \textup{(C6)}, and from \textup{(C7)}: $l<\tau_0-\eps_0$, $r<\tau_0-\eps_0$ and
+$\mu(1-2a)<l<\tau_0-\eps_0$.
+
+\paragraph{Consequences for the sizes.} We collect the facts about the integers $m,\sigma,k,v,\abs L,\abs R$ that
+are used later; ``large $n$'' means $n\ge n_0$ for a threshold depending only on the constants above.
+\begin{enumerate}[label=\textup{(S\arabic*)}]
+\item $4k\le m$ (by \textup{(N4)}), hence $2k\le\sigma$; and $2\sigma=v+2k$.
+\item $v<\abs L$ and $v\le\floor{n/2}$ for large $n$. Indeed $v=m-2k<(1-2a)m+2\le\mu(1-2a)n+2$ (using $k>am-1$
+and $m\le\mu n$), while $\abs L\ge ln-1$ and
+$\floor{n/2}\ge n/2-1$; use \textup{(C7)} and \textup{(N6)}.
+\item $\binom\sigma k\binom vk\le2^{v}$ for all $n$ with $m\ge1$. Indeed $k/\sigma\le2a\le\tfrac12$ gives
+$\binom\sigma k\le2^{(m/2)h(2a)}$, and $\binom vk\le\binom mk\le2^{mh(a)}$ because $v\le m$ and $k/m\le a$; and $m\bigl(\tfrac12h(2a)+h(a)\bigr)<m(1-2a)\le v$
+by \textup{(N5)}.
+\item $\binom\sigma k\ge2^{\gamma m}$ for large $n$. Indeed $\binom\sigma k\ge2^{\sigma h(k/\sigma)}/(\sigma+1)$,
+$k/\sigma>2a-2/m$, and $h$ is concave with $h'(x)=\log\frac{1-x}{x}\le\log(1/a)$ for $x\ge a$; so
+$\sigma h(k/\sigma)\ge\tfrac m2h(2a)-\log(1/a)$, and \textup{(C1)} gives the claim once
+$m\bigl(\tfrac12h(2a)-\gamma\bigr)\ge\log(1/a)+\log(\sigma+1)$.
+\item $\binom mk\le2^{h(a)m}$ and $\binom m{\sigma-k}\le2^{h(1/2-a)m+1}$; and $h(a)<h(\tfrac12-a)$ by
+\textup{(N7)}. For the second bound, $(\sigma-k)/m\le\min\bigl(\tfrac12,\tfrac12-a+\tfrac1m\bigr)$, $h$ is increasing on
+$[0,\tfrac12]$ with $h'\le1$ on $[\tfrac13,\tfrac12]$, and $\tfrac12-a\ge\tfrac13$ because $a\le\tfrac16$.
+\item $\abs R\le rn+3$, $\abs L\le ln$, $\mu n-2<m\le\mu n$, and $\abs R\ge1$ for large $n$ by \textup{(C6)}.
+\end{enumerate}
+The entropy bounds $\binom Nj\le2^{Nh(j/N)}$ and $\binom Nj\ge2^{Nh(j/N)}/(N+1)$ used here are standard: the first
+follows from $1=\sum_i\binom Ni x^i(1-x)^{N-i}\ge\binom Njx^j(1-x)^{N-j}$ at $x=j/N$, and the second because at
+$x=j/N$ the $j$-th term is the largest of the $N+1$ terms.
+
+\subsection{Differences from the sources, and explicit constants}\label{sec:sources}
+Relative to the sources, this text makes the following changes, none of which alters a parameter or the exponent.
+(i) The prime-collision bound is stated with an explicit constant and without the factor $L$
+(Lemma~\ref{lem:primes}). (ii) The one-trial lemma is stated for the \emph{ideal} procedure, without cap and with
+exact samplers; the capped procedure is compared with it afterwards (Section~\ref{sec:thmA}). (iii) The bad-set
+argument needs $\delta>1/G_0$ in addition to \textup{(N3)}; both are recorded. (iv) With one filter the domination
+step is written with the exact rounding costs $3p_1\eps$ and $p_2(4a_\Gamma+3)\eps$; the uniform bound
+$6\max(p_1,p_2)\eps$ used by the certificate needs $a_\Gamma\le\tfrac34$, which is \textup{(N11)}. (v) All uniform
+bounds for the filter functions are derived for densities with sine terms. (vi) The cutoff $n_*$ beyond which the
+asymptotic argument applies is astronomically large; Section~\ref{sec:limits} says how large and why.
+
+\section{Computational model, isolation and deficiency}\label{sec:model}
+
+\subsection{The machine}
+We use the word RAM of~\cite{OAI}. The word length is
+\begin{equation}\label{eq:word}
+ w=\bigl\lceil 4\bigl(n+b+\log(n+2)\bigr)\bigr\rceil .
+\end{equation}
+Each input integer occupies one word of read-only memory. Unit-cost operations are: reading and writing a word,
+indirect addressing, comparison, addition, subtraction, multiplication, integer quotient and remainder by a nonzero
+divisor, bitwise Boolean operations and shifts, each with a constant number of $w$-bit operands; and the generation
+of one fresh uniformly random $w$-bit word. Arithmetic on longer integers is carried out by multiword routines and
+every word operation is charged. Randomness is one-way: a random word can be used again only if it has been stored.
+The algorithm is one finite program for all $n$ and $b$; nothing depending on $n$ is supplied to it.
+
+\emph{Conventions.} A ``step on integers of $B$ bits'' costs $\poly(B)$ word operations. All integers handled below
+have $O(b+n^2)$ bits, so every step costs $\poly(n+b)$ word operations; we say so where it matters.
+The integers $\ceil{\tau_0n}$, $\floor{\eta n}$ and the like are computed exactly from the decimal parameters, and
+the integers $\ceil{\sqrt n}$, $\ceil{2n^{0.6}}$ and $\ceil{n^{0.7}}$ used below are computed exactly in integer
+arithmetic, as the least integers $e$ with $e^2\ge n$, $e^5\ge32n^3$ and $e^{10}\ge n^7$ respectively; this costs
+$\poly(\log n)$ word operations.
+
+\subsection{Tie weights and isolation}
+Let $N_0$ be the power of two with $12n\le N_0<24n$. Draw $u_1,\dots,u_n$ independently and uniformly from
+$\{1,\dots,N_0\}$ (each is one plus the value of $\log N_0$ fair bits). Put
+\begin{equation}\label{eq:transform}
+ C=1+nN_0,\qquad c_i=Ca_i+u_i,\qquad t_s=Ct+s\quad(0\le s\le nN_0).
+\end{equation}
+There are $nN_0+1\le24n^2+1$ targets $t_s$. Since $a_i,t<2^b$ and $C\le24n^2+1$, every $c_i$, every $t_s$ and every
+signed sum $\sum_i\lambda_ic_i$ with $\lambda\in\{-1,0,1\}^n$ has absolute value below
+\begin{equation}\label{eq:bits}
+ 2^{\,b+3\log n+6}.
+\end{equation}
+
+\begin{lemma}[isolation]\label{lem:iso}
+\textup{(a)} For every value of the tie weights, some $I\subseteq[n]$ has $a(I)=t$ if and only if some
+$s\in\{0,\dots,nN_0\}$ and some $I\subseteq[n]$ have $c(I)=t_s$; more precisely, $c(I)=t_s$ holds if and only if
+$a(I)=t$ and $u(I)=s$.
+\textup{(b)} If the instance has a solution, then with probability at least $11/12$ over the tie weights there is an
+$s$ for which exactly one $I\subseteq[n]$ has $c(I)=t_s$.
+\end{lemma}
+\begin{proof}
+(a) $c(I)-t_s=C\,(a(I)-t)+(u(I)-s)$. Both $u(I)$ and $s$ lie in $[0,nN_0]$, so $\abs{u(I)-s}\le nN_0<C$. Hence
+$c(I)=t_s$ forces $a(I)=t$ and then $u(I)=s$; the converse is immediate, and every solution $I$ of the original
+instance satisfies $c(I)=t_{u(I)}$ with $0\le u(I)\le nN_0$.
+
+(b) Let $\mathcal F=\{I:a(I)=t\}\ne\varnothing$ and let $u_{\min}=\min_{I\in\mathcal F}u(I)$. Fix an index $i$ and the
+values $u_j$, $j\ne i$. The least value of $u(I)$ over the members of $\mathcal F$ that contain $i$ is $\alpha_i+u_i$,
+where $\alpha_i$ does not depend on $u_i$ (it is $+\infty$ if there is no such member); the least value over the
+members that do not contain $i$ is a number $\beta_i$ not depending on $u_i$. Call $i$ \emph{ambiguous} if both are
+finite and $\alpha_i+u_i=\beta_i$. For fixed $u_j$ ($j\ne i$) this happens for at most one value of $u_i$, so
+$\Pr[i\text{ ambiguous}]\le1/N_0$. If two distinct members $I\ne I'$ of $\mathcal F$ both attain $u_{\min}$, take
+$i\in I\triangle I'$; one of them contains $i$, the other does not, and both attain the overall minimum, so
+$\alpha_i+u_i=u_{\min}=\beta_i$ and $i$ is ambiguous. By the union bound the minimum is attained by a unique set
+$I^\ast$ with probability at least $1-n/N_0\ge11/12$. In that case let $s=u_{\min}$. By (a), the sets $I$ with
+$c(I)=t_s$ are the members of $\mathcal F$ with $u(I)=u_{\min}$, that is, only $I^\ast$.
+\end{proof}
+
+\subsection{Deficiency}
+Let $w$ be integer weights on a finite index set; signs and repetitions are allowed. For a finite set $V$ of
+indices,
+\begin{equation}\label{eq:def}
+ \Sigma(V)=\{w(I):I\subseteq V\},\qquad d(V)=\abs V-\log\abs{\Sigma(V)} .
+\end{equation}
+So $\abs{\Sigma(V)}=2^{\abs V-d(V)}$: the deficiency $d(V)$ measures how far the subset sums of $V$ are from being
+distinct.
+
+\begin{lemma}[deficiency]\label{lem:def}
+For arbitrary integer weights:
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $d(\varnothing)=0$ and $d(V)\ge0$.
+\item If $i\notin V$ then $0\le d(V\cup\{i\})-d(V)\le1$. Consequently $d(U)\le d(V)$ and $\Sigma(U)\subseteq\Sigma(V)$
+whenever $U\subseteq V$.
+\item If $U\cap V=\varnothing$ then $d(U\cup V)\ge d(U)+d(V)$.
+\item If $V'=(V\setminus\{i\})\cup\{j\}$ with $i\in V$, $j\notin V$, then $\abs{d(V)-d(V')}\le1$.
+\item \textup{(signs)} Let $F$ be a set of indices and let $w^F$ be obtained from $w$ by negating $w_i$ for
+$i\in F$. For $Z,F\subseteq V$,
+\begin{equation}\label{eq:sign}
+ w^F(Z)=w(Z\triangle F)-w(F).
+\end{equation}
+Hence, for any $F$, the set of subset sums of $V$ under $w^F$ is the translate $\Sigma(V)-w(F\cap V)$, and $d(V)$
+is the same for $w$ and for $w^F$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) $\Sigma(\varnothing)=\{0\}$, and $1\le\abs{\Sigma(V)}\le2^{\abs V}$. (b) $\Sigma(V\cup\{i\})=\Sigma(V)\cup(w_i+\Sigma(V))$
+has between $\abs{\Sigma(V)}$ and $2\abs{\Sigma(V)}$ elements, so $\log\abs\Sigma$ grows by an amount in $[0,1]$
+while $\abs V$ grows by $1$. Monotonicity follows by adding the elements of $V\setminus U$ one at a time.
+(c) $\Sigma(U\cup V)=\Sigma(U)+\Sigma(V)$ has at most $\abs{\Sigma(U)}\abs{\Sigma(V)}$ elements. (d) With
+$U=V\setminus\{i\}$, both $d(V)$ and $d(V')$ lie in $[d(U),d(U)+1]$ by (b). (e) For $Z,F\subseteq V$,
+$w(Z\triangle F)-w(F)=w(Z\setminus F)+w(F\setminus Z)-w(F)=w(Z\setminus F)-w(Z\cap F)=w^F(Z)$. For general $F$
+replace $F$ by $F\cap V$, which does not change $w^F$ on $V$. As $Z\mapsto Z\triangle(F\cap V)$ is a bijection of the
+subsets of $V$, the sums $w^F(Z)$, $Z\subseteq V$, are exactly the numbers $x-w(F\cap V)$, $x\in\Sigma(V)$.
+\end{proof}
+
+\subsection{Functions of a uniformly random subset}
+\begin{lemma}[Azuma--Hoeffding]\label{lem:azuma}
+Let $q\ge1$ and let $M_0,M_1,\dots,M_q$ be a martingale with $\abs{M_r-M_{r-1}}\le1$ for all $r$. Then for every
+$\lambda>0$,
+$\Pr[M_q-M_0\ge\lambda]\le e^{-\lambda^2/(2q)}$ and $\Pr[\abs{M_q-M_0}\ge\lambda]\le2e^{-\lambda^2/(2q)}$. Moreover
+$\E(M_q-M_0)^2=\sum_{r}\E(M_r-M_{r-1})^2\le q$; in particular, if $M_0$ is deterministic, then $\Var M_q\le q$.
+\end{lemma}
+\begin{proof}
+For $\abs y\le1$ and real $\theta$, convexity gives $e^{\theta y}\le\frac{1+y}2e^{\theta}+\frac{1-y}2e^{-\theta}$. If
+$Y$ has conditional mean zero and $\abs Y\le1$ then $\E[e^{\theta Y}\mid\text{past}]\le\cosh\theta\le e^{\theta^2/2}$.
+Applying this to the increments successively gives $\E e^{\theta(M_q-M_0)}\le e^{q\theta^2/2}$. By Markov's inequality
+$\Pr[M_q-M_0\ge\lambda]\le e^{q\theta^2/2-\theta\lambda}$; take $\theta=\lambda/q$. The two-sided bound follows by
+applying this to $-M$. Martingale increments are orthogonal in $L^2$, so
+$\E(M_q-M_0)^2=\sum_r\E(M_r-M_{r-1})^2$. If $M_0$ is deterministic then $M_0=\E M_q$ and the left side is
+$\Var M_q$. (Without that hypothesis the variance statement is false: a constant martingale $M_r=Z$ has zero
+increments and variance $\Var Z$.)
+\end{proof}
+
+\begin{lemma}[exchange-Lipschitz functions]\label{lem:subsets}
+Let $\Omega$ be a finite set, $0\le q\le\abs\Omega$, and let $g$ be a real function on the $q$-element subsets of
+$\Omega$ with $\abs{g(V)-g(V')}\le1$ whenever $V'$ arises from $V$ by exchanging one element. Let $V_q$ be a uniformly
+random $q$-subset of $\Omega$. Then $\Var g(V_q)\le q$, and for $q\ge1$
+\[
+ \Pr\bigl[g(V_q)-\E g(V_q)\ge\lambda\bigr]\le e^{-\lambda^2/(2q)},\qquad
+ \Pr\bigl[\abs{g(V_q)-\E g(V_q)}\ge\lambda\bigr]\le2e^{-\lambda^2/(2q)}\quad(\lambda>0).
+\]
+For $q=0$ the set $V_0=\varnothing$ is deterministic and both probabilities are $0$.
+\end{lemma}
+\begin{proof}
+For $q=0$ there is nothing to prove. Let $q\ge1$ and let
+$X_1,\dots,X_q$ be a uniformly random ordered sample from $\Omega$ without replacement; then
+$\{X_1,\dots,X_q\}$ is a uniform $q$-subset. Put $M_r=\E[g(\{X_1,\dots,X_q\})\mid X_1,\dots,X_r]$. This is a martingale
+with the deterministic initial value $M_0=\E g(V_q)$ and with $M_q=g(V_q)$. Fix a prefix $(x_1,\dots,x_{r-1})$ and two admissible values $i\ne j$ of $X_r$.
+Given $X_r=i$, the tail $(X_{r+1},\dots,X_q)$ is uniform over the ordered $(q-r)$-tuples of distinct elements of
+$\Omega\setminus\{x_1,\dots,x_{r-1},i\}$. Applying the transposition $(i\,j)$ to each entry maps this law to the law
+of the tail given $X_r=j$. Under this coupling the two final sets coincide if the tail contains $j$ (then both equal
+the prefix together with $i$, $j$ and the rest of the tail), and otherwise they differ by exchanging $i$ for $j$.
+Hence the two conditional expectations differ by at most $1$. So, given the prefix, the possible values of $M_r$
+lie in an interval of length at most $1$ that contains their mean $M_{r-1}$; thus $\abs{M_r-M_{r-1}}\le1$. Apply
+Lemma~\ref{lem:azuma}.
+\end{proof}
+
+\begin{lemma}[deficiency of random subsets]\label{lem:fmono}
+Fix integer weights on a finite set $\Omega$ and let $V_q$ denote a uniform $q$-subset of $\Omega$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\Var d(V_q)\le q$ and, for $q\ge1$ and $\lambda>0$,
+$\Pr[\abs{d(V_q)-\E d(V_q)}\ge\lambda]\le2e^{-\lambda^2/(2q)}$.
+\item $q\mapsto\E d(V_q)$ is nondecreasing.
+\item A uniform $q'$-subset of a uniform $q$-subset of $\Omega$ ($q'\le q$) is a uniform $q'$-subset of $\Omega$. If
+$M$ is a uniform $m$-subset of $\Omega$ and $L$ is a uniform $\ell$-subset of $\Omega\setminus M$, then $L$ is a
+uniform $\ell$-subset of $\Omega$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) By Lemma~\ref{lem:def}(d), $d$ is exchange-Lipschitz; apply Lemma~\ref{lem:subsets}. (b) Let $\pi$ be a uniform
+random ordering of $\Omega$. Its first $q$ entries form a uniform $q$-subset contained in the uniform
+$(q+1)$-subset formed by its first $q+1$ entries; apply Lemma~\ref{lem:def}(b) and take expectations. (c) In both
+cases the law of the resulting set is invariant under every permutation of $\Omega$, and the only
+permutation-invariant law on the subsets of a given size is the uniform one.
+\end{proof}
+
+From now on, when the tie weights are fixed, $d$ denotes the deficiency for the weights $c_1,\dots,c_n$ and
+\begin{equation}\label{eq:f}
+ f(q)=\E\,d(V_q)\qquad(V_q\text{ a uniform }q\text{-subset of }[n]).
+\end{equation}
+\section{Random primes, bounded samplers and finite-precision sums}\label{sec:prims}
+
+\subsection{Collisions modulo a random prime}
+\begin{lemma}[random primes]\label{lem:primes}
+Let $L\ge5$ be an integer and let $p$ be uniform among the primes of $[2^L,2^{L+1})$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item The interval contains more than $\tfrac35\,2^L/(L\ln2)$ primes; so a uniform integer of the interval is prime
+with probability greater than $c_\ast/L$, where $c_\ast=3/(5\ln2)>0.86$.
+\item If $D$ is a nonzero integer with $\abs D<2^B$, $B>0$, then $\Pr[p\mid D]\le\dfrac{B}{c_\ast2^{L}}<1.16\,B\,2^{-L}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) Rosser and Schoenfeld~\cite[Corollary~3]{RS}: $\pi(2x)-\pi(x)>3x/(5\ln x)$ for $x\ge20.5$. Take $x=2^L\ge32$.
+Neither $2^L$ nor $2^{L+1}$ is prime, so the primes of $(2^L,2^{L+1}]$ are those of $[2^L,2^{L+1})$. (b) Let
+$p_1<\dots<p_j$ be the distinct primes of the interval that divide $D$. Their product divides $D$, so
+$2^{Lj}\le\abs D<2^B$ and $j<B/L$. Divide by the number of primes from (a).
+\end{proof}
+The sources state the bound as $K\,B\,L\,2^{-L}$ with unspecified $K$; the proof above shows that the factor $L$ is
+not needed, because only prime divisors of size at least $2^L$ are counted.
+
+\subsection{Bounded samplers}\label{sec:samplers}
+The analysis uses exactly uniform draws; the machine has random words. We use the following bounded procedures, all
+of which either return a sample with exactly the intended law or report failure.
+
+\begin{lemma}[samplers]\label{lem:samplers}
+Let $n\ge2$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item \emph{Uniform integer.} For $1\le N\le2^{n^2}$ there is a procedure that returns an element of
+$\{0,\dots,N-1\}$ or fails; it fails with probability at most $2^{-n^3}$, and conditional on not failing its output
+is uniform. It uses $\poly(n)$ word operations.
+\item \emph{Uniform subset, Bernoulli.} A uniform $j$-subset of a set of size $N\le n$ and a Bernoulli variable of
+rational parameter $P_1/P_2$ ($P_2\le 2^{n^2}$) are obtained from (a), with failure probability at most $n2^{-n^3}$
+and $2^{-n^3}$ respectively, and exact conditional laws.
+\item \emph{Uniform prime.} For $5\le L\le n$ there is a procedure that returns a prime of $[2^L,2^{L+1})$ or fails; it
+fails with probability at most $e^{-c_\ast n^2}+n^32^{-n^3}$; conditional on not failing its output is uniform among
+the primes of the interval; and it uses at most $n^3\cdot2^{(L+1)/2}$ trial divisions on $(L+1)$-bit integers, plus
+$\poly(n)$ word operations.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) Let $\ell=\ceil{\log N}$. Draw $\ell$ fresh fair bits (low bits of random words), read them as an integer $x$,
+accept if $x<N$, otherwise repeat, at most $n^3$ times; for $N=1$ return $0$. Each attempt accepts with probability
+$N/2^\ell>\tfrac12$ and, given acceptance, $x$ is uniform on $\{0,\dots,N-1\}$; the attempts are independent. So the
+failure probability is below $2^{-n^3}$ and the conditional law is uniform. (b) Choose the elements one after
+another, each uniform among the remaining ones, by (a): the probability of not failing at each stage does not depend
+on the element chosen, so conditional on no failure the set is uniform. For the Bernoulli variable test a uniform
+element of $\{0,\dots,P_2-1\}$ against $P_1$. (c) Repeat at most $n^3$ times: draw a uniform integer of
+$[2^L,2^{L+1})$ by (a) and test it for primality by dividing by $2,3,\dots,\floor{\sqrt{\cdot}}$ (the integer square
+root is found by binary search); stop at the first prime. Conditional on the draws not failing, each candidate is
+uniform on the interval and independent of the earlier ones, so the first prime found is uniform among the primes of
+the interval, and by Lemma~\ref{lem:primes}(a) all $n^3$ candidates are composite with probability at most
+$(1-c_\ast/L)^{n^3}\le e^{-c_\ast n^2}$ because $L\le n$.
+\end{proof}
+
+\paragraph{Coupling with ideal draws.} Call a run of an algorithm \emph{ideal} if every call of
+Lemma~\ref{lem:samplers} is replaced by an exact draw from the intended law. A real run and the ideal run can be
+defined on one probability space so that they coincide unless some sampler call of the real run fails. If the real
+run makes at most $2^{Kn}$ calls of types (a),(b) and at most $2^{Kn}$ calls of type (c) (the calls may be chosen
+adaptively; the failure bound of each call holds conditionally on the past), the two runs differ with probability at
+most
+\begin{equation}\label{eq:couple}
+ 2^{Kn}\bigl(n2^{-n^3}+e^{-c_\ast n^2}+n^32^{-n^3}\bigr)=o(1),
+\end{equation}
+a quantity depending only on $n$ and $K$.
+
+\subsection{Finite-precision complex sums}\label{sec:precision}
+Write $e_P(x)=\exp(2\pi\mathrm i\,x/P)$. The algorithm never needs exact complex numbers.
+
+\begin{lemma}[phases]\label{lem:phase}
+There is a deterministic rational-arithmetic procedure which, given integers $P\ge2$, $x$ and $Q\ge1$, returns a
+complex number with dyadic real and imaginary parts within $2^{-Q}$ of $e_P(x)$, in time polynomial in $Q$ and in the
+bit lengths of $P$ and $x$.
+\end{lemma}
+\begin{proof}
+Reduce $x$ modulo $P$. Compute a rational approximation of $\pi$ from
+$\pi/4=\arctan\tfrac12+\arctan\tfrac13$ and the alternating series $\arctan y=\sum_{j\ge0}(-1)^jy^{2j+1}/(2j+1)$,
+whose remainder after $J$ terms is below $y^{2J+1}$; hence the angle $\theta=2\pi x/P\in[0,2\pi)$ is obtained to
+within $2^{-Q-4}$ with $O(Q)$ terms. Evaluate $\cos$ and $\sin$ by their Taylor series at the approximate angle
+$\tilde\theta\in[0,7]$: the remainder after the term of degree $J$ is at most $7^{J+1}/(J+1)!$, which is below
+$2^{-Q-4}$ once $J\ge 40+Q$: then $(J+1)!\ge((J+1)/e)^{J+1}$ and $7e/(J+1)<\tfrac12$. Since $\cos$ and $\sin$ are $1$-Lipschitz, the angle error contributes
+at most $2^{-Q-4}$; a final rounding to $Q+3$ fractional bits contributes at most $2^{-Q-3}$. All intermediate
+rationals have numerators and denominators of $\poly(Q+\log P)$ bits.
+\end{proof}
+
+\begin{lemma}[products and sums]\label{lem:sums}
+Let $n\ge8$ and $\delta=2^{-2n^2}$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item If $z_0,\dots,z_j$ ($j\le n$) are complex numbers with $\abs{z_i}\le2$ and $\abs{\tilde z_i-z_i}\le\delta$, then
+$\bigl\lvert\prod_i\tilde z_i-\prod_iz_i\bigr\rvert\le(n+1)\,\delta\,(2+\delta)^{n}\le2^{-2n^2+n+\log(n+1)+1}$.
+\item Let $X=\sum_{i=1}^{N}\omega_i\zeta_i$ with $N\le2^{Kn}$, exact rational weights $\abs{\omega_i}\le2^{Kn}$, and
+complex $\zeta_i$ each known to within $2^{-2n^2+2n}$. If each product $\omega_i\tilde\zeta_i$ is rounded to $n^2$
+fractional bits before the additions, the computed sum $\tilde X$ satisfies
+$\abs{\tilde X-X}\le2^{Kn}\bigl(2^{Kn}2^{-2n^2+2n}+2^{-n^2+1}\bigr)\le2^{-n^2+(2K+3)n}$.
+\end{enumerate}
+In particular the error in \textup{(b)} is at most $1/16$ as soon as $n\ge2K+4$.
+\end{lemma}
+\begin{proof}
+(a) Telescoping,
+$\prod\tilde z_i-\prod z_i=\sum_{i}\bigl(\prod_{i'<i}\tilde z_{i'}\bigr)(\tilde z_i-z_i)\bigl(\prod_{i'>i}z_{i'}\bigr)$,
+and each of the $j+1\le n+1$ terms is at most $\delta(2+\delta)^{n}$. (b) Each term has error at most
+$2^{Kn}2^{-2n^2+2n}$ before rounding, and rounding the real and imaginary parts to $n^2$ fractional bits adds at
+most $2^{-n^2+1}$. Summing over $N\le2^{Kn}$ terms gives at most $2^{-2n^2+(2K+2)n}+2^{-n^2+Kn+1}$, and each of
+these two numbers is at most $2^{-n^2+(2K+3)n-1}$. The last sentence is
+arithmetic: $-n^2+(2K+3)n\le-4$ when $n\ge2K+4$.
+\end{proof}
+Dyadic numbers with $n^2$ fractional bits and absolute value at most $2^{2Kn}$ are added exactly with $n^2+O(n)$
+bits. Every comparison that the algorithm makes on approximate quantities is made on these stored dyadic values or
+on the fixed rational approximations of Section~\ref{sec:filter}, so repeated evaluations give identical results.
+\section{The preliminary search}\label{sec:prelim}
+Fix the tie weights. The following procedure is meet in the middle on \emph{distinct} sums, with a cap.
+
+\begin{procedure}[capped preliminary search]\label{proc:prelim}
+\begin{enumerate}[label=\arabic*.]
+\item Draw a uniform $\floor{n/2}$-subset $V$ of $[n]$ by Lemma~\ref{lem:samplers}(b). If the sampler fails, return
+\textsc{continue}.
+\item Build the sorted list of the distinct subset sums of $V$: start from the list $(0)$ and, for each $i\in V$ in
+turn, merge the current sorted list with its translate by $c_i$, deleting duplicates. If a merge is about to produce
+more than $B_n=2^{\ceil{\tau_0n}}$ distinct values, stop and return \textsc{continue}. Do the same for
+$[n]\setminus V$.
+\item For each $s=0,\dots,nN_0$, scan the first list upward and the second downward to decide whether some pair of
+entries sums to $t_s$. Return \textsc{yes} if this happens for some $s$, and \textsc{no} otherwise.
+\end{enumerate}
+\end{procedure}
+
+\begin{proposition}[preliminary search]\label{prop:P}
+For every value of the tie weights:
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item if Procedure~\ref{proc:prelim} returns \textsc{yes} or \textsc{no}, that is the correct answer for the
+instance $(a,t)$;
+\item for $n\ge8$, on every execution it performs at most $50\,n^3\,2^{\tau_0n}$ list operations (comparisons, additions and
+moves of integers of at most $b+3\log n+7$ bits), plus $\poly(n)$ operations for the sampler; hence at most
+$2^{\tau_0n}\poly(n+b+2)$ word operations;
+\item if
+\begin{equation}\label{eq:notLD}
+ \E\,d(V)>\bigl(\tfrac12-\tau_0+\zeta\bigr)n\qquad(V\text{ a uniform }\floor{n/2}\text{-subset of }[n])
+\end{equation}
+and $n>1/\zeta$, then $\Pr[\textsc{continue}]\le\dfrac{8}{\zeta^2n}+n2^{-n^3}$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a) If the procedure reaches Step~3, the two lists are $\Sigma(V)$ and $\Sigma([n]\setminus V)$ in full, because the
+intermediate lists are the sets $\Sigma(V')$ for prefixes $V'\subseteq V$. A pair of entries with sum $t_s$ exists if
+and only if some $I\subseteq[n]$ has $c(I)=t_s$. By Lemma~\ref{lem:iso}(a) such $s$ and $I$ exist if and only if the
+original instance has a solution.
+
+(b) There are $n$ merges; a merge of a list of at most $B_n$ entries with its translate takes at most $2B_n+2$
+comparisons and moves before it completes or is interrupted. Each of the at most $24n^2+1$ scans takes at most
+$2B_n$ steps. With $B_n\le2\cdot2^{\tau_0n}$ the total is at most $(2n+48n^2+2)(2B_n+2)\le50n^3\,2^{\tau_0n}$ for
+$n\ge8$. Entries are subset sums of the $c_i$, bounded by~\eqref{eq:bits}, and their translates.
+
+(c) Let $U$ be either $V$ or $[n]\setminus V$; it is a uniform subset of $[n]$ of size $\floor{n/2}$ or
+$\ceil{n/2}$. By Lemma~\ref{lem:fmono}(b) and~\eqref{eq:notLD}, $\E d(U)\ge f(\floor{n/2})>(\tfrac12-\tau_0+\zeta)n$,
+and by Lemma~\ref{lem:fmono}(a), $\Var d(U)\le n$. Chebyshev's inequality gives
+\[
+ \Pr\bigl[d(U)<(\tfrac12-\tau_0+\tfrac\zeta2)n\bigr]\le\frac{n}{(\zeta n/2)^2}=\frac4{\zeta^2n}.
+\]
+If this event occurs for neither side then, for each side,
+$\log\abs{\Sigma(U)}=\abs U-d(U)\le\tfrac n2+\tfrac12-(\tfrac12-\tau_0+\tfrac\zeta2)n=\tau_0n+\tfrac12-\tfrac{\zeta n}2<\tau_0n$
+when $n>1/\zeta$. By Lemma~\ref{lem:def}(b) no intermediate list is longer than the final one, so no merge is
+interrupted and the procedure returns \textsc{yes} or \textsc{no}. Add the sampler's failure probability.
+\end{proof}
+
+\begin{definition}[the low-deficiency condition]\label{def:LD}
+For fixed tie weights, \textup{(LD)} is the statement
+\begin{equation}\label{eq:LD}
+ f(\floor{n/2})=\E\,d(V)\le\bigl(\tfrac12-\tau_0+\zeta\bigr)n .\tag{LD}
+\end{equation}
+\end{definition}
+So, for each fixed choice of tie weights, either \textup{(LD)} holds or the preliminary search returns a correct
+answer except with probability at most $8/(\zeta^2n)+n2^{-n^3}$. The algorithm never evaluates $f$, and the outcome
+\textsc{continue} is \emph{not} evidence that \textup{(LD)} holds; \textup{(LD)} is used only inside proofs.
+With $\zeta=10^{-8}$ the bound in (c) is below $1/100$ only for $n\ge8\cdot10^{18}$; this is one of the reasons why
+the cutoff $n_\ast$ of the final algorithm is so large (Section~\ref{sec:limits}).
+\section{Small-layer estimates}\label{sec:layers}
+In this section $w$ denotes arbitrary integer weights on a finite index set (equal weights and both signs allowed).
+For a finite set $V$ of indices and $j\ge0$ put
+\[
+ \Sigma_j(V)=\{w(X):X\subseteq V,\ \abs X=j\},\qquad a_j(V)=\abs{\Sigma_j(V)}\Big/\binom{\abs V}{j}\quad(0\le j\le\abs V).
+\]
+Thus $a_j(V)\in(0,1]$ is the fraction of distinct values among the $j$-element subset sums, and
+$\Sigma(V)=\bigcup_j\Sigma_j(V)$.
+
+\begin{lemma}[covering]\label{lem:cover}
+Let $0\le k\le t\le\abs V$ and let $W$ be a uniform $(t-k)$-subset of $V$. Then $a_t(V)\le\E_W\,a_k(V\setminus W)$.
+\end{lemma}
+\begin{proof}
+For each $x\in\Sigma_t(V)$ choose one $t$-set $X_x\subseteq V$ with $w(X_x)=x$. Let $\Pi$ be the set of pairs
+$(x,W)$ with $x\in\Sigma_t(V)$, $W\subseteq X_x$, $\abs W=t-k$; so $\abs\Pi=\binom tk\abs{\Sigma_t(V)}$. The map
+$(x,W)\mapsto(W,\,x-w(W))$ is injective on $\Pi$, since $x$ is recovered as $(x-w(W))+w(W)$. Its second component
+is $w(X_x\setminus W)$, the sum of a $k$-subset of $V\setminus W$. Hence
+$\binom tk\abs{\Sigma_t(V)}\le\sum_{W}\abs{\Sigma_k(V\setminus W)}$, the sum over all $(t-k)$-subsets $W$ of $V$. With
+$N=\abs V$, divide both sides by $\binom Nt\binom tk=\binom N{t-k}\binom{N-t+k}{k}$ (both equal
+$N!/((N-t)!\,k!\,(t-k)!)$).
+\end{proof}
+
+\begin{lemma}[sampling]\label{lem:sample}
+Let $k\le s\le\abs V$ and let $S$ be a uniform $s$-subset of $V$. Then $\E_S\,a_k(S)\ge a_k(V)$.
+\end{lemma}
+\begin{proof}
+For each $x\in\Sigma_k(V)$ choose a $k$-set $X_x\subseteq V$ with $w(X_x)=x$. Then $x\in\Sigma_k(S)$ whenever
+$X_x\subseteq S$, an event of probability $\binom{N-k}{s-k}/\binom Ns=\binom sk/\binom Nk$ ($N=\abs V$). Summing over
+$x$, $\E\abs{\Sigma_k(S)}\ge\abs{\Sigma_k(V)}\binom sk/\binom Nk$; divide by $\binom sk$.
+\end{proof}
+
+\begin{lemma}[a good layer]\label{lem:good}
+For every $V$ there is $t$ with $2t\le\abs V$ and $\abs{\Sigma(V)}\le(\abs V+1)\abs{\Sigma_t(V)}$; in particular
+$a_t(V)\ge2^{-d(V)}/(\abs V+1)$.
+\end{lemma}
+\begin{proof}
+The $\abs V+1$ layers cover $\Sigma(V)$, so some $j$ has $\abs{\Sigma_j(V)}\ge\abs{\Sigma(V)}/(\abs V+1)$.
+Complementation $X\mapsto V\setminus X$ gives $\Sigma_{\abs V-j}(V)=w(V)-\Sigma_j(V)$, so $t=\min(j,\abs V-j)$ has the
+same property and $2t\le\abs V$. Finally $\binom{\abs V}{t}\le2^{\abs V}$ and $\abs{\Sigma(V)}=2^{\abs V-d(V)}$.
+\end{proof}
+
+\begin{corollary}[averaged small layer; Corollary~D of~\cite{Base}]\label{cor:D}
+Let $M$ be a finite index set with integer weights and let $k,\sigma,v$ be nonnegative integers with
+\[
+ 2k\le\sigma,\qquad 2\sigma\le v+2k,\qquad v\le\abs M,\qquad \binom\sigma k\binom vk\le2^{v}.
+\]
+Let $S$ be a uniform $\sigma$-subset and $V$ a uniform $v$-subset of $M$. Then
+\[
+ \E_S\,a_k(S)\ \ge\ \frac{\E_V\,2^{-d(V)}}{v+1}.
+\]
+\end{corollary}
+\begin{proof}
+From $2k\le\sigma\le v/2+k$ we get $k\le v/2$ and $k\le\sigma\le v$. Fix a $v$-set $V\subseteq M$ and let $S_V$ be a
+uniform $\sigma$-subset of $V$. We show
+\begin{equation}\label{eq:Dfixed}
+ \frac{2^{-d(V)}}{v+1}\le\E\,a_k(S_V).
+\end{equation}
+Take $t$ from Lemma~\ref{lem:good} for $V$; so $2t\le v$ and $a_t(V)\ge2^{-d(V)}/(v+1)$.
+
+\emph{Case $t\ge k$.} By Lemma~\ref{lem:cover}, $a_t(V)\le\E_W\,a_k(V\setminus W)$ with $W$ a uniform
+$(t-k)$-subset of $V$. Here $\abs{V\setminus W}=v-t+k\ge v/2+k\ge\sigma\ge k$, so Lemma~\ref{lem:sample} applies to
+$V\setminus W$ with $s=\sigma$: $a_k(V\setminus W)\le\E\,a_k(S')$ for a uniform $\sigma$-subset $S'$ of
+$V\setminus W$. The law of $S'$, with $W$ uniform, is invariant under the permutations of $V$, so $S'$ is a uniform
+$\sigma$-subset of $V$. Hence $2^{-d(V)}/(v+1)\le a_t(V)\le\E\,a_k(S_V)$.
+
+\emph{Case $t<k$.} Then $t<k\le v/2$, so $\abs{\Sigma_t(V)}\le\binom vt\le\binom vk$. By Lemma~\ref{lem:good},
+$2^{v-d(V)}=\abs{\Sigma(V)}\le(v+1)\binom vk$, and with the last hypothesis
+$2^{-d(V)}/(v+1)\le\binom vk2^{-v}\le1/\binom\sigma k$. Every $\sigma$-set $S$ has $a_k(S)\ge1/\binom\sigma k$ because
+$\Sigma_k(S)\ne\varnothing$ ($k\le\sigma$). So~\eqref{eq:Dfixed} holds.
+
+Now average~\eqref{eq:Dfixed} over a uniform $v$-subset $V$ of $M$: by Lemma~\ref{lem:fmono}(c), $S_V$ is then a
+uniform $\sigma$-subset of $M$.
+\end{proof}
+
+\begin{remark}\label{rem:signs}
+Negating some weights leaves $d$ unchanged (Lemma~\ref{lem:def}(e)) but can change $a_k$. In Section~\ref{sec:alias}
+the corollary is applied to one signing of the block, fixed before the random set $S$ is drawn. The hypothesis
+$\binom\sigma k\binom vk\le2^v$ is used only in the case $t<k$ and cannot be dropped from this proof. The
+corollary controls layers of size $k$ inside a random half-size set through the deficiency of sets of size $v$; it
+does not assert that small layers of the whole block are robust (the open statement \textup{[S]} of~\cite{V}), and
+nothing of that kind is used in this paper.
+\end{remark}
+\section{Alias phase sums and Theorem A}\label{sec:alias}
+Fix the tie weights, hence $c_1,\dots,c_n$ and the targets $t_s$. Let $P$ be a prime of
+$[2^{\floor{\eta n}},2^{\floor{\eta n}+1})$ and put
+\[
+ \bc_i=c_i\bmod P\in\{0,\dots,P-1\},\qquad \bc(I)=\sum_{i\in I}\bc_i\ \text{(an integer, not reduced)}.
+\]
+Phases $\varphi\in(\Z/P\Z)^n$ are given, and $\chi(I)=e_P\bigl(\sum_{i\in I}\varphi_i\bigr)$. The \emph{aliases} of
+$t_s$ are
+\[
+ \cA_s(P)=\{I\subseteq[n]:\ c(I)\equiv t_s\!\!\pmod P,\ c(I)\ne t_s\}.
+\]
+If $I\in\cA_s(P)$ then $\bc(I)\equiv t_s\pmod P$ and $0\le\bc(I)\le n(P-1)$, so there is a unique \emph{carry}
+$j\in\{0,\dots,n-1\}$ with
+\begin{equation}\label{eq:carry}
+ \bc(I)=T_{s,j}:=(t_s\bmod P)+jP .
+\end{equation}
+
+\subsection{Statement}
+\begin{thmA}[alias phase sums]
+There are a randomized procedure and an integer $n_A$ with the following properties for all $n\ge n_A$. The input
+is the transformed weights and targets~\eqref{eq:transform} of an instance that passes the guard, a prime
+$P\in[2^{\floor{\eta n}},2^{\floor{\eta n}+1})$ and phases $\varphi\in(\Z/P\Z)^n$. The output is \textsc{fail} or
+complex numbers $\hat A_s$, $0\le s\le nN_0$.
+\begin{enumerate}[label=\textup{(\arabic*)}]
+\item Assume \textup{(LD)}. Let $P$ be uniform among the primes of its interval and independent of the procedure's
+random words. There is an event $\mathcal H$, determined by $P$ and the procedure's random words (for the given
+weights and targets) and not involving $\varphi$, with $\Pr[\mathcal H]\ge1-\epsilon_A(n)$, where
+$\epsilon_A(n)\to0$ depends only on $n$, such that on $\mathcal H$ the following holds \emph{simultaneously for
+every} $\varphi\in(\Z/P\Z)^n$: the procedure run with the phases $\varphi$ does not fail and
+\[
+ \Bigl\lvert\hat A_s-\sum_{I\in\cA_s(P)}\chi(I)\Bigr\rvert\le\frac1{16}\qquad\text{for every }s .
+\]
+In particular the conclusion holds with probability at least $1-\epsilon_A(n)$ for phases chosen in any way
+whatever; they may depend on $P$. (The event that the output is accurate does depend on $\varphi$ in general, for
+instance through cancellation among aliases that were missed; $\mathcal H$ is a sufficient event that does not.)
+\item On every execution the procedure uses at most $2^{\tau_0n+2n^{0.7}}\poly(n+b+2)$ word operations.
+\end{enumerate}
+\end{thmA}
+
+\subsection{Signed weights, keys and classes}
+The partition $[n]=M\cup L\cup R$ is chosen below. For $F\subseteq M$ and $i\in M$ put
+$c^F_i=(-1)^{[i\in F]}c_i$ and $\bc^F_i=(-1)^{[i\in F]}\bc_i$. By~\eqref{eq:sign}, for all $Z,F\subseteq M$,
+\begin{equation}\label{eq:signcF}
+ c^F(Z)=c(Z\triangle F)-c(F),\qquad \bc^F(Z)=\bc(Z\triangle F)-\bc(F).
+\end{equation}
+The \emph{key} of a set $A$ is the integer pair $\key(A)=(c(A),\bc(A))$. For a key $\xi=(x,y)$ write
+$c(\xi)=x$, $\bc(\xi)=y$; note $y\equiv x\pmod P$. A \emph{key of $L$} is a key $\key(A)$ with $A\subseteq L$; likewise
+for $R$. Define
+\[
+ \Phi_L(\xi)=\sum_{A\subseteq L:\ \key(A)=\xi}\chi(A),\qquad \Phi_R(\xi)=\sum_{B\subseteq R:\ \key(B)=\xi}\chi(B).
+\]
+For keys $\xi_L$ of $L$, $\xi_R$ of $R$ and $Z\subseteq M$, the \emph{class} named $(\xi_L,\xi_R,Z)$ is
+\[
+ \cC(\xi_L,\xi_R,Z)=\{A\cup Z\cup B:\ A\subseteq L,\ B\subseteq R,\ \key(A)=\xi_L,\ \key(B)=\xi_R\}.
+\]
+Each $I\subseteq[n]$ lies in exactly one class, namely that of $(\key(I\cap L),\key(I\cap R),I\cap M)$. All members
+of a class have the same $c(I)$ and the same $\bc(I)$; so a class consists entirely of aliases of $t_s$ (an
+\emph{alias class} of $t_s$) or contains none. Since $\chi$ is multiplicative over disjoint unions,
+\begin{equation}\label{eq:classsum}
+ \sum_{I\in\cC(\xi_L,\xi_R,Z)}\chi(I)=\Phi_L(\xi_L)\,\Phi_R(\xi_R)\,\chi(Z).
+\end{equation}
+
+\subsection{The procedure}\label{sec:procA}
+We first describe the \emph{ideal} procedure: exact uniform draws, exact complex arithmetic, no cap.
+Let $e_n$ be the integer $\ceil{2n^{0.6}}$.
+
+\begin{procedure}[ideal alias procedure]\label{proc:A}
+\begin{enumerate}[label=\arabic*.]
+\item \emph{Partition.} Draw a uniform $m$-subset $M$ of $[n]$, then a uniform $\abs L$-subset $L$ of $[n]\setminus M$;
+put $R=[n]\setminus(M\cup L)$.
+\item \emph{Value maps.} Enumerate all $A\subseteq L$ with $\key(A)$ and $\chi(A)$; sort by key; store each distinct
+key $\xi$ once together with $\Phi_L(\xi)$. Do the same for $R$.
+\item \emph{Trial count.} Draw $n^2$ independent uniform $v$-subsets $V_1,\dots,V_{n^2}$ of $M$ and compute each
+$\abs{\Sigma(V_i)}$ exactly, by the merging of Procedure~\ref{proc:prelim} without a cap. Put
+\[
+ \hat S=\frac1{n^2}\sum_{i=1}^{n^2}2^{-d(V_i)},\qquad \hat F=\log\frac1{\hat S}+e_n,\qquad
+ \Ntr=n^7\,2^{e_n}\Bigl\lceil\frac1{\hat S}\Bigr\rceil .
+\]
+\item \emph{Trials.} For every target index $s$ and every carry $j\in\{0,\dots,n-1\}$ run $\Ntr$ independent trials.
+A trial for $(s,j)$:
+\begin{enumerate}[label=(\alph*)]
+\item draw a uniform $F\subseteq M$; put $T^F=T_{s,j}-\bc(F)$ and $t^F=t_s-c(F)$;
+\item draw a uniform prime $P'$ of $[2^{\floor{\gamma m}},2^{\floor{\gamma m}+1})$ and a uniform $y\in\Z/P'\Z$;
+\item \emph{left records}: all pairs $(\xi_L,X)$ with $\xi_L$ a key of $L$, $X\subseteq M$, $\abs X=k$ and
+$\bc(\xi_L)+\bc^F(X)\equiv y\pmod{P'}$. (Sort the keys of $L$ by $\bc(\xi_L)\bmod P'$; for each $X$ find the keys of
+the required residue by binary search.)
+\item \emph{right classes}: list all $Y\subseteq M$ with $\abs Y=\sigma-k$ and group them by
+$\lambda(Y)=(\bc^F(Y),c^F(Y))$; a right class is a value $\lambda=(\bc_\lambda,c_\lambda)$ that occurs, with the list
+of its members $Y$;
+\item \emph{right class records}: all pairs $(\xi_R,\lambda)$ with $\xi_R$ a key of $R$, $\lambda$ a right class and
+$\bc(\xi_R)+\bc_\lambda\equiv T^F-y\pmod{P'}$ (listed as in (c));
+\item \emph{matching}: group the right class records by the integer $\bc(\xi_R)+\bc_\lambda$ and sort each group by
+the integer $c(\xi_R)+c_\lambda$. For each left record $(\xi_L,X)$ find the group with
+$\bc(\xi_R)+\bc_\lambda=T^F-\bc(\xi_L)-\bc^F(X)$; in it find, by two binary searches, the interval of records with
+$c(\xi_R)+c_\lambda=t^F-c(\xi_L)-c^F(X)$; skip that interval and \emph{visit} every other record of the group;
+\item \emph{expansion}: for each visited $(\xi_R,\lambda)$ and each member $Y$ of $\lambda$, test $X\cap Y=\varnothing$;
+if the test passes, put $Z=(X\cup Y)\triangle F$ and insert $(\xi_L,\xi_R,Z)$ into the dictionary $\cD_s$ unless it
+is already there.
+\end{enumerate}
+\item \emph{Output.} $A^\circ_s=\sum_{(\xi_L,\xi_R,Z)\in\cD_s}\Phi_L(\xi_L)\Phi_R(\xi_R)\chi(Z)$ for each $s$.
+\end{enumerate}
+\end{procedure}
+Since $1/\hat S\ge1$ we have $1/\hat S\le\ceil{1/\hat S}\le2/\hat S$, so
+\begin{equation}\label{eq:Ntr}
+ n^7\,2^{\hat F}\le\Ntr\le2n^7\,2^{\hat F}.
+\end{equation}
+An \emph{elementary step} is one of: a subset enumerated, a merge operation, a mask listed, a key or record
+compared or moved during sorting or binary search, a record formed, a record visited, a member expanded, a
+dictionary operation, a term added, a trial division, a sampler call. Each elementary step costs $\poly(n+b)$ word
+operations: keys have at most $b+3\log n+7$ and $\eta n+\log n+2$ bits, masks have $m$ bits, dictionaries are
+balanced search trees with at most $2^n$ entries, and the complex numbers are the dyadic approximations of
+Section~\ref{sec:precision}. A sampler call of type (a) or (b) of Lemma~\ref{lem:samplers} is one elementary step;
+a call of type (c) for a prime of $[2^L,2^{L+1})$ consists of at most $n^3$ candidates, each of which is one
+sampler call of type (a) followed by at most $2^{(L+1)/2}$ trial divisions.
+
+\paragraph{Charging convention for the ideal procedure.} The ideal procedure has no samplers, so the number of
+elementary steps of its exact draws has to be fixed by convention. We \emph{charge} every exact draw of the ideal
+procedure the largest number of elementary steps that the corresponding bounded sampler can perform on any
+execution: one step for a uniform integer, a uniform subset or a Bernoulli variable, and
+\begin{equation}\label{eq:charge}
+ n^3\bigl(1+2^{(L+1)/2}\bigr)\ \text{steps for a uniform prime of }[2^L,2^{L+1}).
+\end{equation}
+All other operations of the ideal procedure are counted as they are performed. The resulting number is the
+\emph{charged step count} of the ideal run; ``the number of elementary steps of the ideal procedure'' always means
+this number. The convention is chosen so that the following holds on every outcome. Couple a run of the capped
+procedure (Procedure~\ref{proc:Acap} below) with the ideal run as in Section~\ref{sec:samplers}. As long as no sampler of the capped run has failed and its cap has not
+intervened, the capped run has made the same draws and performed the same operations as the ideal run, and each of
+its sampler calls has cost at most the charge of the corresponding ideal draw. Hence, at every moment of a capped
+run in which no sampler has failed,
+\begin{equation}\label{eq:dominate}
+ \#\{\text{steps performed so far by the capped run}\}\ \le\ \#\{\text{charged steps of the ideal run}\}.
+\end{equation}
+In particular, if no sampler fails and the charged step count of the ideal run is at most the cap, the capped run
+never reaches its cap and builds the same dictionaries as the ideal run.
+
+\begin{procedure}[capped alias procedure]\label{proc:Acap}
+Run Procedure~\ref{proc:A} with the bounded samplers of Lemma~\ref{lem:samplers} and with the arithmetic of
+Lemmas~\ref{lem:phase}--\ref{lem:sums} (each phase to within $2^{-2n^2}$, each summed term rounded to $n^2$
+fractional bits), and count elementary steps. Return \textsc{fail} as soon as the count would exceed
+$2^{\ceil{\tau_0n}+\ceil{n^{0.7}}}$, or if a sampler fails. Otherwise return the computed values $\hat A_s$.
+\end{procedure}
+Part~(2) of Theorem~A is immediate: at most $2^{\tau_0n+n^{0.7}+2}$ elementary steps, each of
+$\poly(n+b)$ word operations. The rest of the section proves part~(1).
+
+\subsection{Soundness and counts}
+\begin{lemma}[soundness]\label{lem:A1}
+In any run (ideal or capped), every triple inserted into $\cD_s$ names an alias class of $t_s$. Consequently, if at
+the end $\cD_s$ contains the names of all alias classes of $t_s$, then $A^\circ_s=\sum_{I\in\cA_s(P)}\chi(I)$.
+\end{lemma}
+\begin{proof}
+An insertion arises from a left record $(\xi_L,X)$, a visited record $(\xi_R,\lambda)$ and a member $Y$ of $\lambda$
+with $X\cap Y=\varnothing$; and $Z=(X\cup Y)\triangle F$. Let $A\subseteq L$, $B\subseteq R$ with $\key(A)=\xi_L$,
+$\key(B)=\xi_R$, and $I=A\cup Z\cup B$. By~\eqref{eq:signcF} and disjointness,
+$\bc^F(X)+\bc^F(Y)=\bc^F(X\cup Y)=\bc(Z)-\bc(F)$, and likewise for $c$. The record $(\xi_R,\lambda)$ lies in the group
+of $(\xi_L,X)$, so $\bc(A)+\bc(B)+\bc(Z)-\bc(F)=T^F=T_{s,j}-\bc(F)$; hence $\bc(I)=T_{s,j}$ and
+$c(I)\equiv\bc(I)\equiv t_s\pmod P$. The record is outside the skipped interval, so
+$c(A)+c(B)+c(Z)-c(F)\ne t^F=t_s-c(F)$, that is $c(I)\ne t_s$. So $I$ is an alias of $t_s$, and then so is every
+member of its class. For the second statement: distinct names are distinct, hence disjoint, classes; the alias
+classes of $t_s$ partition $\cA_s(P)$; apply~\eqref{eq:classsum}.
+\end{proof}
+
+\begin{lemma}[counts]\label{lem:A2}
+\textup{(a)} $L$ has at most $(n+1)\abs{\Sigma(L)}=(n+1)2^{\abs L-d(L)}$ keys, and each value of $c(\xi)$ occurs in
+at most $n+1$ keys of $L$; the same holds for $R$. \textup{(b)} In every trial there are at most
+$(2m+1)\,2^{m-d(M)}$ right classes.
+\end{lemma}
+\begin{proof}
+(a) A key $(x,y)$ of $L$ has $x\in\Sigma(L)$, $y\equiv x\pmod P$ and $0\le y\le\abs L(P-1)$, which leaves at most
+$\abs L+1\le n+1$ values of $y$ for each $x$. (b) By~\eqref{eq:signcF}, $c^F(Y)=c(Y\triangle F)-c(F)$ takes at most
+$\abs{\Sigma(M)}=2^{m-d(M)}$ values; for each of them $\bc^F(Y)\equiv c^F(Y)\pmod P$ and $\abs{\bc^F(Y)}<mP$, which
+leaves at most $2m+1$ values.
+\end{proof}
+
+\subsection{The trial count}
+For the block $M$ let $V$ denote a uniform $v$-subset of $M$ and put
+\[
+ g_M=-\log\E_V\,2^{-d(V)},\qquad e_M=\E_V\,d(V).
+\]
+By Jensen's inequality $g_M\le e_M$, and by Lemma~\ref{lem:def}(b) $e_M\le d(M)$.
+
+\begin{lemma}[trial count]\label{lem:A3}
+Let $n$ be large enough for \textup{(S2)}. With probability at least $1-\epsilon_3(n)$ over $M$, $L$ and Step~3,
+where $\epsilon_3(n)=2^{-2n^{0.6}}+(2n^2+3)e^{-n^{0.2}/2}$, all of the following hold.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\hat F\ge g_M$.
+\item $\hat F\le e_M+3n^{0.6}+1\le d(M)+3n^{0.6}+1$.
+\item $\hat F\le d(L)+5n^{0.6}+1$.
+\item If \textup{(LD)} holds: $g_M\le e_M\le(\tfrac12-\tau_0+\zeta)n+n^{0.6}$ and
+$\hat F\le(\tfrac12-\tau_0+\zeta)n+4n^{0.6}+1$.
+\end{enumerate}
+Call this event $\cE_{\mathrm{tr}}$. It is determined by $M$, $L$ and the draws of Step~3; in particular it is
+independent of $P$, of the phases and of the trials.
+\end{lemma}
+\begin{proof}
+(i) $\hat S$ is the mean of $n^2$ independent copies of $2^{-d(V)}$, so $\E[\hat S\mid M]=2^{-g_M}$. By Markov's
+inequality, $\hat S<2^{2n^{0.6}}2^{-g_M}$ except with probability $2^{-2n^{0.6}}$; then
+$\hat F=\log(1/\hat S)+e_n>g_M-2n^{0.6}+e_n\ge g_M$.
+
+(ii) Fix $M$ and apply Lemma~\ref{lem:fmono}(a) with $\Omega=M$, $q=v\le n$, $\lambda=n^{0.6}$: each $d(V_i)$ is at
+most $e_M+n^{0.6}$ except with probability $2e^{-n^{1.2}/(2v)}\le2e^{-n^{0.2}/2}$. If this holds for all $n^2$
+samples then $\hat S\ge2^{-e_M-n^{0.6}}$ and $\hat F\le e_M+n^{0.6}+e_n\le e_M+3n^{0.6}+1$.
+
+Next, $e_M\le f(v)+n^{0.6}$ except with probability $e^{-n^{0.2}/2}$. Indeed $e_M$ is a function of the uniform
+$m$-subset $M$ of $[n]$, and it is exchange-Lipschitz: if $M'=(M\setminus\{i\})\cup\{i'\}$, couple a uniform
+$v$-subset $V$ of $M$ with $V'=V$ if $i\notin V$ and $V'=(V\setminus\{i\})\cup\{i'\}$ otherwise; then $V'$ is a
+uniform $v$-subset of $M'$ and $\abs{d(V)-d(V')}\le1$ by Lemma~\ref{lem:def}(d), so $\abs{e_M-e_{M'}}\le1$. By
+Lemma~\ref{lem:fmono}(c), $\E_M\,e_M=f(v)$. Apply the one-sided bound of Lemma~\ref{lem:azuma} through the
+martingale of Lemma~\ref{lem:subsets} with $q=m\le n$.
+
+(iii) By Lemma~\ref{lem:fmono}(c), $L$ is a uniform $\abs L$-subset of $[n]$, so $d(L)\ge f(\abs L)-n^{0.6}$ except
+with probability $2e^{-n^{0.2}/2}$. By \textup{(S2)}, $v<\abs L$, and $f$ is nondecreasing; hence
+$\hat F\le e_M+3n^{0.6}+1\le f(v)+4n^{0.6}+1\le f(\abs L)+4n^{0.6}+1\le d(L)+5n^{0.6}+1$.
+
+(iv) By \textup{(S2)}, $v\le\floor{n/2}$, so $f(v)\le f(\floor{n/2})\le(\tfrac12-\tau_0+\zeta)n$ under \textup{(LD)}.
+Combine with the bounds above. Adding the exceptional probabilities gives $\epsilon_3(n)$.
+\end{proof}
+
+\subsection{Reduction modulo $P$ on half-blocks}
+Call a $\sigma$-subset $S\subseteq M$ \emph{bad for $P$} if there is $\lambda\in\{-1,0,1\}^S$ with
+$\sum_{i\in S}\lambda_ic_i\ne0$ and $P\mid\sum_{i\in S}\lambda_ic_i$; otherwise $S$ is \emph{good}. Recall
+$\delta=\tfrac12(\eta-\tfrac\mu2\log3)>0$ by \textup{(C8)}.
+
+\begin{lemma}[bad half-blocks]\label{lem:A4}
+Let $M$ be fixed and let $P$ be uniform among the primes of $[2^{\floor{\eta n}},2^{\floor{\eta n}+1})$, with
+$\floor{\eta n}\ge5$. With probability at least $1-\epsilon_4(n)$, where
+$\epsilon_4(n)=2.4\,(b+3\log n+6)\,2^{-\delta n}$, at most a $2^{-\delta n}$ fraction of the $\sigma$-subsets of $M$ are
+bad for $P$. Call this event $\cE_P$. Under the guard, $\epsilon_4(n)\le 2^{(1/G_0-\delta)n+O(\log n)}\to0$, because
+$\delta>1/G_0$.
+
+If $S$ is good, $\epsilon_i\in\{\pm1\}$ for $i\in S$ and $X,X'\subseteq S$, then
+\begin{equation}\label{eq:keep}
+ \sum_{i\in X}\epsilon_ic_i\ne\sum_{i\in X'}\epsilon_ic_i\ \Longrightarrow\ \sum_{i\in X}\epsilon_i\bc_i\ne\sum_{i\in X'}\epsilon_i\bc_i .
+\end{equation}
+\end{lemma}
+\begin{proof}
+Fix $S$. There are fewer than $3^\sigma$ vectors $\lambda$, and each nonzero $\sum_i\lambda_ic_i$ has absolute value
+below $2^{B}$ with $B=b+3\log n+6$ by~\eqref{eq:bits}. By Lemma~\ref{lem:primes}(b) with $L=\floor{\eta n}$, $P$
+divides a given one with probability at most $1.16\,B\,2^{-\floor{\eta n}}\le2.4\,B\,2^{-\eta n}$. So
+$\Pr[S\text{ bad}]\le2.4\,B\,3^{\sigma}2^{-\eta n}\le2.4\,B\,2^{-2\delta n}$, using $\sigma\le\mu n/2$. The expected
+fraction of bad sets has the same bound, and Markov's inequality gives the first claim. For the guard: $b\le2^{n/G_0}$.
+
+For~\eqref{eq:keep}: the difference of the two left sides is $\sum_{i\in S}\lambda_ic_i$ with
+$\lambda_i=\epsilon_i([i\in X]-[i\in X'])\in\{-1,0,1\}$; it is nonzero, so $P$ does not divide it. The difference of
+the two right sides is congruent to it modulo $P$, hence nonzero.
+\end{proof}
+
+\subsection{Coverage}
+\begin{lemma}[one trial]\label{lem:A5}
+There is $n_5$ such that the following holds for $n\ge n_5$. Assume \textup{(LD)}. Fix $P$, $M$, $L$ and the
+outcome of Step~3 such that $\cE_{\mathrm{tr}}$ and $\cE_P$ hold. Fix $s$, an alias $I\in\cA_s(P)$ with carry $j$, and
+one trial of the ideal procedure for $(s,j)$. Over the trial's own draws $(F,P',y)$, the trial inserts the name of
+the class of $I$ into $\cD_s$ (or finds it already there) with probability at least $2^{-g_M}n^{-6}$.
+\end{lemma}
+\begin{proof}
+Put $A=I\cap L$, $B=I\cap R$ and $S=(I\cap M)\triangle F$.
+
+\emph{Step 1 (a half of the block).} $F$ is uniform among the subsets of $M$, hence so is $S$. So
+$\Pr[\abs S=\sigma]=\binom m\sigma2^{-m}\ge1/(m+1)$, the middle binomial coefficient being the largest of $m+1$
+coefficients that sum to $2^m$. Conditional on $\abs S=\sigma$, $S$ is a uniform $\sigma$-subset of $M$, and
+$F=S\triangle(I\cap M)$.
+
+\emph{Step 2 (the signs on $S$ do not depend on $S$).} Define weights on $M$ by $c^I_i=c_i$ for $i\in I\cap M$ and
+$c^I_i=-c_i$ for $i\in M\setminus I$; define $\bc^I$ likewise. If $i\in S$, then either $i\in I$ and $i\notin F$, or
+$i\notin I$ and $i\in F$; in both cases $c^F_i=c^I_i$ and $\bc^F_i=\bc^I_i$. The weights $c^I$ depend on $I$ only.
+
+\emph{Step 3 (many distinct layer values).} Apply Corollary~\ref{cor:D} to the weights $c^I$ on $M$ with the
+integers $k,\sigma,v$ of Section~\ref{sec:params}; its hypotheses are \textup{(S1)} and \textup{(S3)} and
+$v\le m$. By Lemma~\ref{lem:def}(e) the deficiency of every $V\subseteq M$ is the same for $c^I$ and for $c$. Hence,
+writing $a_k(S;c^I)$ for the layer density under $c^I$,
+\[
+ \E_S\,a_k(S;c^I)\ \ge\ \frac{\E_V2^{-d(V)}}{v+1}=\frac{2^{-g_M}}{v+1}.
+\]
+Let $W_S=\{\bc(A)+\bc^F(X):X\subseteq S,\ \abs X=k\}$, a set of integers, and $\beta_S=\abs{W_S}$. By Step~2,
+$W_S=\{\bc(A)+\bc^I(X)\}$ depends on $S$ (and on $I$, $P$, $L$) but not on $P'$ or $y$. If $S$ is good,
+\eqref{eq:keep} with $\epsilon_i=c^I_i/c_i$ shows that $k$-subsets of $S$ with different $c^I$-sums have different
+$\bc^I$-sums, so $\beta_S\ge\abs{\Sigma_k(S;c^I)}=a_k(S;c^I)\binom\sigma k$. On $\cE_P$ a uniform $\sigma$-subset is
+bad with probability at most $2^{-\delta n}$, and $a_k\le1$, so
+\[
+ \E_S\Bigl[\mathbf 1_{S\text{ good}}\,\frac{\beta_S}{\binom\sigma k}\Bigr]\ \ge\ \frac{2^{-g_M}}{v+1}-2^{-\delta n}
+ \ \ge\ \frac{2^{-g_M}}{2(v+1)} .
+\]
+The last step needs $2^{-\delta n}\le2^{-g_M}/(2(v+1))$. By Lemma~\ref{lem:A3}(iv),
+$g_M\le(\tfrac12-\tau_0+\zeta)n+n^{0.6}$, so it holds as soon as
+$\bigl(\delta-(\tfrac12-\tau_0+\zeta)\bigr)n\ge n^{0.6}+\log(2n+2)$, which is true for large $n$ by \textup{(N3)}.
+
+\emph{Step 4 (the small prime keeps many residues).} Fix a good $S$. The elements of $W_S$ lie in $(-nP,nP)$, so
+the difference of two of them is a nonzero integer of absolute value below $2nP<2^{\eta n+\log n+2}\le2^{n}$ (large
+$n$). By Lemma~\ref{lem:primes}(b) with $L=\floor{\gamma m}\ge5$, for distinct $x,x'\in W_S$,
+$\Pr_{P'}[P'\mid x-x']\le1.16\,n\,2^{-\floor{\gamma m}}\le3n\,2^{-\gamma m}$. Let $z_\rho$ be the number of elements of
+$W_S$ in the residue class $\rho$ modulo $P'$. Counting ordered pairs,
+\[
+ \E_{P'}\sum_\rho z_\rho^2\ \le\ \beta_S+3n\,\beta_S^2\,2^{-\gamma m}\ \le\ 4n\max\bigl(\beta_S,\ \beta_S^2\,2^{-\gamma m}\bigr).
+\]
+By Markov's inequality, with probability at least $\tfrac12$ over $P'$ the sum $\sum_\rho z_\rho^2$ is at most twice
+this bound. On that event the Cauchy--Schwarz inequality
+$\beta_S^2=(\sum_\rho z_\rho)^2\le\#\{\rho:z_\rho>0\}\cdot\sum_\rho z_\rho^2$ shows that at least
+$\min(\beta_S,2^{\gamma m})/(8n)$ residues are occupied. Since $P'<2^{\gamma m+1}$, a uniform $y\in\Z/P'\Z$ is occupied
+with probability at least
+\[
+ \frac{\min(\beta_S2^{-\gamma m},1)}{16n}\ \ge\ \frac{\beta_S}{16n\binom\sigma k},
+\]
+where the last step uses both $\beta_S\le\binom\sigma k$ and $2^{\gamma m}\le\binom\sigma k$ \textup{(S4)}.
+
+\emph{Step 5 (an occupied residue is recovered).} Suppose $\abs S=\sigma$ and $y\equiv\bc(A)+\bc^F(X)\pmod{P'}$ for
+some $X\subseteq S$ with $\abs X=k$. Then $(\key(A),X)$ is a left record. Put $Y=S\setminus X$, so $\abs Y=\sigma-k$
+and $X\cap Y=\varnothing$. Since $S\triangle F=I\cap M$, \eqref{eq:signcF} gives
+\[
+ \bc(A)+\bc^F(X)+\bc(B)+\bc^F(Y)=\bc(A)+\bc(B)+\bc(I\cap M)-\bc(F)=T_{s,j}-\bc(F)=T^F .
+\]
+Hence $\bc(B)+\bc^F(Y)\equiv T^F-y\pmod{P'}$, so $(\key(B),\lambda(Y))$ is a right class record, and it lies in the
+group of the left record $(\key(A),X)$. The same computation with $c$ gives $c(A)+c^F(X)+c(B)+c^F(Y)=c(I)-c(F)$,
+which differs from $t^F=t_s-c(F)$ because $I$ is an alias. So the record is outside the skipped interval and is
+visited; the expansion reaches its member $Y$, the test $X\cap Y=\varnothing$ passes, and the triple
+$(\key(A),\key(B),(X\cup Y)\triangle F)=(\key(A),\key(B),I\cap M)$, the name of the class of $I$, is inserted unless
+already present.
+
+\emph{Step 6 (product).} $F$ is independent of the pair $(P',y)$, and given $P'$ the residue $y$ is uniform on
+$\Z/P'\Z$; Step~4 used exactly this, first over $P'$ and then over $y$. Steps 1, 3, 4 and 5 give a success probability of at
+least
+\[
+ \frac1{m+1}\ \E_S\Bigl[\mathbf 1_{S\text{ good}}\cdot\frac12\cdot\frac{\beta_S}{16n\binom\sigma k}\Bigr]
+ \ \ge\ \frac{2^{-g_M}}{64\,n\,(m+1)(v+1)}\ \ge\ 2^{-g_M}\,n^{-6}
+\]
+for $n\ge8$. The thresholds on $n$ (Steps~3 and~4, \textup{(S1)--(S4)}) depend only on the fixed constants.
+\end{proof}
+
+\begin{corollary}[coverage]\label{cor:A6}
+Assume \textup{(LD)}, and fix $P$, $M$, $L$ and the outcome of Step~3 such that $\cE_{\mathrm{tr}}$ and $\cE_P$ hold,
+$n\ge n_5$. Then, except with probability at most $(24n^2+1)(2/e)^n$ over the trials, at the end of Step~4 of the
+ideal procedure every alias class of every target $t_s$ is named in $\cD_s$.
+\end{corollary}
+\begin{proof}
+Fix $s$ and an alias $I$ of $t_s$ with carry $j$. The $\Ntr$ trials for $(s,j)$ are independent, and
+$\Ntr\ge n^72^{\hat F}\ge n^72^{g_M}$ by~\eqref{eq:Ntr} and Lemma~\ref{lem:A3}(i). By Lemma~\ref{lem:A5}, none of them
+produces the class of $I$ with probability at most $(1-2^{-g_M}n^{-6})^{\Ntr}\le e^{-n}$. There are at most
+$(nN_0+1)2^n$ pairs $(s,I)$.
+\end{proof}
+
+\subsection{Expected work}\label{sec:work}
+This is the step where an accounting error is most likely, so each category of elementary step is treated
+separately and the random choices averaged over are named each time.
+
+\begin{lemma}[expected work]\label{lem:A7}
+Assume \textup{(LD)}. Fix $M$, $L$ and the outcome of Step~3 such that $\cE_{\mathrm{tr}}$ holds. Let $P$ be uniform
+among the primes of its interval (independent of $M$, $L$, Step~3), let the phases be arbitrary, and let $n$ be
+large. Then the expected number of elementary steps of the ideal procedure (its charged step count, in the sense
+of Section~\ref{sec:procA}), over $P$ and over all draws of the trials, is at most
+\[
+ (b+2)\,2^{(\tau_0-\eps_0+\zeta)n+c_7n^{0.6}}
+\]
+for an absolute constant $c_7$.
+\end{lemma}
+\begin{proof}
+The number of trials is $N_{\mathrm{all}}=(nN_0+1)\,n\,\Ntr\le50\,n^{10}\,2^{\hat F}$ by~\eqref{eq:Ntr}; it is
+determined by Step~3. Below, $\pi_n$ denotes a factor $2^{O(n^{0.6})}$ with an absolute implied constant; it absorbs
+all polynomial factors in $n$ and $N_{\mathrm{all}}2^{-\hat F}$. We use $m\le\mu n$, $m>\mu n-2$,
+$\abs L\le ln$, $\abs R\le rn+3$ \textup{(S6)}, and the four bounds on $\hat F$ of Lemma~\ref{lem:A3}. Each of
+\textup{(C2)--(C5)} is used in the form given by \textup{(E0)}: its left side is less than $\tau_0-\eps_0$.
+
+\emph{1.\ Value maps and Step~3 (no randomness needed).} Enumerating and sorting the subsets of $L$ and of $R$
+takes $O(n(2^{\abs L}+2^{\abs R}))$ steps; Step~3 takes at most $n^2\cdot v\cdot(2^{v+1}+2)$ merge operations. The
+exponents $l$, $r$ and $\mu(1-2a)$ are below $\tau_0-\eps_0$ (Section~\ref{sec:params}).
+
+\emph{2.\ Masks (deterministic per trial).} A trial lists $\binom mk+\binom m{\sigma-k}\le2^{h(1/2-a)m+2}$ masks
+\textup{(S5)}, computes $\bc^F$ and $c^F$ of each, and sorts the right masks into classes. Over all trials this is
+$\pi_n\,2^{\hat F+h(1/2-a)\mu n}\le\pi_n\,2^{(h(1/2-a)\mu+\frac12-\tau_0+\zeta)n}$ by Lemma~\ref{lem:A3}(iv), and
+$h(\tfrac12-a)\mu+\tfrac12-\tau_0\le\tau_0-\eps_0$ by \textup{(C5)}.
+
+\emph{3.\ Small primes (deterministic charge per trial).} The exact draw of $P'$ is charged~\eqref{eq:charge}
+with $L=\floor{\gamma m}$: $n^3$ candidates, each with at most $2^{(\gamma m+1)/2}$ trial divisions. This is a
+convention about the ideal procedure, not a property of an exact draw; by~\eqref{eq:dominate} it dominates what the
+bounded sampler of the capped run actually does. Over all trials: $\pi_n2^{(\frac12-\tau_0+\zeta+\gamma\mu/2)n}$,
+and the exponent is
+below $\tau_0-\eps_0+\zeta$ by \textup{(N8)}. The other draws of a trial (the set $F$, the residue $y$) are charged
+one step each, and the $n^3$ candidate draws for $P'$ are included in~\eqref{eq:charge}; the draws of Steps~1
+and~3 number $n^2+2$ in all.
+
+\emph{4.\ Sorting keys by residue (deterministic per trial).} A trial sorts at most
+$(n+1)(2^{\abs L-d(L)}+2^{\abs R})$ keys (Lemma~\ref{lem:A2}(a)). With Lemma~\ref{lem:A3}(iii) for the first term and
+Lemma~\ref{lem:A3}(iv) for the second, the total is at most
+$\pi_n\bigl(2^{ln}+2^{(r+\frac12-\tau_0+\zeta)n}\bigr)$; use $l<\tau_0-\eps_0$ and \textup{(N8)}.
+
+\emph{5.\ Left records (average over $y$).} Fix everything in a trial except $y$. A pair $(\xi_L,X)$ is a left
+record for exactly one residue $y$, hence with probability $1/P'\le2^{1-\gamma m}$. So the expected number of left
+records in a trial is at most $(n+1)2^{\abs L-d(L)}\binom mk2^{1-\gamma m}$, and over all trials at most
+$\pi_n\,2^{\hat F-d(L)}\,2^{\abs L+(h(a)-\gamma)m}\le\pi_n\,2^{(l+(h(a)-\gamma)\mu)n}$, by Lemma~\ref{lem:A3}(iii),
+\textup{(S5)} and $\mu n-2<m\le\mu n$ (which gives $(h(a)-\gamma)m\le(h(a)-\gamma)\mu n+2$ whatever the sign of
+$h(a)-\gamma$). Use \textup{(C2)}.
+The binary searches of Step~(c) cost $O(n)$ steps per mask and per record and are covered by items 2 and 5.
+
+\emph{6.\ Right class records (average over $y$).} By Lemma~\ref{lem:A2}(b) a trial has at most
+$(2m+1)2^{m-d(M)}$ right classes; handling the classes (one binary search each) costs
+$\pi_n2^{\hat F+m-d(M)}\le\pi_n2^{\mu n}$ over all trials by Lemma~\ref{lem:A3}(ii), and $\mu<\tau_0-\eps_0$ by
+\textup{(N2)}. A pair $(\xi_R,\lambda)$ is a right class record for exactly one $y$; so the expected number of right
+class records in a trial is at most $(n+1)2^{\abs R}(2m+1)2^{m-d(M)}2^{1-\gamma m}$, and over all trials at most
+$\pi_n\,2^{\hat F-d(M)}\,2^{\abs R+(1-\gamma)m}\le\pi_n\,2^{(r+(1-\gamma)\mu)n}$. Use \textup{(C3)}.
+
+\emph{7.\ Visits and expansions (average over $P$ and $y$).} Call a tuple $(\xi_L,X,\xi_R,Y)$ \emph{visited} in a
+trial if $(\xi_L,X)$ is a left record, $(\xi_R,\lambda(Y))$ is a right class record visited from it, and $Y$ is a
+member of $\lambda(Y)$. Every expansion step handles one visited tuple, and every visited record has at least one
+member, so the visits and expansions of a trial number at most twice its visited tuples.
+
+Fix a trial's $s$, $j$, $F$ and $P'$. For values $x_L\in\Sigma(L)$, $x_R\in\Sigma(R)$ and masks $X$, $Y$ of sizes
+$k$ and $\sigma-k$ put
+\[
+ D=D(x_L,X,x_R,Y)=x_L+c^F(X)+x_R+c^F(Y)-t^F .
+\]
+$D$ is an integer that depends on neither $P$ nor $y$ (the sets $\Sigma(L)$, $\Sigma(R)$ and the integers $c_i$,
+$t_s$ do not involve $P$), and $\abs D<2^{B}$ with $B=b+3\log n+9$ by~\eqref{eq:bits}. Suppose a tuple with
+$c(\xi_L)=x_L$ and $c(\xi_R)=x_R$ is visited. Then: (i) $D\ne0$, because the skipped interval consists exactly of
+the records with $D=0$; (ii) $P\mid D$, because the group condition says
+$\bc(\xi_L)+\bc^F(X)+\bc(\xi_R)+\bc^F(Y)=T^F$, while $\bc(\xi)\equiv c(\xi)$, $\bc^F\equiv c^F$ and
+$T^F\equiv t^F\pmod P$; (iii) $y\equiv\bc(\xi_L)+\bc^F(X)\pmod{P'}$, because $(\xi_L,X)$ is a left record. The set
+of keys depends on $P$, but for every $P$ at most $(n+1)^2$ pairs $(\xi_L,\xi_R)$ have $c(\xi_L)=x_L$ and
+$c(\xi_R)=x_R$ (Lemma~\ref{lem:A2}(a)), and for each such pair condition (iii) holds for one residue $y$. As $y$ is
+uniform and independent of $P$, the expected number of visited tuples with given $(x_L,X,x_R,Y)$ is at most
+\[
+ \mathbf 1_{D\ne0}\cdot\Pr_P[P\mid D]\cdot(n+1)^2\cdot\frac1{P'}
+ \ \le\ 1.16\,B\,2^{-\floor{\eta n}}\,(n+1)^2\,2^{1-\gamma m},
+\]
+by Lemma~\ref{lem:primes}(b). Summing over $(x_L,X,x_R,Y)$, the expected number of visited tuples in one trial is
+at most
+\[
+ 5B(n+1)^2\;2^{\abs L-d(L)}\,2^{\abs R}\binom mk\binom m{\sigma-k}\,2^{-\eta n-\gamma m}.
+\]
+Multiply by $N_{\mathrm{all}}\le50n^{10}2^{\hat F}$ and use Lemma~\ref{lem:A3}(iii), $\abs L+\abs R=n-m$ and
+\textup{(S5)}: the total is at most
+\[
+ B\,\pi_n\,2^{\,n-m+(h(a)+h(1/2-a)-\gamma)m-\eta n}\ \le\ B\,\pi_n\,2^{(1-\mu+(h(a)+h(1/2-a)-\gamma)\mu-\eta)n},
+\]
+where the last step writes the exponent as $(1-\eta)n+\vartheta m$ with
+$\vartheta=h(a)+h(\tfrac12-a)-\gamma-1\in[-2,2]$ and uses $\mu n-2<m\le\mu n$, so that $\vartheta m\le\vartheta\mu n+4$
+whatever the sign of $\vartheta$. By \textup{(C4)} with \textup{(E0)} the exponent is at most $(\tau_0-\eps_0)n$.
+Finally $B\le(b+2)(3\log n+9)$.
+
+\emph{8.\ Matching, dictionaries, output.} The matching step performs $O(n)$ elementary steps per left record, per
+right class record and per visited tuple; each expansion causes at most one dictionary operation of $O(n)$ steps;
+the output sums one term per dictionary entry, and there are at most as many entries as insertions.
+
+Every item is at most $(b+2)\,\pi_n\,2^{(\tau_0-\eps_0+\zeta)n}$.
+\end{proof}
+
+\begin{remark}\label{rem:A7}
+Item~7 averages over $P$ under its unconditional law; it does not condition on $\cE_P$, and it does not use
+$\cE_P$. Only coverage uses $\cE_P$. Items 2--4 are worst-case bounds given $\cE_{\mathrm{tr}}$ and
+\textup{(LD)}; items 5--6 average only over $y$. The hypothesis \textup{(LD)} enters through
+Lemma~\ref{lem:A3}(iv) in items 2, 3 and 4; without it the trial count $\Ntr$ is not controlled. The lemma bounds an
+expectation; it is turned into a statement about the capped procedure only through Markov's inequality in the
+proof below, never into a worst-case time bound.
+\end{remark}
+
+\subsection{Proof of Theorem~A}\label{sec:thmA}
+Part~(2) was shown after Procedure~\ref{proc:Acap}. For part~(1) assume \textup{(LD)} and $n\ge n_A$, where $n_A$
+exceeds $n_5$ and the thresholds of \textup{(S1)--(S6)}. Couple the capped procedure with the ideal procedure
+(Section~\ref{sec:samplers}). By the charging convention and~\eqref{eq:dominate}, they build the same dictionaries
+unless a sampler of the capped run fails or the charged step count of the ideal procedure exceeds
+$2^{\ceil{\tau_0n}+\ceil{n^{0.7}}}$. Consider the following events.
+\begin{itemize}
+\item $\cE_{\mathrm{tr}}$ fails: probability at most $\epsilon_3(n)$ (Lemma~\ref{lem:A3}).
+\item $\cE_P$ fails: probability at most $\epsilon_4(n)$ (Lemma~\ref{lem:A4}; $M$ is independent of $P$).
+\item $\cE_{\mathrm{tr}}$ and $\cE_P$ hold but some alias class is missing from the ideal dictionaries:
+probability at most $(24n^2+1)(2/e)^n$ (Corollary~\ref{cor:A6}).
+\item $\cE_{\mathrm{tr}}$ holds and the ideal procedure exceeds the step cap: by Lemma~\ref{lem:A7} and Markov's
+inequality, conditionally on $(M,L,\text{Step 3})\in\cE_{\mathrm{tr}}$ this has probability at most
+\[
+ \frac{(b+2)\,2^{(\tau_0-\eps_0+\zeta)n+c_7n^{0.6}}}{2^{\tau_0n+n^{0.7}}}\ \le\ 2^{(1/G_0+\zeta-\eps_0)n+c_7n^{0.6}-n^{0.7}+1},
+\]
+using the guard. By \textup{(N1)} the coefficient of $n$ is negative, so this tends to $0$.
+\item A sampler of the capped run fails: the capped run makes at most $2^{n}$ sampler calls, so by~\eqref{eq:couple}
+this has probability $o(1)$.
+\end{itemize}
+All five bounds depend only on $n$ (the guard bounds $b$); let $\epsilon_A(n)$ be their sum and let $\mathcal H$
+be the complement of the union of the five events.
+
+\emph{$\mathcal H$ does not involve the phases.} The control flow of both procedures never reads $\varphi$: the
+phases enter only the stored values $\Phi_L(\xi)$, $\Phi_R(\xi)$, the factors $\chi(Z)$ and the output sums, while
+the partition, the trial count, the records, the visits, the dictionaries, every sampler call and the step count
+are functions of the weights, the targets, $P$ and the random words. On the event that no sampler fails, the
+coupled ideal draws are the outputs of the samplers, so the ideal run is itself a function of $P$ and the random
+words. Hence $\mathcal H$ is determined by $P$ and the random words, and $\Pr[\mathcal H]\ge1-\epsilon_A(n)$.
+
+\emph{On $\mathcal H$ the output is accurate for every $\varphi$.} On $\mathcal H$ the capped procedure does not
+fail, and its dictionary
+$\cD_s$ contains every alias class of $t_s$ and nothing else (Lemma~\ref{lem:A1}); so the exact value of its output
+sum is $\sum_{I\in\cA_s(P)}\chi(I)$, whatever the phases are. It remains to bound the arithmetic error, uniformly
+in $\varphi$.
+
+\emph{Arithmetic error.} Each $\chi(A)$ is evaluated to within $2^{-2n^2}$ (Lemma~\ref{lem:phase}) and rounded to
+$n^2$ fractional bits, so each computed $\tilde\Phi_L(\xi)$ and $\tilde\Phi_R(\xi)$ is within
+$\epsilon'=2^{n}(2^{-2n^2}+2^{-n^2+1})\le2^{-n^2+n+2}$ of the true value, and $\abs{\Phi_L},\abs{\Phi_R}\le2^n$. A
+product of three factors of modulus at most $2^n+1$, each known to within $\epsilon'$, is known to within
+$3\epsilon'(2^n+1)^2$. Each dictionary has at most $2^n$ entries (they name disjoint nonempty classes), and each term
+is rounded to $n^2$ fractional bits. The total error is at most
+$2^n\bigl(3\epsilon'(2^n+1)^2+2^{-n^2+1}\bigr)\le2^{-n^2+4n+7}\le\tfrac1{16}$ for $n\ge8$. \qed
+\section{Filter construction and finite-circle convergence}\label{sec:filter}
+Everything in this section is fixed independently of the input.
+
+\subsection{Definitions on a circle}
+A \emph{circle} is either $\Tc=\R/2\pi\Z$ with normalized Lebesgue measure, or, for an integer $P\ge2$, the finite
+circle $\Z/P\Z$ with normalized counting measure, the residue $x$ being identified with the angle $2\pi x/P$. On a
+circle, $\av H$ denotes the mean of $H$ (an integral with the factor $1/2\pi$, or $P^{-1}\sum_x$).
+
+Fix real trigonometric polynomials with cosine and sine terms,
+\[
+ r(x)=\sum_{j=1}^{J}\bigl(r_j\cos jx+r'_j\sin jx\bigr),\qquad s(x)=\sum_{j=1}^{J}\bigl(s_j\cos jx+s'_j\sin jx\bigr),
+\]
+with rational coefficients, and a rational $\kappa>0$. Write
+\[
+ R_r=\sum_j(\abs{r_j}+\abs{r'_j}),\quad R^1_r=\sum_jj(\abs{r_j}+\abs{r'_j}),\quad R=R_r+R_s,\quad R^1=R^1_r+R^1_s,\quad \kappa^+=\max(1,\kappa),
+\]
+so that $\abs r\le R_r$, $\abs{r'}\le R^1_r$, and likewise for $s$. On either circle put
+\begin{equation}\label{eq:fg}
+\begin{gathered}
+ f_\ast(y)=\frac{2^{\kappa r(y)}}{\av{2^{\kappa r}}},\qquad g_\ast(y)=\frac{2^{\kappa s(y)}}{\av{2^{\kappa s}}},\\
+ k(x,w)=2^{\,r(x+w)+s(w)},\qquad q(x)=\av{k(x,\cdot)},\qquad K_x(w)=\frac{k(x,w)}{q(x)},
+\end{gathered}
+\end{equation}
+and
+\begin{equation}\label{eq:DAE}
+\begin{gathered}
+ D(x)=\av{K_x\log K_x},\qquad A(x)=\av{K_x(\cdot)\log f_\ast(x+\cdot)},\qquad E(x)=\av{K_x\log g_\ast},\\
+ u=A+E-D,\qquad \omega=2D-A-E .
+\end{gathered}
+\end{equation}
+These are the functions of~\cite[Section~3]{OAI}: with $f=2^r/\av{2^r}$ and $g=2^s/\av{2^s}$ one has
+$K_x(w)=f(x+w)g(w)/\av{f(x+\cdot)g}$ and $f_\ast=f^\kappa/\av{f^\kappa}$, the normalizers of $f$ and $g$ cancelling.
+The function called $v$ in~\cite{OAI} and $w$ in~\cite{Base} is our $\omega$. Note the convention: the first density
+is evaluated at $x+w$ and the second at $w$. No symmetry of $r$ or $s$ is assumed. On a finite circle every mean,
+including those in the normalizers, is the finite mean; we write $D_P,A_P,\dots$ when the circle must be specified.
+
+\begin{lemma}[entropy order and bounds]\label{lem:order}
+On either circle, for every $x$: $K_x$, $f_\ast(x+\cdot)$ and $g_\ast$ are strictly positive with mean $1$, and
+\begin{equation}\label{eq:order}
+ D(x)\ge0,\qquad D(x)-A(x)\ge0,\qquad D(x)-E(x)\ge0 .
+\end{equation}
+Hence $\omega\ge0$ and $u+\omega=D\ge0$. Moreover, with $C_0=2\kappa^+R$,
+\begin{equation}\label{eq:C0}
+\begin{gathered}
+ \abs{\log K_x(w)},\ \abs{\log f_\ast},\ \abs{\log g_\ast},\ \abs D,\ \abs A,\ \abs E\ \le\ C_0,\\
+ \abs u\le U_\infty:=2(1+\kappa)R,\qquad 0\le\omega\le W_\infty:=(4+2\kappa)R .
+\end{gathered}
+\end{equation}
+For the filter of Section~\ref{sec:params}, $R\le7.24$ and $C_0\le15$.
+\end{lemma}
+\begin{proof}
+Positivity and the normalizations are clear from~\eqref{eq:fg}; for $f_\ast(x+\cdot)$ use shift invariance of the
+mean, which holds on both circles. For positive functions $\pi_1,\pi_2$ with mean $1$, concavity of the logarithm
+gives $\av{\pi_1\ln(\pi_2/\pi_1)}\le\ln\av{\pi_2}=0$ (Jensen's inequality for the probability measure with density
+$\pi_1$). With $\pi_1=K_x$ and $\pi_2=1$, $f_\ast(x+\cdot)$, $g_\ast$ in turn this gives the three inequalities
+of~\eqref{eq:order}. For the bounds: $2^{-R}\le k\le2^{R}$, so $2^{-R}\le q\le2^R$ and $\abs{\log K_x}\le2R$;
+$2^{-\kappa R_r}\le2^{\kappa r},\av{2^{\kappa r}}\le2^{\kappa R_r}$ gives $\abs{\log f_\ast}\le2\kappa R_r$, and likewise
+$\abs{\log g_\ast}\le2\kappa R_s$. $D$, $A$, $E$ are averages of these logarithms against the probability density
+$K_x$. Then $\abs u\le\abs A+\abs E+\abs D\le2\kappa R+2R$ and $\omega\le2\abs D+\abs A+\abs E$.
+\end{proof}
+
+It is convenient to write the functions through three means. Put
+$Y_r(x)=\av{k(x,\cdot)\,r(x+\cdot)}$, $Y_s(x)=\av{k(x,\cdot)\,s}$, $N_r=\av{2^{\kappa r}}$, $N_s=\av{2^{\kappa s}}$. Then
+\begin{equation}\label{eq:means}
+ D=\frac{Y_r+Y_s}{q}-\log q,\qquad A=\frac{\kappa Y_r}{q}-\log N_r,\qquad E=\frac{\kappa Y_s}{q}-\log N_s ,
+\end{equation}
+and therefore
+\begin{equation}\label{eq:uomega}
+ u=(\kappa-1)\frac{Y_r+Y_s}{q}+\log q-\log(N_rN_s),\qquad
+ \omega=(2-\kappa)\frac{Y_r+Y_s}{q}-2\log q+\log(N_rN_s).
+\end{equation}
+These are the formulas that the certificate evaluates (Section~\ref{sec:cert}).
+
+\subsection{Convergence of the finite circle}
+\begin{lemma}[Riemann sums]\label{lem:riemann}
+Let $H$ be a continuously differentiable $2\pi$-periodic function and $N\ge1$. Then
+$\bigl\lvert N^{-1}\sum_{i=0}^{N-1}H(2\pi i/N)-\frac1{2\pi}\int_0^{2\pi}H\bigr\rvert\le\pi\,\|H'\|_\infty/N$.
+\end{lemma}
+\begin{proof}
+On $[\theta_i,\theta_{i+1}]$ with $\theta_i=2\pi i/N$, $\abs{H(\theta)-H(\theta_i)}\le\|H'\|_\infty(\theta-\theta_i)$, so
+$\bigl\lvert\frac1{2\pi}\int_{\theta_i}^{\theta_{i+1}}(H-H(\theta_i))\bigr\rvert\le\frac{\|H'\|_\infty}{2\pi}\cdot\frac{(2\pi/N)^2}{2}$.
+Sum over $i$.
+\end{proof}
+
+\begin{lemma}[finite-circle functions]\label{lem:conv}
+Let $C_1=64\,(\kappa^+)^2\,2^{2\kappa^+R}\,R^1\,(1+R)^2$. For every integer $N\ge1$ and every real $x$, let
+$D^{(N)}(x),A^{(N)}(x),E^{(N)}(x)$ be defined by~\eqref{eq:means} with every mean over $w$ (and the means $N_r,N_s$)
+replaced by the $N$-point average over $w\in\{2\pi i/N\}$. Then for $\Xi\in\{D,A,E,u,\omega\}$,
+\begin{equation}\label{eq:conv}
+ \bigl\lvert\Xi^{(N)}(x)-\Xi(x)\bigr\rvert\le\frac{C_1}{N}\quad\text{for all real }x,\qquad
+ \abs{\log f^{(N)}_\ast-\log f_\ast},\ \abs{\log g^{(N)}_\ast-\log g_\ast}\le\frac{C_1}{N},
+\end{equation}
+where the functions without superscript are those of the continuous circle. In particular, for $P\ge2$ and
+$x\in\Z/P\Z$, $\abs{\Xi_P(x)-\Xi(2\pi x/P)}\le C_1/P$. Moreover $u$ and $\omega$ are continuously differentiable on
+$\Tc$ with $\abs{u'},\abs{\omega'}\le C_1$.
+\end{lemma}
+\begin{proof}
+For fixed $x$ the $w$-derivatives of $k(x,w)$, $k(x,w)r(x+w)$ and $k(x,w)s(w)$ are bounded in absolute value by
+$2^RR^1(1+R)$ (use $\partial_wk=\ln2\,(r'(x+w)+s'(w))\,k$ and $\ln2<1$). By Lemma~\ref{lem:riemann}, each of
+$q^{(N)},Y^{(N)}_r,Y^{(N)}_s$ differs from $q,Y_r,Y_s$ by at most $e_1:=\pi2^RR^1(1+R)/N$. Both $q$ and $q^{(N)}$ lie
+in $[2^{-R},2^R]$ and $\abs{Y_r/q}\le R_r$, $\abs{Y_s/q}\le R_s$ (weighted averages). Hence
+\[
+ \Bigl\lvert\frac{Y^{(N)}}{q^{(N)}}-\frac Yq\Bigr\rvert\le\frac{\abs{Y^{(N)}-Y}}{q^{(N)}}+\frac{\abs Y}{q}\cdot\frac{\abs{q-q^{(N)}}}{q^{(N)}}
+ \le2^R(1+R)\,e_1
+\]
+for $Y=Y_r$ or $Y_s$, and $\abs{\log q^{(N)}-\log q}\le\abs{q^{(N)}-q}/(\ln2\cdot2^{-R})\le2^{R+1}e_1$. Similarly
+$\abs{(2^{\kappa r})'}\le\kappa R^1_r2^{\kappa R_r}$ gives $\abs{N^{(N)}_r-N_r}\le\pi\kappa R^1_r2^{\kappa R_r}/N$ and
+$\abs{\log N^{(N)}_r-\log N_r}\le5\kappa R^12^{2\kappa R}/N$; the same for $N_s$. Inserting these in~\eqref{eq:means}
+and~\eqref{eq:uomega}: the error of $D$ is at most $2\cdot2^R(1+R)e_1+2^{R+1}e_1\le4\pi2^{2R}R^1(1+R)^2/N$, the errors
+of $A$ and $E$ are at most $9\kappa^+2^{2\kappa^+R}R^1(1+R)^2/N$, and the errors of $u$ and $\omega$ are at most the
+sum of two errors of $D$ and one each of $A$ and $E$, which is below $C_1/N$. The statement for $\log f_\ast$
+follows from that for $\log N_r$. For $x$ on the grid of $\Z/P\Z$ and $N=P$, $\Xi^{(P)}(2\pi x/P)=\Xi_P(x)$.
+
+For the derivatives in $x$ on $\Tc$: $\abs{\partial_xk}\le R^1_r2^R$, so $\abs{q'}\le R^12^R$ and
+$\abs{Y_r'},\abs{Y_s'}\le2^RR^1(1+R)$; then $\abs{(Y/q)'}\le2\cdot2^{2R}R^1(1+R)$ and $\abs{(\log q)'}\le2\cdot2^{2R}R^1$,
+and~\eqref{eq:uomega} gives $\abs{u'},\abs{\omega'}\le C_1$.
+\end{proof}
+
+\begin{lemma}[finite-circle moments]\label{lem:B1}
+Let $\Lambda(x)=2+2\cos x$ (on $\Z/P\Z$: $\Lambda(x)=2+2\cos(2\pi x/P)$). Assume \textup{(M1)}, \textup{(M2)},
+\textup{(N11)}, \textup{(N14)}. There is an absolute integer $P_0$ such that for every integer $P\ge P_0$,
+\begin{equation}\label{eq:finmom}
+ \frac1P\sum_{x\in\Z/P\Z}\Lambda(x)\,2^{p_1(\Delta-u_P(x))}<2^{\rho_f},\qquad
+ \frac1P\sum_{x\in\Z/P\Z}\Lambda(x)\,2^{p_2(a_\Gamma\omega_P(x)-u_P(x))}<2^{\rho_f}.
+\end{equation}
+One may take
+$P_0=\bigl\lceil 20\,(1+p_1+2p_2)\,C_1\,2^{\beta_0}/(2^{\rho_f}-2^{\rho_c})\bigr\rceil$ with
+$\beta_0=\max\bigl(p_1(\Delta+U_\infty),\,p_2(a_\Gamma W_\infty+U_\infty)\bigr)$.
+\end{lemma}
+\begin{proof}
+Consider the first moment; write $\Psi(x)=\Lambda(x)2^{p_1(\Delta-u(x))}$ on $\Tc$ and $\Psi_P$ for its finite-circle
+analogue. For real $\alpha,\beta\le\beta_0$, $\abs{2^\alpha-2^\beta}\le2^{\beta_0}\abs{\alpha-\beta}$. By
+Lemma~\ref{lem:conv} and $0\le\Lambda\le4$, $\abs{\Psi_P(x)-\Psi(2\pi x/P)}\le4\cdot2^{\beta_0}p_1C_1/P$ at every grid
+point. Also $\abs{\Psi'}\le2\cdot2^{\beta_0}+4\cdot2^{\beta_0}p_1C_1$, so by Lemma~\ref{lem:riemann} the $P$-point
+average of $\Psi$ differs from $\int_\Tc\Psi$ by at most $\pi2^{\beta_0}(2+4p_1C_1)/P$. The two errors add up to
+$2^{\beta_0}\bigl(2\pi+(4+4\pi)p_1C_1\bigr)/P$, and $2\pi+(4+4\pi)p_1C_1\le20(1+p_1)C_1$ because $C_1\ge1$ (for our
+filter $C_1>3\cdot10^9$, Section~\ref{sec:cert}). Together,
+\[
+ \Bigl\lvert\frac1P\sum_x\Psi_P(x)-\int_\Tc\Psi\Bigr\rvert\le\frac{20(1+p_1)C_1\,2^{\beta_0}}{P}\le2^{\rho_f}-2^{\rho_c}
+\]
+for $P\ge P_0$, and $\int_\Tc\Psi<2^{\rho_c}$ by \textup{(M1)}. The second moment is the same, with exponent
+$p_2(a_\Gamma\omega-u)$, which is Lipschitz in $(u,\omega)$ with constant $p_2(1+a_\Gamma)\le2p_2$ by
+\textup{(N11)}; so the same bound holds with $2p_2$ in place of $p_1$, and both bounds are at most
+$20(1+p_1+2p_2)C_1\,2^{\beta_0}/P$.
+\end{proof}
+Strict positivity of the densities and smoothness enter only through the bounds $2^{-R}\le k\le2^R$ and through
+$R^1$; sine terms change neither. $P_0$ is a (large) absolute constant: with our filter $\beta_0<270$ and $C_1<2^{32}$, so
+$P\ge P_0$ holds once $\eta n\ge340$.
+
+\subsection{Effective evaluation}
+\begin{lemma}[effective evaluation]\label{lem:eval}
+For every rational $\varrho>0$ there are an integer $P_\varrho$ and a deterministic procedure which, given an integer
+$P\ge P_\varrho$ and a residue $x\in\Z/P\Z$, returns rational numbers within $\varrho$ of $D_P(x)$, $A_P(x)$,
+$E_P(x)$, $\log f_{\ast,P}(x)$ and $\log g_{\ast,P}(x)$, in time polynomial in $\log P$, without enumerating
+$\Z/P\Z$. Called twice with the same arguments it returns the same values.
+\end{lemma}
+\begin{proof}
+Let $N=\ceil{8C_1/\varrho}$ and $P_\varrho=N$. By Lemma~\ref{lem:conv}, for $P\ge P_\varrho$ each of the five finite-circle
+values at $x$ is within $\varrho/8$ of the continuous value at $\theta=2\pi x/P$, which is within $\varrho/8$ of the
+$N$-point value $\Xi^{(N)}(\theta)$. The latter is a fixed finite expression: by~\eqref{eq:means} it is built from
+the $2N$ numbers $r(\theta+2\pi i/N)$, $s(2\pi i/N)$ by finitely many additions, multiplications, one division by
+$q^{(N)}\in[2^{-R},2^R]$, the function $z\mapsto2^z$ on $\abs z\le\kappa^+R$ and the function $\log$ on
+$[2^{-\kappa^+R},2^{\kappa^+R}]$. On these compact domains all the operations are Lipschitz with constants depending
+only on $(r,s,\kappa)$, so there is a fixed number of bits $Q_\varrho$ such that evaluating every elementary function
+to within $2^{-Q_\varrho}$ gives the result to within $\varrho/4$. The elementary functions are evaluated in rational
+arithmetic as in Lemma~\ref{lem:phase}: the angle from $x/P$ and a rational approximation of $\pi$; $\cos$ and
+$\sin$ of arguments in $[0,7J+7]$ by Taylor series; $2^z=\exp(z\ln2)$ by the exponential series; and
+$\ln y=2\sum_{i\ge0}\frac1{2i+1}\bigl(\frac{y-1}{y+1}\bigr)^{2i+1}$, which converges geometrically, uniformly for $y$
+in a compact subinterval of $(0,\infty)$ (it also gives $\ln2$). The numbers of terms and the working precision are
+constants depending on $\varrho$; the only dependence on $P$ is the division $x/P$ to a fixed number of bits. The
+total error is below $\varrho/8+\varrho/8+\varrho/4<\varrho$. The procedure is deterministic.
+\end{proof}
+Since the approximations need not preserve the order relations~\eqref{eq:order} exactly, Section~\ref{sec:checksum}
+rounds them in a fixed direction before use.
+\section{The checksum estimator and Theorem B}\label{sec:checksum}
+In this section $P$ is an integer with $\abs{\log P-\eta n}\le2$ (no primality is needed), $\bc_1,\dots,\bc_n$ are
+residues modulo $P$, and for a residue $\rho$
+\begin{equation}\label{eq:V}
+ V_\rho=\sum_{I\subseteq[n]:\ \bc(I)\equiv\rho\ (\mathrm{mod}\ P)}\chi(I),\qquad \chi(I)=e_P\Bigl(\sum_{i\in I}\varphi_i\Bigr).
+\end{equation}
+All filter functions are the finite-circle functions on $\Z/P\Z$ of Section~\ref{sec:filter}; we drop the subscript
+$P$. We write $\tau$ for $\tau_0$, and assume $n$ so large that $P\ge\max(P_0,P_{\eps/8})$
+(Lemmas~\ref{lem:B1},~\ref{lem:eval}).
+
+\begin{thmB}[modular checksum with one filter]
+Fix a constant $d>0$. There are a randomized procedure and an integer $n_B$ with the following properties for
+$n\ge n_B$. Its inputs are $P$, the residues $\bc_i$, phases $\varphi_1,\dots,\varphi_n\in\Z/P\Z$, and a list $\cT$ of at
+most $n^d$ target residues. It returns \textsc{fail} or numbers $\hat V_\rho$ ($\rho\in\cT$) with dyadic real and
+imaginary parts of $n^2+O(n)$ bits.
+\begin{enumerate}[label=\textup{(\arabic*)}]
+\item Let $P$, the residues $\bc_i$ and the list $\cT$ be fixed, that is, chosen without reference to the phases. If
+the phases are independent and uniform on $\Z/P\Z$ and independent of the procedure's own draws, then with
+probability at least $1-\epsilon_B(n)$, over the phases and those draws, the procedure does not fail and
+$\abs{\hat V_\rho-V_\rho}\le\tfrac18$ for every $\rho\in\cT$. Here $\epsilon_B(n)\to0$ depends only on $n$ and $d$; the
+bound is uniform in $P$, in the residues and in $\cT$.
+\item On every execution the procedure uses at most $2^{(\tau+20\eps)n+c_B\sqrt n}\,\poly(n+\abs\cT)$ word operations,
+$c_B$ an absolute constant.
+\end{enumerate}
+\end{thmB}
+
+\subsection{Fourier form}
+\begin{lemma}\label{lem:fourier}
+For every residue $\rho$,
+\begin{equation}\label{eq:fourier}
+ V_\rho=\frac1P\sum_{k=0}^{P-1}J_\rho(k),\qquad J_\rho(k)=e_P(-k\rho)\prod_{i=1}^n\bigl(1+e_P(x_i(k))\bigr),\qquad
+ x_i(k)=\varphi_i+k\bc_i\bmod P,
+\end{equation}
+and $\abs{J_\rho(k)}^2=\prod_{i=1}^n\Lambda(x_i(k))$. If the $\varphi_i$ are independent and uniform on $\Z/P\Z$ then, for
+each fixed $k$, the residues $x_1(k),\dots,x_n(k)$ are independent and uniform, whatever the $\bc_i$ are.
+\end{lemma}
+\begin{proof}
+Expanding the product, $J_\rho(k)=\sum_{I}\chi(I)\,e_P\bigl(k(\bc(I)-\rho)\bigr)$, and
+$P^{-1}\sum_{k<P}e_P(kz)$ is $1$ if $P\mid z$ and $0$ otherwise. Further $\abs{1+e^{\mathrm i\theta}}^2=2+2\cos\theta$.
+For fixed $k$ the map $\varphi\mapsto(\varphi_i+k\bc_i)_i$ is a translation of $(\Z/P\Z)^n$, which preserves the uniform
+law.
+\end{proof}
+For two different frequencies $k\ne k'$ the vectors $x(k)$ and $x(k')$ are \emph{not} independent
+($x_i(k)-x_i(k')=(k-k')\bc_i$ is deterministic). The argument below uses only the law of $x(k)$ for one $k$ at a
+time, combined by linearity of expectation.
+
+\subsection{Patterns, digits and tables}\label{sec:tables}
+\paragraph{Blocks.} Let $N_b=\ceil{\sqrt n}$ and cut $[n]$ into consecutive blocks $\mathsf B_1,\dots,\mathsf B_{N_b}$
+of sizes $n_\beta\in\{\floor{n/N_b},\ceil{n/N_b}\}$; so $\sqrt n/2\le n_\beta\le\sqrt n+1$ for $n\ge16$ and
+$\sum_\beta n_\beta=n$.
+
+\paragraph{Fixed approximations.} By Lemma~\ref{lem:eval} fix deterministic rational approximations of $D(x)$,
+$A(x)$, $E(x)$ within $\eps/8$, and approximations $\tilde\ell_f(y)$, $\tilde\ell_g(y)$ of $\log f_\ast(y)$,
+$\log g_\ast(y)$ within $\eps$. The same approximations are used at every occurrence.
+
+\paragraph{Patterns.} Let $\mathbb G$ be the set of integer multiples of $\eps/4$ in $[-C_0-\eps,C_0+\eps]$; it has at
+most $8C_0/\eps+9$ elements. For a frequency $k<P$ and a block $\beta$ let $\bar D_\beta,\bar A_\beta,\bar E_\beta$ be the
+averages of $D,A,E$ over the coordinates $x_i(k)$, $i\in\mathsf B_\beta$, and let
+$\tilde D_\beta,\tilde A_\beta,\tilde E_\beta$ be the averages of the fixed approximations (so each is within $\eps/8$ of
+the true average). Define $D_\beta$ as the least element of $\mathbb G$ that is at least $\tilde D_\beta+\eps/8$, and
+$A_\beta$, $E_\beta$ as the greatest elements of $\mathbb G$ that are at most $\tilde A_\beta-\eps/8$,
+$\tilde E_\beta-\eps/8$. The \emph{pattern} $\pat(k)$ of $k$ is the tuple $(D_\beta,A_\beta,E_\beta)_{\beta\le N_b}$. It is a
+deterministic function of $k$, the phases and the residues, computable in $\poly(n)$ time.
+
+\begin{lemma}[pattern rule]\label{lem:pattern}
+For every $k$ and $\beta$: $0\le D_\beta-\bar D_\beta<\eps/2$, $0\le\bar A_\beta-A_\beta<\eps/2$,
+$0\le\bar E_\beta-E_\beta<\eps/2$; hence
+\begin{equation}\label{eq:patorder}
+ D_\beta\ge0,\qquad A_\beta\le D_\beta,\qquad E_\beta\le D_\beta .
+\end{equation}
+\end{lemma}
+\begin{proof}
+$\tilde D_\beta+\eps/8\ge\bar D_\beta$, and rounding up to the grid adds less than $\eps/4$, while
+$\tilde D_\beta+\eps/8\le\bar D_\beta+\eps/4$; so $\bar D_\beta\le D_\beta<\bar D_\beta+\eps/2$. The same for $A,E$ with
+directions reversed. All values stay in $[-C_0-\eps,C_0+\eps]$ by~\eqref{eq:C0}. By~\eqref{eq:order},
+$\bar D_\beta\ge0$, $\bar A_\beta\le\bar D_\beta$ and $\bar E_\beta\le\bar D_\beta$, which gives~\eqref{eq:patorder}.
+\end{proof}
+Let $\cP$ be the set of \emph{all} tuples $(D_\beta,A_\beta,E_\beta)_\beta\in\mathbb G^{3N_b}$
+satisfying~\eqref{eq:patorder}, whether or not some frequency attains them. Then
+\begin{equation}\label{eq:Qn}
+ Q_n:=\abs\cP\le(8C_0/\eps+9)^{3N_b}\le2^{c_{\cP}\sqrt n},\qquad c_{\cP}=6\log(8C_0/\eps+9).
+\end{equation}
+The set $\cP$ does not depend on the phases; only the map $k\mapsto\pat(k)$ does. For $\pi\in\cP$ put
+\[
+ (D_\pi,A_\pi,E_\pi)=\frac1n\sum_\beta n_\beta\,(D_\beta,A_\beta,E_\beta),\qquad U_\pi=A_\pi+E_\pi-D_\pi,\qquad
+ W_\pi=2D_\pi-A_\pi-E_\pi\ \ (\ge0),
+\]
+\begin{equation}\label{eq:alpha}
+ \alpha_\pi=\begin{cases}1,&W_\pi\le\Gamma,\\ \Gamma/W_\pi,&W_\pi>\Gamma,\end{cases}\qquad
+ H_\pi=\tau-\alpha_\pi(D_\pi-A_\pi).
+\end{equation}
+All these are rationals with numerators and denominators of $O(\log n)$ bits.
+
+\begin{lemma}[digit balance]\label{lem:balance}
+$0<\alpha_\pi\le1$, $\alpha_\pi W_\pi\le\Gamma$, $\Delta\le H_\pi\le\tau$, and
+$\eta-H_\pi+\alpha_\pi(D_\pi-E_\pi)=\Delta+\alpha_\pi W_\pi\le\tau$.
+\end{lemma}
+\begin{proof}
+$D_\pi-A_\pi\ge0$ and $D_\pi-E_\pi\ge0$ by~\eqref{eq:patorder}, and their sum is $W_\pi$. So $H_\pi\le\tau$ and
+$H_\pi\ge\tau-\alpha_\pi W_\pi\ge\tau-\Gamma=\Delta$. The identity is $\eta-\tau=\Delta$ and the last inequality is
+$\Delta+\Gamma=\tau$.
+\end{proof}
+
+\paragraph{Digits.} Let $B_\pi=2^{\ceil{(\eta-H_\pi)n}}$. High digits are the integers $0\le h<\ceil{P/B_\pi}$, low
+digits the integers $0\le\ell<B_\pi$; the pair $(h,\ell)$ \emph{represents} $k=hB_\pi+\ell$, and each $k<P$ is
+represented by exactly one pair. The digit vectors are
+\[
+ y_i(h)=\varphi_i+hB_\pi\bc_i,\qquad z_i(\ell)=-\ell\,\bc_i\pmod P,\qquad\text{so}\quad y_i(h)-z_i(\ell)=x_i(k).
+\]
+Since $\abs{\log P-\eta n}\le2$, there are at most $2^{H_\pi n+3}\le2^{\tau n+3}$ high digits, at most
+$2^{(\eta-H_\pi)n+1}\le2^{\tau n+1}$ low digits, and at most $B_\pi\ceil{P/B_\pi}<P+B_\pi\le2^{\eta n+2}+2^{\tau n+1}\le2^{\eta n+3}$ pairs (some of which represent
+$k\ge P$).
+
+\paragraph{Tables.} For each $\pi\in\cP$ and each block $\beta$ draw
+\begin{equation}\label{eq:Rb}
+ R_\beta=2^{\ceil{(\alpha_\pi D_\beta+4\eps)n_\beta}}
+\end{equation}
+independent \emph{block tables}. A block table assigns to each coordinate $i\in\mathsf B_\beta$, independently, the
+label $\ast$ with probability $1-\alpha_\pi$ and otherwise a uniform label $\theta_i\in\Z/P\Z$. All block tables (for
+all patterns and blocks) are independent of each other and of the phases, and they are stored.
+
+\paragraph{Tests.} At a coordinate labelled $\ast$ both scores are $0$. At a coordinate labelled $\theta$, the exact
+high score of the digit $h$ is $\log f_\ast(y_i(h)-\theta)$ and the exact low score of $\ell$ is
+$\log g_\ast(z_i(\ell)-\theta)$; the approximate scores are $\tilde\ell_f(y_i(h)-\theta)$ and
+$\tilde\ell_g(z_i(\ell)-\theta)$. A high digit \emph{passes} a block table if the average of its approximate scores
+over the block is at least $\alpha_\pi A_\beta-3\eps$; a low digit passes if the average is at least
+$\alpha_\pi E_\beta-3\eps$. A \emph{whole table} is a tuple of one block-table index per block; a digit passes it if it
+passes each of its block tables. An \emph{entry} is a digit together with a whole table that it passes. A
+\emph{match} is a high entry and a low entry with the same whole table. $L_\pi$ is the number of matches, and
+$\mu_\pi(k)$ the number of matches whose digit pair represents $k$. These definitions do not require the represented
+frequency to have pattern $\pi$.
+
+\subsection{Coverage and sizes}
+\begin{lemma}[coverage and sizes]\label{lem:cov}
+Let $n$ be so large that $n_\beta\ge6C_0^2/\eps^2$ and $n_\beta\ge(\log n+1)/(3\eps)$ for all $\beta$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item For arbitrary fixed phases and residues, the probability over the tables that some $k<P$ has
+$\mu_{\pat(k)}(k)=0$ is at most $2^{\eta n+2}(\sqrt n+1)\exp(-2^{3\eps n_{\min}-1})$, where
+$n_{\min}=\min_\beta n_\beta$.
+\item For each $\pi\in\cP$: conditionally on arbitrary phases, the expected numbers of high and of low entries are
+at most $2^{(\tau+8\eps)n+N_b+3}$; and, when the phases are independent and uniform,
+\begin{equation}\label{eq:EL}
+ \E\,L_\pi\le2^{(\eta-\alpha_\pi U_\pi+12\eps)n+N_b+3},
+\end{equation}
+the expectation being over the phases and the tables.
+\item With independent uniform phases, with probability at least $1-\epsilon_{\cG}(n)$, where
+$\epsilon_{\cG}(n)=2^{\eta n+2}(\sqrt n+1)\exp(-2^{3\eps n_{\min}-1})+3Q_n2^{-6\eps n+N_b+3}$, the following event $\cG$
+holds: every $k<P$ has $\mu_{\pat(k)}(k)\ge1$, and for every $\pi\in\cP$ both entry counts are at most
+$2^{(\tau+14\eps)n}$ and
+\begin{equation}\label{eq:Lgood}
+ L_\pi\le2^{(\eta-\alpha_\pi U_\pi+18\eps)n}.
+\end{equation}
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(i) Fix the phases, a frequency $k<P$ with digits $(h,\ell)$, its pattern $\pi=\pat(k)$ with $\alpha=\alpha_\pi$, and a
+block $\beta$. Write $x_i=x_i(k)$, $y_i=y_i(h)$, $z_i=z_i(\ell)$. Let $\Pr$ be the law of one block table and let
+$\widetilde\Pr$ be the law under which the labels are still independent, $\ast$ still has probability $1-\alpha$,
+but a non-$\ast$ label $\theta_i$ is such that $w_i=z_i-\theta_i$ has density $K_{x_i}$ with respect to the uniform
+law on $\Z/P\Z$. Since $K>0$ the two laws are mutually absolutely continuous, with
+$\log\frac{d\widetilde\Pr}{d\Pr}=\sum_{i\in\mathsf B_\beta}\Xi^{\mathrm{lr}}_i$, where
+$\Xi^{\mathrm{lr}}_i=\log K_{x_i}(w_i)$ at non-$\ast$ coordinates and $0$ at $\ast$. At a non-$\ast$ coordinate the
+exact high score is $\Xi^{\mathrm{hi}}_i=\log f_\ast(y_i-\theta_i)=\log f_\ast(x_i+w_i)$ and the exact low score is
+$\Xi^{\mathrm{lo}}_i=\log g_\ast(w_i)$. By~\eqref{eq:DAE}, under $\widetilde\Pr$ the three variables have means
+$\alpha A(x_i)$, $\alpha E(x_i)$, $\alpha D(x_i)$; they are bounded by $C_0$ in absolute value~\eqref{eq:C0} and
+independent across $i$. By Chebyshev's inequality and the union bound, with $\widetilde\Pr$-probability at least
+$1-3C_0^2/(n_\beta\eps^2)\ge\tfrac12$ the three block averages are within $\eps$ of their means
+$\alpha\bar A_\beta,\alpha\bar E_\beta,\alpha\bar D_\beta$. Call this event $\mathcal Q$. On $\mathcal Q$, using
+Lemma~\ref{lem:pattern} and $\alpha\le1$: the approximate high average is at least
+$\alpha\bar A_\beta-\eps-\eps\ge\alpha A_\beta-3\eps$, the approximate low average is at least $\alpha E_\beta-3\eps$, so
+the block table accepts both digits; and $\log\frac{d\widetilde\Pr}{d\Pr}\le(\alpha\bar D_\beta+\eps)n_\beta\le(\alpha D_\beta+\eps)n_\beta$.
+Therefore
+\[
+ \Pr[\text{the block table accepts both digits}]\ \ge\ \Pr[\mathcal Q]=\widetilde\E\Bigl[\mathbf 1_{\mathcal Q}\frac{d\Pr}{d\widetilde\Pr}\Bigr]
+ \ \ge\ \tfrac12\,2^{-(\alpha D_\beta+\eps)n_\beta}.
+\]
+The $R_\beta\ge2^{(\alpha D_\beta+4\eps)n_\beta}$ block tables are independent, so none accepts both digits with
+probability at most $\exp(-\tfrac12R_\beta2^{-(\alpha D_\beta+\eps)n_\beta})\le\exp(-2^{3\eps n_\beta-1})$. If every block has
+an accepting table, their tuple is a whole table passed by both digits, that is, a match of pattern $\pi$
+representing $k$. A union bound over the $N_b\le\sqrt n+1$ blocks and the $P\le2^{\eta n+2}$ frequencies gives (i).
+
+(ii) By~\eqref{eq:Rb} the number of whole tables is at most
+$\prod_\beta R_\beta\le2^{(\alpha D_\pi+4\eps)n+N_b}$. Fix a high digit $h$ and a whole-table index tuple, and let
+$\mathsf S$ be the sum over all $n$ coordinates of the exact high scores. The labels are independent and, by the
+normalization of $f_\ast$ on $\Z/P\Z$,
+$\E_{\text{tables}}2^{\mathsf S}=\prod_i\bigl((1-\alpha)+\alpha\av{f_\ast}\bigr)=1$ for every value of the phases. If
+$h$ passes the whole table, each block average of approximate scores is at least $\alpha A_\beta-3\eps$, so each block
+sum of exact scores is at least $(\alpha A_\beta-4\eps)n_\beta$ and $\mathsf S\ge(\alpha A_\pi-4\eps)n$. By Markov's
+inequality this has probability at most $2^{-(\alpha A_\pi-4\eps)n}$. Multiplying by the numbers of high digits and of
+whole tables (linearity of expectation; no independence between whole tables is used),
+\[
+ \E[\#\text{high entries}\mid\varphi]\le2^{H_\pi n+3}\cdot2^{(\alpha D_\pi+4\eps)n+N_b}\cdot2^{-(\alpha A_\pi-4\eps)n}=2^{(\tau+8\eps)n+N_b+3}.
+\]
+For low digits the same argument with $g_\ast$ gives
+$2^{(\eta-H_\pi)n+1}2^{(\alpha D_\pi+4\eps)n+N_b}2^{-(\alpha E_\pi-4\eps)n}\le2^{(\tau+8\eps)n+N_b+1}$ by
+Lemma~\ref{lem:balance}.
+
+For matches fix a digit pair $(h,\ell)$ (representing some $k$, possibly $k\ge P$) and a whole-table index tuple, and
+let $\mathsf S_h$, $\mathsf S_\ell$ be the two sums of exact scores. Now take the expectation over the tables
+\emph{and} over independent uniform phases. The pairs $(\varphi_i,\text{label}_i)$ are independent across $i$. At a
+non-$\ast$ coordinate, conditionally on $\theta_i$ the residue $y_i(h)-\theta_i=\varphi_i+hB_\pi\bc_i-\theta_i$ is
+uniform, so the factor $f_\ast(y_i-\theta_i)$ averages to $1$; then $g_\ast(z_i(\ell)-\theta_i)$ averages to $1$ over
+the uniform $\theta_i$. Hence
+\begin{equation}\label{eq:joint}
+ \E_{\varphi,\text{tables}}\,2^{\mathsf S_h+\mathsf S_\ell}=1 .
+\end{equation}
+A match requires $\mathsf S_h+\mathsf S_\ell\ge(\alpha(A_\pi+E_\pi)-8\eps)n$, which by Markov has probability at
+most $2^{-(\alpha(A_\pi+E_\pi)-8\eps)n}$. Multiply by the at most $2^{\eta n+3}$ digit pairs and the number of whole
+tables to get~\eqref{eq:EL}. It is essential that \emph{all} digit pairs are counted, whatever frequency they
+represent and whatever its pattern, and that the phases have their original product law: \eqref{eq:joint} is false
+conditionally on the phases.
+
+(iii) Each of the three bounds defining $\cG$ exceeds the corresponding expectation in (ii) by a factor
+$2^{6\eps n-N_b-3}$; apply Markov's inequality and a union bound over $\pi\in\cP$, and add (i).
+\end{proof}
+
+\subsection{Lists, multiplicities and sampling}\label{sec:lists}
+For one pattern $\pi$ the lists are built block by block: for each digit, test its vector against the $R_\beta$
+tables of each block and record the set of passing indices; if some set is empty the digit has no entry; otherwise
+the entries of the digit are the elements of the Cartesian product of these sets, emitted one at a time by a nested
+counter. By~\eqref{eq:C0} and~\eqref{eq:Rb},
+\begin{equation}\label{eq:sumR}
+ \sum_\beta R_\beta\le N_b\,2^{(C_0+6\eps)(\sqrt n+1)+1}\le2^{c_R\sqrt n}\qquad(c_R=2C_0+2),
+\end{equation}
+so the work per digit, apart from emitted entries, is $2^{c_R\sqrt n}\poly(n)$. Sort the high and low entry lists by
+whole-table index tuple. If the group of the tuple $\nu$ has $a_\nu$ high and $b_\nu$ low entries, then
+$L_\pi=\sum_\nu a_\nu b_\nu$; prefix sums of the products $a_\nu b_\nu$ allow a uniformly random match to be drawn
+without enumerating the matches (draw a uniform integer below $L_\pi$, locate its group by binary search, and split
+the offset by quotient and remainder), and the same structure enumerates the matches sequentially.
+
+\begin{lemma}[multiplicity]\label{lem:mult}
+For $k=hB_\pi+\ell$,
+\[
+ \mu_\pi(k)=\prod_{\beta}\#\{\text{block tables of block }\beta\text{ that both }h\text{ and }\ell\text{ pass}\}.
+\]
+It is computed by retesting the stored block tables in $2^{c_R\sqrt n}\poly(n)$ time. Every match that is sampled or
+enumerated represents a frequency with $\mu_\pi\ge1$.
+\end{lemma}
+\begin{proof}
+The digits of $k$ are unique, and a match representing $k$ is exactly a whole table passed by both digits, that is,
+a choice in each block of a block table passed by both. The tests are deterministic functions of the stored labels
+and of the fixed approximations, so the recomputation reproduces the list construction exactly.
+\end{proof}
+
+\paragraph{The estimator.} For each $\pi\in\cP$ and each $\rho\in\cT$ define the exact pattern contribution
+$v_{\pi,\rho}=P^{-1}\sum_{k<P,\ \pat(k)=\pi}J_\rho(k)$; by~\eqref{eq:fourier}, $V_\rho=\sum_{\pi\in\cP}v_{\pi,\rho}$.
+\begin{itemize}
+\item \emph{Direct patterns} ($\alpha_\pi U_\pi\ge\Delta$): enumerate all matches; a match representing $k$
+contributes $J_\rho(k)/(P\mu_\pi(k))$ if $k<P$ and $\pat(k)=\pi$, and $0$ otherwise.
+\item \emph{Sampled patterns} ($\alpha_\pi U_\pi<\Delta$): if $L_\pi=0$ the estimate is $0$. Otherwise draw
+$N=2^{\ceil{\tau n}}$ independent uniform matches and average the values
+\begin{equation}\label{eq:X}
+ X=\frac{L_\pi}{P\,\mu_\pi(k)}\,J_\rho(k)\ \text{ if }k<P\text{ and }\pat(k)=\pi,\qquad X=0\ \text{ otherwise},
+\end{equation}
+where $k$ is the frequency represented by the sampled match. (One set of $N$ matches serves all $\rho\in\cT$.)
+\end{itemize}
+The \emph{ideal estimate} $V^\circ_\rho$ is the sum over $\pi\in\cP$ of these pattern estimates, in exact arithmetic
+and with exact uniform draws.
+
+\begin{lemma}[conditional analysis]\label{lem:cond}
+Fix phases and tables in $\cG$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item A direct pattern's estimate equals $v_{\pi,\rho}$, and it enumerates $L_\pi\le2^{(\tau+18\eps)n}$ matches.
+\item A sampled pattern's estimate has conditional mean $v_{\pi,\rho}$, and its conditional mean squared error is at
+most
+\begin{equation}\label{eq:mse}
+ \frac1N\cdot\frac{L_\pi}{P^2}\sum_{k<P:\ \pat(k)=\pi}\abs{J_\rho(k)}^2 .
+\end{equation}
+If $L_\pi=0$ the estimate $0$ equals $v_{\pi,\rho}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) On $\cG$ every $k<P$ with $\pat(k)=\pi$ is represented by $\mu_\pi(k)\ge1$ matches, whose contributions add up to
+$J_\rho(k)/P$; all other matches contribute $0$. By~\eqref{eq:Lgood},
+$L_\pi\le2^{(\eta-\Delta+18\eps)n}=2^{(\tau+18\eps)n}$. (b) A uniform match represents a given $k$ with probability
+$\mu_\pi(k)/L_\pi$. So $\E X=\sum_{k<P,\,\pat(k)=\pi}\frac{\mu_\pi(k)}{L_\pi}\cdot\frac{L_\pi}{P\mu_\pi(k)}J_\rho(k)=v_{\pi,\rho}$
+(on $\cG$ all these $k$ have $\mu_\pi(k)\ge1$), and
+\[
+ \E\abs X^2=\sum_{k<P,\,\pat(k)=\pi}\frac{\mu_\pi(k)}{L_\pi}\cdot\frac{L_\pi^2}{P^2\mu_\pi(k)^2}\abs{J_\rho(k)}^2
+ \le\frac{L_\pi}{P^2}\sum_{k<P,\,\pat(k)=\pi}\abs{J_\rho(k)}^2 .
+\]
+The mean of $N$ independent copies has mean squared error $\Var(X)/N\le\E\abs X^2/N$ (independent centred complex
+variables have vanishing cross terms). If $L_\pi=0$ then, on $\cG$, no frequency has pattern $\pi$.
+\end{proof}
+
+\subsection{Domination and the error of a sampled pattern}
+For a frequency $k$ let $\bar u(k)$ and $\bar\omega(k)$ be the averages of $u$ and $\omega$ over the $n$ coordinates
+$x_i(k)$. If $\pat(k)=\pi$ then, by Lemma~\ref{lem:pattern} (three, respectively four, terms each within $\eps$),
+\begin{equation}\label{eq:paterr}
+ \abs{U_\pi-\bar u(k)}\le3\eps,\qquad\abs{W_\pi-\bar\omega(k)}\le4\eps .
+\end{equation}
+
+\begin{lemma}[domination]\label{lem:B2}
+Let $\pi$ be a sampled pattern and $k$ a frequency with $\pat(k)=\pi$. Put $\mathsf R_1(x)=p_1(\Delta-u(x))$ and
+$\mathsf R_2(x)=p_2(a_\Gamma\omega(x)-u(x))$, and let $e=1$ if $W_\pi\le\Gamma$ and $e=2$ if $W_\pi>\Gamma$. Then
+\begin{equation}\label{eq:dom}
+ -\alpha_\pi U_\pi\ \le\ -\Delta+\frac1n\sum_{i=1}^n\mathsf R_e(x_i(k))+c_e\,\eps,\qquad c_1=3p_1,\quad c_2=p_2(4a_\Gamma+3).
+\end{equation}
+By \textup{(N11)}, $\max(c_1,c_2)\le6\max(p_1,p_2)$.
+\end{lemma}
+\begin{proof}
+\emph{Case $W_\pi\le\Gamma$.} Then $\alpha_\pi=1$ and, the pattern being sampled, $\Delta-U_\pi>0$. Since $p_1\ge1$
+\textup{(N12)}, $-U_\pi=-\Delta+(\Delta-U_\pi)\le-\Delta+p_1(\Delta-U_\pi)\le-\Delta+p_1(\Delta-\bar u(k))+3p_1\eps$
+by~\eqref{eq:paterr}.
+
+\emph{Case $W_\pi>\Gamma$.} Then $\alpha_\pi=\Gamma/W_\pi\in(0,1)$ and $\alpha_\pi a_\Gamma W_\pi=\Delta$. The pattern
+being sampled, $\alpha_\pi U_\pi<\Delta=\alpha_\pi a_\Gamma W_\pi$, so $a_\Gamma W_\pi-U_\pi>0$. Since
+$\alpha_\pi\le1\le p_2$,
+\[
+ -\alpha_\pi U_\pi=-\Delta+\alpha_\pi(a_\Gamma W_\pi-U_\pi)\le-\Delta+p_2(a_\Gamma W_\pi-U_\pi)
+ \le-\Delta+p_2(a_\Gamma\bar\omega(k)-\bar u(k))+p_2(4a_\Gamma+3)\eps .
+\]
+In both cases the middle term is $\frac1n\sum_i\mathsf R_e(x_i(k))$. If $a_\Gamma\le\tfrac34$ then
+$4a_\Gamma+3\le6$.
+\end{proof}
+The positivity used in the two cases comes from the sampling condition, not from~\eqref{eq:order}; the lemma is
+false for direct patterns and for frequencies of other patterns, and it is applied to neither.
+
+\begin{lemma}[one sampled pattern]\label{lem:B3}
+Let the phases be independent and uniform and independent of the tables and of the sampling draws. For a sampled
+pattern $\pi$ and a residue $\rho$ let $\mathsf E_{\pi,\rho}$ be the difference between the ideal sampled estimate
+and $v_{\pi,\rho}$. Then, with $\beta_3=\eta-\rho_f-(18+6\max(p_1,p_2))\eps>0$ \textup{(N13)},
+\[
+ \E\bigl[\mathbf 1_{\cG}\,\abs{\mathsf E_{\pi,\rho}}^2\bigr]\le2^{-\beta_3n+2}.
+\]
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:cond}(b), on $\cG$ the conditional expectation of $\abs{\mathsf E_{\pi,\rho}}^2$ given the phases
+and tables is at most~\eqref{eq:mse}. The phases must not now be averaged ``conditionally on $\cG$'': under that
+conditioning they are no longer independent. Instead we bound the integrand pointwise. For every $k<P$,
+by~\eqref{eq:Lgood}, Lemma~\ref{lem:fourier} and Lemma~\ref{lem:B2},
+\begin{equation}\label{eq:pointwise}
+ \mathbf 1_{\cG}\,\mathbf 1_{\{\pat(k)=\pi\}}\,L_\pi\,\abs{J_\rho(k)}^2
+ \ \le\ 2^{(\eta-\Delta+(18+c_e)\eps)n}\prod_{i=1}^n\Lambda(x_i(k))\,2^{\mathsf R_e(x_i(k))},
+\end{equation}
+where $e\in\{1,2\}$ is determined by $\pi$. The right side is nonnegative and involves neither $\cG$ nor the pattern
+of $k$, so the inequality may be integrated against the original law. For fixed $k$ the $x_i(k)$ are independent and
+uniform (Lemma~\ref{lem:fourier}), so by Lemma~\ref{lem:B1} the expectation of the product is
+$\bigl(P^{-1}\sum_x\Lambda(x)2^{\mathsf R_e(x)}\bigr)^n<2^{\rho_fn}$. Summing over the $P$ frequencies (linearity; no
+independence between frequencies is used),
+\[
+ \E\bigl[\mathbf 1_{\cG}\abs{\mathsf E_{\pi,\rho}}^2\bigr]\le\frac{1}{NP^2}\cdot P\cdot2^{(\eta-\Delta+(18+c_e)\eps+\rho_f)n}
+ \le2^{(\rho_f+(18+c_e)\eps-\Delta-\tau)n+2},
+\]
+using $N\ge2^{\tau n}$ and $P\ge2^{\eta n-2}$. Finally $\Delta+\tau=\eta$ and $c_e\le6\max(p_1,p_2)$.
+\end{proof}
+
+\subsection{Proof of Theorem~B}
+\paragraph{The procedure.} For each $\pi\in\cP$ in turn: compute $\alpha_\pi,H_\pi,B_\pi$ and the $R_\beta$; draw and
+store the block tables; build the two entry lists, returning \textsc{fail} before either list would exceed
+\begin{equation}\label{eq:Cn}
+ C_n=2^{\ceil{(\tau+20\eps)n}}
+\end{equation}
+entries; sort them and form the prefix sums. For a direct pattern enumerate the matches, returning \textsc{fail}
+before enumerating more than $C_n$ of them. For a sampled pattern draw $N$ matches (or return $0$ if $L_\pi=0$).
+For each enumerated or sampled match compute $k$, test $k<P$, compute $\pat(k)$, $\mu_\pi(k)$ and, for each
+$\rho\in\cT$, the value $J_\rho(k)$. All draws use the samplers of Lemma~\ref{lem:samplers} (\textsc{fail} on a
+sampler failure), and the complex arithmetic is that of Lemmas~\ref{lem:phase}--\ref{lem:sums}.
+
+\paragraph{Ideal accuracy.} Let the phases be independent and uniform. For a direct pattern
+$\mathsf E_{\pi,\rho}=0$ on $\cG$ (Lemma~\ref{lem:cond}(a)), as it is for a sampled pattern with $L_\pi=0$. By the
+Cauchy--Schwarz inequality over the $Q_n$ patterns and Lemma~\ref{lem:B3},
+\[
+ \E\Bigl[\mathbf 1_{\cG}\Bigl\lvert\sum_{\pi\in\cP}\mathsf E_{\pi,\rho}\Bigr\rvert^2\Bigr]
+ \le Q_n\sum_{\pi}\E\bigl[\mathbf 1_{\cG}\abs{\mathsf E_{\pi,\rho}}^2\bigr]\le Q_n^2\,2^{-\beta_3n+2}.
+\]
+By Markov's inequality and a union bound over $\cT$, the probability that $\cG$ holds and some
+$\abs{V^\circ_\rho-V_\rho}$ exceeds $\tfrac1{16}$ is at most $256\,n^d\,Q_n^2\,2^{-\beta_3n+2}$. No independence between
+pattern errors or between targets is used. With~\eqref{eq:Qn} this tends to $0$, and so does $\epsilon_{\cG}(n)$.
+
+\paragraph{Caps and samplers.} On $\cG$ no cap is reached: the entry counts are at most
+$2^{(\tau+14\eps)n}\le C_n$ and a direct pattern has $L_\pi\le2^{(\tau+18\eps)n}\le C_n$. The procedure makes at most
+$2^{2n}$ sampler calls on any execution (see the count below), so by~\eqref{eq:couple} the real run coincides with
+the ideal one except with probability $o(1)$.
+
+\paragraph{Arithmetic.} On every execution that reaches the summation, the number of terms is at most
+$Q_n\max(N,C_n)\le2^{n}$; each term is a product of at most $n+1$ factors of modulus at most $2$, evaluated to within
+$2^{-2n^2+2n}$ (Lemma~\ref{lem:sums}(a)), times an exact rational weight $1/(P\mu_\pi(k))$ or $L_\pi/(NP\mu_\pi(k))$ of
+absolute value at most $L_\pi\le C_n^2\le2^{n}$ whose numerator and denominator have $O(n)$ bits (on every execution
+that passes the entry caps, $L_\pi\le C_n^2$; and $\mu_\pi(k)\ge1$). By Lemma~\ref{lem:sums}(b) with $K=1$ the total
+arithmetic error is at most $2^{-n^2+5n}\le\tfrac1{16}$ for $n\ge8$. Hence
+$\abs{\hat V_\rho-V_\rho}\le\tfrac1{16}+\tfrac1{16}$ outside the exceptional events, which proves part~(1) with
+\[
+ \epsilon_B(n)=\epsilon_{\cG}(n)+2^{10+d\log n+2c_{\cP}\sqrt n-\beta_3n}+o(1).
+\]
+
+\paragraph{Resources (every execution).} For one pattern: computing its rational parameters costs $\poly(n)$;
+drawing and storing the block tables costs $2^{c_R\sqrt n}\poly(n)$ by~\eqref{eq:sumR}; each of the at most
+$2^{\tau n+3}$ digits per side costs $2^{c_R\sqrt n}\poly(n)$ before its entries are emitted; at most $C_n$ entries
+are emitted per side, each at polynomial cost; sorting, prefix sums and each random index cost polynomially per
+entry or sample, the integers involved ($L_\pi\le C_n^2$ and its prefix sums) having $O(n)$ bits; each of the at
+most $\max(N,C_n)$ sampled or enumerated matches costs $2^{c_R\sqrt n}\poly(n)$ for its multiplicity, $\poly(n)$ for
+its pattern, and $\poly(n)$ per target for $J_\rho(k)$. Multiplying by $Q_n\le2^{c_{\cP}\sqrt n}$ patterns gives
+part~(2) with $c_B=c_{\cP}+c_R+1$. The number of sampler calls is at most the number of elementary operations,
+which is below $2^{2n}$ for large $n$. \qed
+
+\begin{remark}[what is used about the filter]\label{rem:onefilter}
+The proof uses the filter only through Lemma~\ref{lem:order} (order and bounds), Lemma~\ref{lem:eval} (evaluation)
+and the two finite moments~\eqref{eq:finmom}. In the language of~\cite{Base}, whose Theorem~B uses a family of $43$
+filters and ten regions of $W_\pi$ with multiplier vectors $z$, the present case is the family with one filter and
+the vectors $z=(p_1,0)$ for $W_\pi\le\Gamma$ and $z=(p_2,0,\dots)$ for $W_\pi>\Gamma$; then all ten certificates
+reduce to \textup{(M1)} and \textup{(M2)}. We have written the argument directly for one filter, so the regions and
+the comparison rows of~\cite{Base} do not appear, and the general ``$6\eps$ per row'' accounting, which
+needs $a_\Gamma\le\tfrac34$ (otherwise a row combining a $3\eps$ and a $4\eps$ error costs $7\eps$), is replaced by
+the exact constants $c_1,c_2$ of Lemma~\ref{lem:B2}. With $7\max(p_1,p_2)$ in place of $6\max(p_1,p_2)$ the
+premise \textup{(N13)} would still hold at our point (slack $7.2\cdot10^{-7}$).
+\end{remark}
+\section{The final algorithm and its correctness}\label{sec:final}
+
+\subsection{The algorithm}
+Let $n_\ast$ be a fixed integer, specified in Section~\ref{sec:nstar}.
+\begin{procedure}[main algorithm]\label{proc:main}
+\begin{enumerate}[label=\arabic*.]
+\item If $n<n_\ast$, or if the guard $G_0\ceil{\log(b+1)}\le n$ fails, run exact meet in the middle on the original
+instance (Section~\ref{sec:fallback}) and stop. (Here $b$ is the bit length of the \emph{original} instance.)
+\item Draw the tie weights and form $c_i$ and $t_s$ by~\eqref{eq:transform}.
+\item Run the preliminary search (Procedure~\ref{proc:prelim}). If it returns \textsc{yes} or \textsc{no}, return
+that answer.
+\item Draw a prime $P$ of $[2^{\floor{\eta n}},2^{\floor{\eta n}+1})$ by Lemma~\ref{lem:samplers}(c), and independent
+uniform phases $\varphi_1,\dots,\varphi_n\in\Z/P\Z$ by Lemma~\ref{lem:samplers}(a); store them. Put $\bc_i=c_i\bmod P$.
+If a sampler fails, return \textsc{no}.
+\item Run the capped alias procedure (Procedure~\ref{proc:Acap}) on $(c,t,P,\varphi)$. If it fails, return \textsc{no}.
+\item Run the checksum procedure of Theorem~B (with $d=3$) on $(P,\bc,\varphi)$ and the target list
+$\cT=\{t_s\bmod P:0\le s\le nN_0\}$. If it fails, return \textsc{no}.
+\item For each $s$ put $\hat B_s=\hat V_{t_s\bmod P}-\hat A_s$. Return \textsc{yes} if $\abs{\hat B_s}^2\ge\tfrac14$ for
+some $s$, and \textsc{no} otherwise. (The real and imaginary parts are dyadic rationals with $n^2+O(n)$ fractional
+bits, so the comparison is exact.)
+\end{enumerate}
+\end{procedure}
+The procedures of Steps~3, 5 and~6 read only their declared inputs and their own fresh random words; in
+particular Step~5 does not modify the stored phases, and Steps~4--6 do not read the random words used in Step~3.
+
+\subsection{Exact cancellation}
+\begin{lemma}\label{lem:cancel}
+For every prime $P$, all phases and every $s$,
+\begin{equation}\label{eq:cancel}
+ V_{t_s\bmod P}-\sum_{I\in\cA_s(P)}\chi(I)=B_s:=\sum_{I\subseteq[n]:\ c(I)=t_s}\chi(I).
+\end{equation}
+If no $I$ has $c(I)=t_s$ then $B_s=0$; if exactly one has, then $\abs{B_s}=1$.
+\end{lemma}
+\begin{proof}
+Since $\bc(I)\equiv c(I)\pmod P$, the sum $V_{t_s\bmod P}$ of~\eqref{eq:V} runs over the $I$ with
+$c(I)\equiv t_s\pmod P$; these are the aliases of $t_s$ together with the $I$ with $c(I)=t_s$. Each $\chi(I)$ has
+modulus $1$.
+\end{proof}
+
+\subsection{Correctness}
+For fixed tie weights $u$ the statement \textup{(LD)} is either true or false; the algorithm cannot test it.
+Write $\mathrm{ISO}(u)$ for the event of Lemma~\ref{lem:iso}(b) (some $t_s$ has exactly one representing subset).
+Put
+\[
+ \epsilon_{\mathrm{pre}}(n)=\frac8{\zeta^2n}+n2^{-n^3},\qquad
+ \epsilon_{\mathrm{main}}(n)=\epsilon_A(n)+\epsilon_B(n)+e^{-c_\ast n^2}+2n^32^{-n^3},
+\]
+with $\epsilon_A,\epsilon_B$ from Theorems~A and~B; all depend on $n$ only and tend to $0$.
+
+\begin{proposition}[correctness for large guarded inputs]\label{prop:correct}
+Let $n\ge\max(n_A,n_B,1/\zeta)$ and let the input pass the guard and Step~1.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item On a \textsc{no} instance the algorithm returns \textsc{yes} with probability at most
+$\max(\epsilon_{\mathrm{pre}}(n),\epsilon_{\mathrm{main}}(n))$.
+\item On a \textsc{yes} instance it returns \textsc{no} with probability at most
+$\tfrac1{12}+\max(\epsilon_{\mathrm{pre}}(n),\epsilon_{\mathrm{main}}(n))$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+\emph{An extended experiment.} The random words read in Step~3 and those read in Steps~4--6 are disjoint and
+therefore independent. Consider the experiment in which, after Step~3, Steps~4--7 are carried out \emph{in every
+case} (also when Step~3 has returned an answer), reading their own words. The output of the algorithm is a function
+of this experiment: it is the answer of Step~3 if that is \textsc{yes} or \textsc{no}, and otherwise the answer of
+Step~7 (or \textsc{no} if Steps~4--6 fail). In the extended experiment the joint law of everything in Steps~4--7 is
+the law of Steps~4--7 run on $(c,t)$ with fresh randomness; it is \emph{not} conditioned on the outcome of Step~3.
+No statement below is made conditionally on \textsc{continue}.
+
+Fix the tie weights $u$. In the extended experiment let $\mathcal S$ be the event that: no sampler of Step~4 fails;
+the alias procedure does not fail and $\abs{\hat A_s-\sum_{I\in\cA_s(P)}\chi(I)}\le\tfrac1{16}$ for all $s$; and the
+checksum procedure does not fail and $\abs{\hat V_\rho-V_\rho}\le\tfrac18$ for all $\rho\in\cT$. On $\mathcal S$,
+by~\eqref{eq:cancel},
+\begin{equation}\label{eq:resid}
+ \abs{\hat B_s-B_s}\le\tfrac3{16}<\tfrac14\qquad\text{for every }s .
+\end{equation}
+
+\emph{Claim: if \textup{(LD)} holds for $u$, then $\Pr[\mathcal S^c\mid u]\le\epsilon_{\mathrm{main}}(n)$.} Couple
+Step~4 with ideal draws (Section~\ref{sec:samplers}): there are a prime $P^\circ$ uniform among the primes of the
+interval and, given $P^\circ$, independent uniform phases $\varphi^\circ$, such that $(P,\varphi)=(P^\circ,\varphi^\circ)$
+unless a sampler of Step~4 fails, which has probability at most $e^{-c_\ast n^2}+2n^32^{-n^3}$. We bound the
+probabilities of the remaining parts of $\mathcal S^c$ for the run on $(P^\circ,\varphi^\circ)$; this involves no
+conditioning on the samplers' success. \emph{Alias part.} The random words of the alias procedure are independent
+of $(P^\circ,\varphi^\circ)$, and $P^\circ$ is uniform among the primes of its interval. Let $\mathcal H$ be the
+event of Theorem~A(1) for the run with the prime $P^\circ$; it is determined by $P^\circ$ and the alias
+procedure's words, and $\Pr[\mathcal H^c]\le\epsilon_A(n)$. On $\mathcal H$ the alias part of $\mathcal S$ holds
+for every phase vector, in particular for $\varphi^\circ$; no conditioning on $\varphi^\circ$ is needed, and it
+does not matter that $\varphi^\circ$ depends on $P^\circ$. So the alias part of $\mathcal S$ fails
+with probability at most $\epsilon_A(n)$. \emph{Checksum part.} Condition on $P^\circ$. The phases are independent
+and uniform on $\Z/P^\circ\Z$ and independent of the checksum procedure's own words; $\abs{\log P^\circ-\eta n}\le1$;
+the target list has at most $24n^2+1\le n^3$ residues and is a function of $(c,t,P^\circ)$. By
+Theorem~B(1) the checksum part of $\mathcal S$ fails with probability at most $\epsilon_B(n)$. That the
+alias procedure reads the same phases is irrelevant here: the checksum event is a function of
+$(P^\circ,\bc,\varphi^\circ)$ and the checksum's own words only. The union bound proves the claim.
+
+\emph{Case 1: \textup{(LD)} holds for $u$.} If Step~3 returns an answer, it is correct
+(Proposition~\ref{prop:P}(a)). Otherwise the output is that of Steps~4--7. On $\mathcal S$: for a \textsc{no}
+instance every $B_s=0$ (Lemma~\ref{lem:iso}(a) and Lemma~\ref{lem:cancel}), so $\abs{\hat B_s}<\tfrac14$ for all $s$
+by~\eqref{eq:resid} and the output is \textsc{no}; for a \textsc{yes} instance with $\mathrm{ISO}(u)$, some
+$\abs{B_s}=1$, so $\abs{\hat B_s}>\tfrac34$ and the output is \textsc{yes}. Hence, given $u$, the algorithm errs with
+probability at most $\epsilon_{\mathrm{main}}(n)$ on a \textsc{no} instance, and at most
+$\epsilon_{\mathrm{main}}(n)+\mathbf 1_{\neg\mathrm{ISO}(u)}$ on a \textsc{yes} instance.
+
+\emph{Case 2: \textup{(LD)} fails for $u$.} By Proposition~\ref{prop:P}(c), Step~3 returns a correct answer except
+with probability at most $\epsilon_{\mathrm{pre}}(n)$. So, given $u$, the algorithm errs with probability at most
+$\epsilon_{\mathrm{pre}}(n)$, on either kind of instance.
+
+In both cases the conditional error probability given $u$ is at most
+\[
+ \max(\epsilon_{\mathrm{pre}}(n),\epsilon_{\mathrm{main}}(n))+\mathbf 1_{\{\textsc{yes}\text{ instance}\}}\,\mathbf 1_{\neg\mathrm{ISO}(u)} .
+\]
+This bound is pointwise in $u$, so the dependence between $\mathrm{ISO}(u)$ and the truth of \textup{(LD)} does not
+matter. Average over $u$ and use $\Pr[\neg\mathrm{ISO}]\le\tfrac1{12}$.
+\end{proof}
+
+\begin{remark}[how a wrong answer can arise]\label{rem:errors}
+A \textsc{no} instance is answered \textsc{yes} only if Step~7 finds $\abs{\hat B_s}\ge\tfrac12$ although $B_s=0$,
+which requires an inaccurate alias sum or checksum; \textsc{fail} outcomes are converted to \textsc{no} and the
+preliminary search never errs. A \textsc{yes} instance is answered \textsc{no} if isolation fails, if a main
+procedure fails or is inaccurate, or if \textup{(LD)} is false and the preliminary search nevertheless returns
+\textsc{continue} and the main part then errs. The error is two-sided. Failure probabilities are carried to the
+final decision only through the union bounds above; no expected-time bound is used in the correctness proof except
+inside Theorem~A(1), where it bounds the probability of reaching the cap.
+\end{remark}
+
+\subsection{The cutoff $n_\ast$ and part (a) of Theorem~\ref{thm:main}}\label{sec:nstar}
+Let $n_\ast$ be an integer such that for all $n\ge n_\ast$: (i) $n\ge\max(n_A,n_B,1/\zeta)$ and the thresholds of
+\textup{(S1)--(S6)}, Lemma~\ref{lem:cov} and Proposition~\ref{prop:time} hold, and $2^{\eta n-1}\ge\max(P_0,P_{\eps/8})$;
+(ii) $\max(\epsilon_{\mathrm{pre}}(n),\epsilon_{\mathrm{main}}(n))\le\tfrac1{12}$. Such an integer exists and depends
+only on the fixed constants, because every one of these quantities has been bounded by an explicit function of $n$
+tending to its limit; Section~\ref{sec:limits} estimates its size. Then by Proposition~\ref{prop:correct} the
+algorithm answers correctly with probability at least $1-\tfrac1{12}-\tfrac1{12}=\tfrac56\ge\tfrac23$ on every input
+with $n\ge n_\ast$ that passes the guard. On all other inputs it runs the exact fallback. Together with the halting
+statement of Proposition~\ref{prop:time} this proves Theorem~\ref{thm:main}(a).
+
+\subsection{The fallback}\label{sec:fallback}
+Split $[n]$ into two halves, list all subset sums $a(I)$ of each half (including the empty set), sort one list and,
+for each element $x$ of the other, search for $t-x$ by binary search. This decides the original instance exactly,
+uses $O(n2^{n/2})$ operations on integers of at most $b+\ceil{\log(n+1)}\le w$ bits (one word each), and at most
+$4\cdot2^{\ceil{n/2}}+O(1)$ words of storage with an in-place merge sort buffer of one list length.
+\section{Running time and resource accounting}\label{sec:time}
+
+\begin{proposition}[time, halting, address space]\label{prop:time}
+There are constants $K_0,K$ such that the following hold.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item Every execution of Procedure~\ref{proc:main} halts.
+\item Every execution on an input with $n\ge n_\ast$ that passes the guard uses at most
+\begin{equation}\label{eq:alltime}
+ K_0\,2^{(\tau_0+20\eps)n+2n^{0.7}}\,(n+b+2)^{K}
+\end{equation}
+word operations. Every execution on any other input uses at most $K_0\,2^{n/2}(n+b+2)^K$ word operations.
+\item The number of memory words ever allocated is at most the number of operations, memory is allocated
+sequentially, and for every input ($n\ge2$, $b\ge1$) every address used is below $2^{w}$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(b) We go through the steps for $n\ge n_\ast$ and a guarded input; every bound is for every execution.
+\begin{itemize}
+\item \emph{Step 1}: reading the input, computing $b$ by shifts, and the two comparisons cost $\poly(n+b)$. The
+comparison of $n$ with the constant $n_\ast$ is a comparison with a fixed multiword literal.
+\item \emph{Step 2}: $n\log N_0$ random bits and $O(n^2)$ arithmetic operations on integers of $O(b+\log n)$ bits.
+\item \emph{Step 3}: at most $2^{\tau_0n}\poly(n+b+2)$ (Proposition~\ref{prop:P}(b)).
+\item \emph{Step 4}: at most $n^3$ candidates, each tested by at most $2^{(\floor{\eta n}+1)/2}$ trial divisions of
+$(\eta n+1)$-bit integers (Lemma~\ref{lem:samplers}(c)): at most $2^{\eta n/2}\poly(n)$, and $\eta/2<\tau_0$ by
+\textup{(N9)}. The phases and the residues $\bc_i$ cost $\poly(n+b)$.
+\item \emph{Step 5}: at most $2^{\tau_0n+2n^{0.7}}\poly(n+b+2)$ (Theorem~A(2)).
+\item \emph{Step 6}: at most $2^{(\tau_0+20\eps)n+c_B\sqrt n}\poly(n)$ (Theorem~B(2), $\abs\cT\le24n^2+1$).
+\item \emph{Step 7}: $O(n^2)$ subtractions and comparisons of dyadic numbers with $n^2+O(n)$ bits.
+\end{itemize}
+Since $c_B\sqrt n\le n^{0.7}$ for large $n$ (guaranteed by the choice of $n_\ast$), the sum is at
+most~\eqref{eq:alltime}. For inputs with $n<n_\ast$ or failing the guard, Step~1 costs $\poly(n+b)$ and the fallback
+costs $O(n2^{n/2})$ operations on one-word integers.
+
+(a) Each step has just been bounded on every execution: all loops are bounded by the list caps, the step cap of
+Procedure~\ref{proc:Acap}, the entry and match caps~\eqref{eq:Cn}, the fixed numbers of samples and trials, and the
+bounded samplers. (An unbounded rejection sampler would give only almost-sure halting; this is why the samplers of
+Lemma~\ref{lem:samplers} are capped.)
+
+(c) Allocate memory by a single increasing pointer, a new word being allocated only when it is first written; then
+every address is below $n+2$ plus the number of words written, which is at most the operation count. For
+$n\ge n_\ast$ and a guarded input, by~\eqref{eq:alltime} the logarithm of the operation count is at most
+$\log K_0+0.49n+2n^{0.7}+K\log(n+b+2)$. For $x\ge x_0(K)$ one has $K\log x\le x$; taking $n_\ast\ge x_0(K)$ and
+$n_\ast$ so large that $\log K_0+2n^{0.7}+4\le n/2$, this is at most $n+(n+b+2)-4\le w-2$ for every $b\ge1$, since
+$w\ge4n+4b$. (The term $4b$ of the word length pays for the factor $(n+b+2)^K$ whatever $b$ is; the guard is not
+used here.) For the fallback the storage is $4\cdot2^{\ceil{n/2}}+O(1)$ words, and
+$\log(4\cdot2^{\ceil{n/2}}+n+64)\le n/2+8\le4n+4\le w$ for all $n\ge2$, $b\ge1$.
+\end{proof}
+
+\paragraph{Proof of Theorem~\ref{thm:main}(b).} Fix $c\ge1$ and $T'>T=\tau_0+20\eps$. Let $N\ge n_\ast$ be such that
+for all $n\ge N$: $G_0\ceil{\log(n^c+1)}\le n$ (so every input with $b\le n^c$ passes the guard) and
+$2n^{0.7}+K\log(n+n^c+2)\le(T'-T)n$. Then by~\eqref{eq:alltime} every execution on an input with $n\ge N$ and
+$b\le n^c$ uses at most $K_0\,2^{T'n}$ word operations. With $T'=0.4875755>0.4875754036$ this is the bound
+$O(2^{0.4875755n})$. The program does not depend on $c$ or $T'$; only $N$ and the constant do. \qed
+
+\begin{remark}[expected versus worst-case time]\label{rem:worst}
+The bound~\eqref{eq:alltime} is a bound on every execution, including executions that return a wrong answer. It is
+obtained from caps, not from expectations. The only expectation bound in the paper, Lemma~\ref{lem:A7}, is used to
+show that the cap of the alias procedure is rarely reached; if it is reached the procedure fails and the algorithm
+answers \textsc{no}, which costs correctness probability (accounted for in $\epsilon_A$), not time.
+\end{remark}
+
+\begin{remark}[polynomial factors]\label{rem:polyfactors}
+On guarded inputs $b$ may be as large as $2^{n/G_0}$, so the factor $(n+b+2)^K$ in~\eqref{eq:alltime} can itself be
+exponential in $n$. This is harmless for Theorem~\ref{thm:main}(b), which concerns $b\le n^c$, and it is why the
+theorem is stated for polynomial bit length. Inside the proof of Theorem~A the bit length enters the
+\emph{probability} of reaching the cap only to the first power, through the factor $b+2$ of Lemma~\ref{lem:A7},
+and there the guard and \textup{(N1)} absorb it.
+\end{remark}
+\section{Numerical certification}\label{sec:cert}
+This section says what is certified, by what means, and how each numerical premise of Section~\ref{sec:params}
+corresponds to a line of the certificate. Certification of a numerical inequality and proof of a lemma are
+different things; this section concerns only the former.
+
+\subsection{Method}
+A real number is represented by a ball (midpoint and rigorous radius) in the Arb library, through
+\texttt{python-flint}, at 200 bits; every operation enlarges the radius so that the true value stays inside. An
+inequality is certified when the whole ball lies on the correct side. The scalar premises \textup{(E0)},
+\textup{(C1)--(C8)}, \textup{(N1)--(N14)} are evaluated directly from the exact decimals of Section~\ref{sec:params},
+with $h(x)=-(x\ln x+(1-x)\ln(1-x))/\ln2$. The constant $\eps_0$ enters as the exact decimal $0.0000013156$; no
+computed quantity is substituted for it, so every enclosure containing $\eps_0$ has the direction required by the
+inequality it certifies.
+
+For the moments \textup{(M1)}, \textup{(M2)} the certificate evaluates the formulas~\eqref{eq:uomega} on the
+continuous circle. With $F=2^r$, $G=2^s$, $Z_f=\int F$, $Z_g=\int G$, $Z_{f,\kappa}=\int F^\kappa$,
+$Z_{g,\kappa}=\int G^\kappa$, $\mathcal P(x)=\int F(x+w)G(w)\,dw$ and
+$\mathcal Y(x)=\int F(x+w)G(w)\,(r(x+w)+s(w))\,dw$, it forms
+\[
+ \mathsf L=\log\mathcal P-\log(Z_fZ_g),\qquad\mathsf B=\mathcal Y/\mathcal P-\log(Z_fZ_g),\qquad
+ \mathsf H=\log Z_{f,\kappa}+\log Z_{g,\kappa}-\kappa\log(Z_fZ_g),
+\]
+and $u=\mathsf L+(\kappa-1)\mathsf B-\mathsf H$, $\omega=(2-\kappa)\mathsf B-2\mathsf L+\mathsf H$. In the notation
+of~\eqref{eq:means}, $\mathcal P=q$, $\mathcal Y=Y_r+Y_s$, $Z_{f,\kappa}=N_r$, $Z_{g,\kappa}=N_s$; the terms
+$\log(Z_fZ_g)$ cancel, and these expressions are identical to~\eqref{eq:uomega}.
+
+\paragraph{Orientation.} The certificate uses the convention ``$F$ at $x+w$, $G$ at $w$'' of
+Section~\ref{sec:filter}: $\mathcal P$ is a \emph{correlation} of the two densities. Two other conventions must be
+distinguished from it and from each other. \emph{Exchanging the densities}, that is, using
+$\int G(x+w)F(w)\,dw=\mathcal P(-x)$, only reflects $x$: it replaces $u(x)$, $\omega(x)$ by $u(-x)$, $\omega(-x)$,
+and because $\Lambda$ is even the two moments are unchanged. \emph{Replacing the correlation by the convolution}
+$\int F(x-w)G(w)\,dw$, which amounts to reflecting one of the two densities, is a different filter. With the
+asymmetric densities of Appendix~\ref{app:filter} it gives $\log M_1=3.27728\ldots$ and $\log M_2=3.27609\ldots$
+(certified enclosures from the same code with the sine coefficients of $s$ negated), far above $\rho_c$; so
+\textup{(M1)} and \textup{(M2)} hold for the stated convention only. Reflecting both densities again changes
+nothing.
+
+\paragraph{Quadrature.} Each integral is a trapezoid sum with a rigorous error term
+from the bound of Trefethen and Weideman~\cite[Theorem~3.2]{TW}: if $g$ is $2\pi$-periodic, analytic and
+$\abs g\le M$ in the strip
+$\abs{\operatorname{Im}z}<\mathsf a$, the $N$-point trapezoid mean differs from the mean of $g$ by at most
+$2M/(e^{\mathsf aN}-1)$. (The theorem is stated in~\cite{TW} for the integral over a period, with the constant
+$4\pi M$; dividing by $2\pi$ gives the bound for means.) What has to be supplied is, for every integrand, a strip
+on which it is analytic and a bound for it there. For a real trigonometric polynomial $r$ as in
+Section~\ref{sec:filter} and $y\ge0$ write
+\[
+ S_r(y)=\sum_{j=1}^{J}\bigl(\abs{r_j}+\abs{r'_j}\bigr)\cosh(jy),
+\]
+so that $\abs{r(z)}\le S_r(\abs{\operatorname{Im}z})$ for complex $z$, because
+$\abs{\cos jz},\abs{\sin jz}\le\cosh(j\operatorname{Im}z)$. Consequently $\abs{2^{r(z)}}=2^{\operatorname{Re}r(z)}\le2^{S_r(\abs{\operatorname{Im}z})}$.
+
+\emph{Inner integrals} (strip half-width $\sigma$, variable $w$, real $x$). The integrands of $Z_f$, $Z_{f,\kappa}$,
+$\mathcal P(x)$ and $\mathcal Y(x)$ are entire and $2\pi$-periodic in $w$, and for $\abs{\operatorname{Im}w}<\sigma$
+they are bounded by $2^{S_r(\sigma)}$, $2^{\kappa S_r(\sigma)}$, $2^{S_r(\sigma)+S_s(\sigma)}$ and
+$(S_r(\sigma)+S_s(\sigma))\,2^{S_r(\sigma)+S_s(\sigma)}$ respectively (likewise for $g$). No further argument is
+needed for them.
+
+\emph{Outer integrals} (strip half-width $2\beta$, variable $x$). Here the integrands
+$\Lambda\,2^{p_1(\Delta-u)}$ and $\Lambda\,2^{p_2(a_\Gamma\omega-u)}$ contain $\log\mathcal P$ and
+$\mathcal Y/\mathcal P$, so one must show that $\mathcal P$ has no zero in the strip, fix the branch of the
+logarithm, and bound $\operatorname{Re}u$ and $\operatorname{Re}\omega$ there. This is the content of the next
+lemma. Write $f=F/Z_f$ and $g=G/Z_g$; these are entire, $2\pi$-periodic, positive on the real axis and of mean
+$1$.
+
+\begin{lemma}[strip bounds for the moment integrands]\label{lem:strip}
+Let $\beta>0$ and put
+\[
+ n_f=\int_{\Tc}\abs{f(w+\mathrm i\beta)}^2dw,\qquad n_g=\int_{\Tc}\abs{g(w+\mathrm i\beta)}^2dw,\qquad
+ q_0=\sqrt{(n_f-1)(n_g-1)} .
+\]
+Assume $q_0<1$. Then for every complex $z$ with $\abs{\operatorname{Im}z}<2\beta$:
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\bigl\lvert\mathcal P(z)/(Z_fZ_g)-1\bigr\rvert\le q_0$. Hence $\mathcal P$ has no zero in the strip;
+$\mathsf L(z)=\operatorname{Log}\bigl(\mathcal P(z)/(Z_fZ_g)\bigr)$, with the principal branch (base $2$), is
+analytic there and coincides on the real axis with the real function $\mathsf L$ of the certificate; and
+$\abs{\operatorname{Re}\mathsf L(z)}\le\lambda_0:=-\log(1-q_0)$.
+\item $\bigl\lvert\mathcal Y(z)/\mathcal P(z)\bigr\rvert\le\sqrt{n_fn_g}\,\bigl(S_r(\beta)+S_s(\beta)\bigr)/(1-q_0)$, so that
+$\abs{\mathsf B(z)}\le B^\ast$ with
+\[
+ B^\ast=\frac{\sqrt{n_fn_g}\,\bigl(S_r(\beta)+S_s(\beta)\bigr)+(1+q_0)\abs{\log(Z_fZ_g)}}{1-q_0}.
+\]
+\item $u$ and $\omega$ extend to analytic functions on the strip with
+\[
+ \abs{\operatorname{Re}u}\le U^\ast:=\lambda_0+\abs{\kappa-1}B^\ast+\abs{\mathsf H},\qquad
+ \abs{\operatorname{Re}\omega}\le W^\ast:=2\lambda_0+\abs{2-\kappa}B^\ast+\abs{\mathsf H},
+\]
+and the two moment integrands are analytic on the strip and bounded there by
+$(2+2\cosh2\beta)\,2^{p_1(\Delta+U^\ast)}$ and $(2+2\cosh2\beta)\,2^{p_2(a_\Gamma W^\ast+U^\ast)}$ respectively.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+\emph{Norms on shifted lines.} Since $f$ is entire and $2\pi$-periodic it has an absolutely convergent Fourier
+series $f(w)=\sum_{j\in\Z}\hat f_je^{\mathrm ijw}$, valid for complex $w$, with $\hat f_0=\int f=1$. For real $t$,
+$f(w+\mathrm it)=\sum_j\hat f_je^{-jt}e^{\mathrm ijw}$; so the mean of $w\mapsto f(w+\mathrm it)$ over $\Tc$ is $1$
+for every $t$, and by Parseval
+\[
+ \int_{\Tc}\abs{f(w+\mathrm it)}^2dw=\sum_j\abs{\hat f_j}^2e^{-2jt}=1+\sum_{j\ge1}\abs{\hat f_j}^2\,2\cosh(2jt),
+\]
+where the last step uses $\hat f_{-j}=\overline{\hat f_j}$, which holds because $f$ is real on the real axis. This
+is an even function of $t$, nondecreasing in $\abs t$. Hence for $\abs t\le\beta$,
+\begin{equation}\label{eq:shiftnorm}
+ \int_{\Tc}\abs{f(w+\mathrm it)}^2dw\le n_f,\qquad\int_{\Tc}\abs{f(w+\mathrm it)-1}^2dw=\int_{\Tc}\abs{f(w+\mathrm it)}^2dw-1\le n_f-1,
+\end{equation}
+and the same for $g$ with $n_g$.
+
+\emph{Contour shift.} Let $z=x+\mathrm iy$ with $\abs y<2\beta$. The function
+$w\mapsto f(z+w)g(w)$ is entire and $2\pi$-periodic, so its integral over a period is the same along every
+horizontal line (Cauchy's theorem on a rectangle; the vertical sides cancel by periodicity). Taking the line
+$\operatorname{Im}w=-y/2$,
+\[
+ \frac{\mathcal P(z)}{Z_fZ_g}=\int_{\Tc}f(z+w)g(w)\,dw=\int_{\Tc}f\bigl(x+w+\tfrac{\mathrm iy}2\bigr)\,g\bigl(w-\tfrac{\mathrm iy}2\bigr)\,dw .
+\]
+Both factors now have imaginary displacement $\abs y/2<\beta$, and both have mean $1$. Therefore
+\[
+ \frac{\mathcal P(z)}{Z_fZ_g}-1=\int_{\Tc}\Bigl(f\bigl(x+w+\tfrac{\mathrm iy}2\bigr)-1\Bigr)\Bigl(g\bigl(w-\tfrac{\mathrm iy}2\bigr)-1\Bigr)dw,
+\]
+and the Cauchy--Schwarz inequality with~\eqref{eq:shiftnorm} bounds the modulus by
+$\sqrt{(n_f-1)(n_g-1)}=q_0$, which is the inequality of (a). So $\mathcal P(z)/(Z_fZ_g)$ lies in the closed disc of radius $q_0<1$ about $1$, which
+does not contain $0$ and on which the principal logarithm is analytic; on the real axis the quotient is a positive
+real number and the principal logarithm is the real one. As the modulus of the quotient lies in $[1-q_0,1+q_0]$,
+$\abs{\operatorname{Re}\mathsf L}\le\max\bigl(-\log(1-q_0),\log(1+q_0)\bigr)=-\log(1-q_0)$.
+
+(b) The same shift applied to $\mathcal Y$ gives
+\[
+ \frac{\mathcal Y(z)}{Z_fZ_g}=\int_{\Tc}f\bigl(x+w+\tfrac{\mathrm iy}2\bigr)g\bigl(w-\tfrac{\mathrm iy}2\bigr)
+ \Bigl(r\bigl(x+w+\tfrac{\mathrm iy}2\bigr)+s\bigl(w-\tfrac{\mathrm iy}2\bigr)\Bigr)dw .
+\]
+The last factor is at most $S_r(\beta)+S_s(\beta)$ in modulus, and by the Cauchy--Schwarz inequality
+and~\eqref{eq:shiftnorm} the integral of $\abs{f(\cdot)g(\cdot)}$ is at most $\sqrt{n_fn_g}$. Divide by
+$\abs{\mathcal P(z)/(Z_fZ_g)}\ge1-q_0$. Finally $\mathsf B=\mathcal Y/\mathcal P-\log(Z_fZ_g)$ and
+$(1+q_0)/(1-q_0)\ge1$, which gives the (slightly generous) bound $B^\ast$ used by the certificate.
+
+(c) $u=\mathsf L+(\kappa-1)\mathsf B-\mathsf H$ and $\omega=(2-\kappa)\mathsf B-2\mathsf L+\mathsf H$, where
+$\mathsf H$ is a real constant; by (a) and (b) both are analytic on the strip, with the stated bounds for their
+real parts. For real $\theta$ and complex $\xi$, $\abs{2^{\theta\xi}}=2^{\theta\operatorname{Re}\xi}$; so
+$\abs{2^{p_1(\Delta-u)}}\le2^{p_1(\Delta+U^\ast)}$ and
+$\abs{2^{p_2(a_\Gamma\omega-u)}}\le2^{p_2(a_\Gamma W^\ast+U^\ast)}$, using $p_1,p_2,a_\Gamma,\Delta>0$. Finally
+$\abs{2+2\cos z}\le2+2\cosh(\operatorname{Im}z)\le2+2\cosh2\beta$.
+\end{proof}
+
+\emph{How the certificate uses the lemma.} The number $n_f$ is itself an integral of an entire periodic function:
+$\abs{F(w+\mathrm i\beta)}^2=2^{2r_\beta(w)}$ with the real trigonometric polynomial
+$r_\beta(w)=\operatorname{Re}r(w+\mathrm i\beta)=\sum_j\cosh(j\beta)\,(r_j\cos jw+r'_j\sin jw)$, so
+$n_f=Z_f^{-2}\int2^{2r_\beta}$ is enclosed by a trapezoid sum with the error term for the bound
+$2^{2S_{r_\beta}(\sigma)}$; likewise $n_g$. The script then forms an upper bound for $q_0$, checks $q_0<1$, and
+forms upper bounds for $B^\ast$, $U^\ast$, $W^\ast$ and for the two outer error terms
+$2M/(e^{2\beta N}-1)$ with $M$ from~(c). The values of $u$ and $\omega$ at the outer nodes are balls that already
+contain the inner quadrature errors. At the stored parameters ($\beta=0.1$, $\sigma=0.25$, $512$ inner nodes for
+$\mathcal P$ and $\mathcal Y$, and $N=16384$ nodes for the outer integrals, the normalizers and $n_f,n_g$) the run
+gives $q_0\le0.37084$, $U^\ast\le1.3258$, $W^\ast\le19.178$, inner error terms
+below $5\cdot10^{-51}$ and outer error terms below $2^{-4700}$.
+
+\subsection{Results}
+The certified lower bounds of the slacks (right side minus left side, rounded down) are as follows. For
+\textup{(M1)} and \textup{(M2)}, marked $\ast$, the number is the \emph{logarithmic} margin $\rho_c-\log M_i$, where
+$M_i$ is the integral on the left of the premise; $M_i<2^{\rho_c}$ is equivalent to $\log M_i<\rho_c$.
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Premise & Slack $\ge$ & Premise & Slack $\ge$\\
+\midrule
+(C1) & $1.3160\cdot10^{-6}$ & (N3) & $0.0574$\\
+(C2) & $1.3157\cdot10^{-6}$ & (N4) & $0.967$\\
+(C3) & $1.3157\cdot10^{-6}$ & (N5) & $0.854$\\
+(C4) & $1.3156\cdot10^{-6}$ & (N6) & $0.0325$\\
+(C5) & $1.3157\cdot10^{-6}$ & (N7) & $0.930$\\
+(C6) & $0.0411,\ 0.446,\ 0.00394$ & (N8) & $0.460,\ 0.434$\\
+(C7) & $0.0162$ & (N9) & $0.229$\\
+(C8) & $0.139$ & (N10) & $0.0286,\ 0.458$\\
+(E0) & $7.02\cdot10^{-11}$ & (N11) & $0.687$\\
+(N1) & $1.2956\cdot10^{-6}$ (exact) & (N12) & $7.45,\ 7.27$\\
+(N2) & $0.0123$ & (N13) & $8.124\cdot10^{-7}$\\
+(M1)$^\ast$ & $1.3154\cdot10^{-6}$ & (N14) & $10^{-6}$ (exact)\\
+(M2)$^\ast$ & $1.4940\cdot10^{-6}$ & &\\
+\bottomrule
+\end{tabular}
+\end{center}
+The line \textup{(E0)} is the least, over the ten lines of \textup{(C1)--(C8)}, of the slack minus $\eps_0$; it is
+attained by \textup{(C4)}, whose slack is $1.31567023384\ldots\cdot10^{-6}$.
+The moments are $\log M_1=0.51626832585128515\ldots$ and $\log M_2=0.51626814726466968\ldots$ with ball radii below
+$10^{-20}$, against $\rho_c=\eta-2.5\cdot10^{-6}=0.5162696413$.
+
+\paragraph{Correspondence with the certificate file.} The script \texttt{certify\_selfcontained.py} supplied with
+this manuscript prints its margins under the labels of Section~\ref{sec:params}: ten lines \textup{(E0)}, one for
+each line of \textup{(C1)--(C8)} (\textup{(C6)} has three parts); the ten lines \textup{(C1)--(C8)} themselves;
+seventeen lines \textup{(N1)--(N14)} (\textup{(N8)}, \textup{(N10)} and \textup{(N12)} have two parts each); and
+the two moments. Eight further lines X1--X8 certify the auxiliary constants of the filter that are quoted in the
+text: $\|r\|_1\le3.64$, $\|s\|_1\le3.60$, $R\le7.24$, $C_0\le15$ (Lemma~\ref{lem:order}); $C_1<2^{32}$,
+$\beta_0<270$ and $\log P_0<339$ (Lemma~\ref{lem:B1} and the remark after it); and the variant of \textup{(N13)}
+mentioned in Remark~\ref{rem:onefilter}, which is not a premise. The script computes
+$\|r\|_1=3.63121121$, $\|s\|_1=3.59861571$, $R^1=24.49012608$, $C_0=14.9608\ldots$,
+$C_1=3.62406\ldots\cdot10^{9}$ and $\beta_0=266.006\ldots$ For $P_0=\ceil A$, with $A$ the quantity under the
+ceiling in Lemma~\ref{lem:B1}, the script certifies $\log(A+1)<339$, which suffices because $\ceil A\le A+1$; it
+finds $\log A=326.727\ldots$ The moment computation is done
+by \texttt{certify\_c5.py}, unchanged from~\cite{V}.
+
+Conversely, every numerical inequality used in
+Sections~\ref{sec:model}--\ref{sec:time} is one of \textup{(E0)}, \textup{(C1)--(C8)}, \textup{(N1)--(N14)},
+\textup{(M1)}, \textup{(M2)}, one of the auxiliary bounds X1--X7, or one of the following facts of exact decimal
+arithmetic, which the script checks with exact rationals: $\tau_0<\tfrac12$; $1/G_0=\zeta$;
+$\tau_0+20\eps=0.4875754036$; $0.4875754036<0.4875755$; $\tau_0+20\eps<0.49$ (address space,
+Proposition~\ref{prop:time}); $a\le\tfrac16$ (in \textup{(S5)}); $\eta<1$ (Lemma~\ref{lem:A5}, Step~4); and the
+values of $r$, $\Delta$, $\Gamma$ and $\rho_c$ displayed in Section~\ref{sec:params}.
+
+\paragraph{Relation to the certificate of~\cite{V}.} The certificate of~\cite{V} verifies the same inequalities at
+the same parameter point, with the same moment code. It differs in the treatment of $\eps_0$: there $\eps_0$ was
+computed as the least of the \textup{(C)}-slacks, whereas here $\eps_0$ is the fixed decimal of
+Section~\ref{sec:params} and \textup{(E0)} is a premise, so that $\eps_0$ enters every other line as an exact number
+and \textup{(N1)} is a fact of decimal arithmetic. The margins of~\cite{V} that do not involve $\eps_0$ are
+reproduced to within one unit in the last place of a double (the present script rounds downward).
+
+\paragraph{Reproduction.} From the directory \texttt{certificates/}, with Python~3.12 and \texttt{python-flint}
+0.9.0, the stored run is
+\begin{center}
+\texttt{python certify\_selfcontained.py candidate\_base.json 512 32 0.1 0.25}
+\end{center}
+The arguments are the number of inner nodes ($512$), the ratio of outer to inner nodes ($32$, so $N=16384$),
+$\beta$ (the outer strip has half-width $2\beta=0.2$) and the inner strip half-width $\sigma=0.25$; the working
+precision is $200$ bits, and the run takes about ten seconds. Its output is \texttt{cert\_selfcontained\_512.json}.
+The margins in that file are directed lower bounds (rounded toward $-\infty$). The script reads from
+\texttt{candidate\_base.json} only the decimal strings of the parameters and of the coefficient arrays
+\texttt{rc}, \texttt{sc}, whose order is that of Appendix~\ref{app:filter}; the fields \texttt{floating\_margins}
+and \texttt{floating\_T} of that file are metadata of the floating-point optimization and are not read.
+
+\paragraph{Independent computations.} According to~\cite{V}, the moments were computed by the script above and,
+independently, by two separately written interval implementations (agreement to 20 digits; one with an analytic
+quadrature bound, one with ball radius below $4\cdot10^{-55}$), and the scalar conditions were re-derived from the
+sources by two reviewers. A further directed-interval computation by Astra (in its referee
+report on~\cite{V}) gives logarithmic moment margins exceeding $1.3154487148\cdot10^{-6}$ and $1.4940353303\cdot10^{-6}$. For
+this paper the script \texttt{certify\_selfcontained.py} was run as described above, and the reviewer re-ran it with
+identical output. The reviewer also compared both logarithmic moments with a separately written floating-point
+computation (an FFT correlation at $512$ to $4096$ points), which agreed to about fourteen decimal places; that
+is a check of the formulas and of the orientation at floating-point accuracy, not a certificate.
+All runs of the certificate share the moment code \texttt{certify\_c5.py}; they are same-code reproductions, and
+the independence of the moment values rests on the separately written implementations reported in~\cite{V}. The
+output file contains directed bounds, and the table above is rounded down.
+
+\paragraph{Scope.} The certificate proves the inequalities listed above and nothing else. It does not check the
+lemmas, the finite-circle transfer (Lemma~\ref{lem:B1}, proved in the text), or that the list of premises is
+complete; completeness is the claim of the previous paragraph and is a statement about the written proof, to be
+checked by the reader.
+\section{Precisely scoped limits of the analysis}\label{sec:limits}
+Each limitation below is stated together with the assumption that produces it and with what is known about
+removing that assumption. None of them is a lower bound for Subset Sum.
+
+\subsection{The result is asymptotic, and the cutoff is astronomically large}
+Theorem~\ref{thm:main} is an asymptotic statement. The algorithm runs plain meet in the middle below $n_\ast$, and the
+written proof needs, among others, the following thresholds (order-of-magnitude estimates, with
+$C_0\approx14.96$, $\eps=\zeta=10^{-8}$, $c_{\cP}\approx201$):
+\begin{center}
+\begin{tabular}{p{0.52\linewidth}p{0.2\linewidth}l}
+\toprule
+Requirement & Where & $n\gtrsim$\\
+\midrule
+block concentration $n_\beta\ge6C_0^2/\eps^2$ with $n_\beta\approx\sqrt n$ & Lemma~\ref{lem:cov}(i) & $2\cdot10^{38}$\\
+$3Q_n2^{-6\eps n+N_b+3}$ small, i.e.\ $6\eps n\gg c_{\cP}\sqrt n$ & Lemma~\ref{lem:cov}(iii) & $10^{19}$\\
+$8/(\zeta^2n)\le\tfrac1{12}$ & Proposition~\ref{prop:P}(c), Section~\ref{sec:nstar} & $10^{18}$\\
+$Q_n^22^{-\beta_3n}$ small with $\beta_3\approx8.1\cdot10^{-7}$ & Theorem~B & $3\cdot10^{17}$\\
+$(\eps_0-\zeta-1/G_0)\,n\gg c_7n^{0.6}$ & Theorem~A & $10^{17}$\\
+$(2n^2+3)e^{-n^{0.2}/2}$ small & Lemma~\ref{lem:A3} & $10^{10}$\\
+the guard $G_0\ceil{\log(b+1)}\le n$ & Section~\ref{sec:params} & $10^{8}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Hence $n_\ast>10^{38}$ in this proof: the first row alone needs
+$n\ge(6C_0^2/\eps^2)^2\approx1.8\cdot10^{38}$. Below $n_\ast$ the program runs meet in the middle, so on every input
+that could be written down it takes the classical time $2^{n/2}\poly(n+b)$, and the proof gives no estimate
+of a crossover point for inputs of feasible size. No statement about the size of the constant $C$ in
+Theorem~\ref{thm:main}(b) follows from this: the theorem allows a threshold $N$, so the finite range of inputs
+handled by the fallback need not be absorbed into $C$, and an upper bound on a running time does not yield a lower
+bound on a constant. This proof supplies a bound of the form $C\,2^{T'n}$ only from $n\ge N\ge n_\ast$ on; a bound
+valid from a stated small $n$ would have to be derived separately. \emph{Assumption responsible:} the small accuracy constant $\eps=10^{-8}$ (shared with~\cite{OAI}), used with
+Chebyshev's inequality on blocks of size $\sqrt n$, and the thin numerical slacks ($10^{-6}$) at the frozen point.
+\emph{Removable?} Partly: a point with larger slacks, an exponential tail bound in place of Chebyshev, and a larger
+$\eps$ would lower $n_\ast$ at the price of a slightly larger exponent; we have not optimized this, and no choice
+is known that makes the cutoff practical.
+
+\subsection{Three closed-form bounds}
+\begin{proposition}\label{prop:three}
+Write $\eta=\tau_0+\Delta$ and $l+r=1-\mu$. The premises \textup{(C2)--(C5)} imply
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\tau_0>\tfrac12-\mu\bigl(\gamma-\tfrac12h(a)\bigr)$ \quad(add \textup{(C2)} and \textup{(C3)});
+\item $2\tau_0>1-\Delta+\mu\bigl[(h(a)-\gamma)+(h(\tfrac12-a)-1)\bigr]$ \quad(\textup{(C4)});
+\item $\tau_0>\tfrac12\bigl(\tfrac12+\mu\,h(\tfrac12-a)\bigr)$ \quad(\textup{(C5)}).
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(i) $l+r+(h(a)-\gamma)\mu+(1-\gamma)\mu<2\tau_0$ and $l+r=1-\mu$ give $1+(h(a)-2\gamma)\mu<2\tau_0$. (ii) Substitute
+$\eta=\tau_0+\Delta$ in \textup{(C4)}. (iii) is \textup{(C5)}.
+\end{proof}
+These are exact algebra on the premises of the present proof. They describe this proof's budget, not the problem:
+at the frozen point (ii) and (iii) are the tight ones. \emph{Assumption responsible:} the specific accounting of
+Lemma~\ref{lem:A7} (every trial lists all masks; every visited tuple is expanded). \emph{Removable?} Unknown;
+\cite{V} reports numerical experiments on several variants, none of which is a theorem.
+
+\subsection{A counting floor for alias enumeration}
+\begin{proposition}[counting floor]\label{prop:floor}
+Consider any procedure that, for a prime $P$ of about $\eta n$ bits, inserts a name for every alias class of a
+target into a dictionary, spending at least one counted step per class, within a budget of $2^{(\tau_0+o(1))n}$
+steps, and is combined with a checksum at the same modulus that requires $\eta-\tau_0\le\Delta^\ast$. If for some
+input and target there are at least $2^{(1-\eta-o(1))n}$ alias classes, then
+$\tau_0\ge1-\eta-o(1)\ge1-\tau_0-\Delta^\ast-o(1)$, that is $\tau_0\ge(1-\Delta^\ast)/2-o(1)$.
+\end{proposition}
+\begin{proof}
+The number of steps is at least the number of classes inserted, so $\tau_0\ge1-\eta-o(1)$; and
+$\eta\le\tau_0+\Delta^\ast$.
+\end{proof}
+At $\Delta^\ast=\Delta=0.0286969377$ the floor is $0.48565\ldots$. \emph{Assumptions responsible, and their status:}
+(A1) every alias class is inserted individually --- removable in
+principle (an exact signed aggregation over classes is known in a restricted model, but no algorithm that uses it
+within the budget is known); (A2) the checksum uses the same modulus --- other combinations untested; (A3) the
+checksum capacity is $\Delta^\ast$ --- see below; (A4) the input has $2^{(1-\eta-o(1))n}$ alias classes --- this is a
+property of inputs whose subset sums are nearly equidistributed modulo $P$, not of all inputs (the weights
+$P,2P,4P,\dots$ have distinct subset sums and no aliases of a target $\equiv1$). The proposition says nothing about
+procedures that do not enumerate classes.
+
+\subsection{A lower bound on the first moment}
+\begin{lemma}[first-moment bound; Lemma~1 of~\cite{V}]\label{lem:first}
+For all strictly positive continuous densities (in particular for every pair $r,s$ and every $\kappa>0$ in
+Section~\ref{sec:filter}), every $\Delta\ge0$ and $p>0$,
+\[
+ \log\int_\Tc\Lambda(x)\,2^{p(\Delta-u(x))}\,dx\ \ge\ 1+p\Delta+(1+p)\log\int_\Tc(1+\cos x)^{1/(1+p)}\,dx .
+\]
+\end{lemma}
+\begin{proof}
+By Jensen's inequality for the probability density $K_x$,
+$u(x)=\av{K_x\log\bigl(f_\ast(x+\cdot)g_\ast/K_x\bigr)}\le\log Q_\ast(x)$ with $Q_\ast(x)=\av{f_\ast(x+\cdot)g_\ast}$,
+and $Q_\ast$ is a probability density on $\Tc$. Let $\varpi(x)=1+\cos x$, also a probability density. Then the
+left integral equals $2^{1+p\Delta}\int\varpi\,2^{-pu}\ge2^{1+p\Delta}\int\varpi\,Q_\ast^{-p}$. By H\"older's inequality
+with exponents $1+p$ and $(1+p)/p$,
+$\int\varpi^{1/(1+p)}=\int(\varpi Q_\ast^{-p})^{1/(1+p)}Q_\ast^{p/(1+p)}\le\bigl(\int\varpi Q_\ast^{-p}\bigr)^{1/(1+p)}$.
+\end{proof}
+So \textup{(M1)} can hold only if $p_1\Delta<\rho_c-1-(1+p_1)\log\int(1+\cos x)^{1/(1+p_1)}dx$: the checksum capacity
+$\Delta$ of any filter in this moment format is bounded. \emph{Assumption responsible:} the error is controlled
+through a first-moment condition with one multiplier and a coordinatewise product filter. \emph{Removable?} In
+principle, by an estimator outside the moment format; none is known. The consequences drawn from this lemma
+in~\cite{V} for the original construction of~\cite{OAI} are not used or re-proved here.
+
+\subsection{What is not claimed}
+The paper does not claim: the conditional exponent $0.4873407528$ of~\cite{V} (which needs the open statement
+\textup{[S]}); optimality of the parameter point; any lower bound; a derandomization; or a practical algorithm. The
+correctness guarantee is two-sided error at most $1/3$; it can be amplified by repetition in the usual way.
+\section{Verification status and supplementary files}\label{sec:verification}
+The proof is divided into the statement groups S1--S29 of the table below. The codes mean:
+\begin{description}[leftmargin=2.2em,style=nextline]
+\item[W] A complete proof is written in this manuscript. It was produced by Claude, which had read the
+corresponding passages of~\cite{OAI,Base}; it is a \emph{source-aware reconstruction}, not an independent proof.
+\item[B] Two \emph{blind} derivations exist: two fresh instances of the same AI system were each given a
+statement-only packet (no proof text, instructed not to open the sources) and wrote proofs from scratch. Their
+conclusions agree with each other and with the proof written here; the comparison was made by the builder of this
+manuscript, not by a referee. Blindness was by instruction and self-declaration, and both provers are the same
+model as the builder: this is not cross-model independence. The packets and the derivations are working
+documents and are not part of the supplement.
+\item[R] Re-derived before this manuscript by two different AI systems (Claude and Astra),
+each with partial exposure to the source proof.
+\item[X] Re-derived for this manuscript by Astra from a statement-only packet, without
+opening the manuscript during the derivation. That system had read an earlier draft, so the derivation is
+independent in authorship but not blind. The comparison with the proof written here was made by the builder.
+\item[C] Published classical theorem, cited.
+\item[N] Numerical inequality, certified in ball arithmetic (Section~\ref{sec:cert}).
+\end{description}
+
+\paragraph{Cross-model review.} The manuscript was reviewed by Astra with the sources, the
+earlier preprint~\cite{V} and the certificate files open; this is a \emph{source-aware} review, not a blind
+re-derivation and not a formal verification. It traced the dependency chain of the main theorem and checked, among
+others: the two cases of Corollary~\ref{cor:D} and its use in Lemma~\ref{lem:A5} under a signing fixed before the
+half-block is drawn; the charging convention of Section~\ref{sec:procA} and item~7 of Lemma~\ref{lem:A7}; the event
+$\mathcal H$ of Theorem~A; the change of measure and the joint match count of Lemma~\ref{lem:cov};
+Lemmas~\ref{lem:B2} and~\ref{lem:B3}; the inverse-multiplicity factor in both branches of the estimator;
+Proposition~\ref{prop:correct}; the proof of Lemma~\ref{lem:strip} against the moment code; the use of
+\textup{(E0)}; and the final exponent. It compared the 64 coefficients of Appendix~\ref{app:filter} with the
+parameter file and re-ran the certificate, reproducing every margin. The corrections it requested are
+incorporated in this text. It did not write a second interval implementation of the moments.
+
+\paragraph{Cross-model re-derivation and audit.} The same system then did three things, in separate sessions.
+(i) From statement-only packets, and without opening the manuscript during the derivation, it proved
+Lemmas~\ref{lem:cover}--\ref{lem:good}, Corollary~\ref{cor:D} and Lemma~\ref{lem:A5} (rows S8 and S13, code X),
+using no hypothesis beyond those stated; for the collision step of Lemma~\ref{lem:A5} it used Jensen's inequality
+where the proof here uses Markov's. It had read an earlier draft, so these derivations are independent in
+authorship but not blind. (ii) With the manuscript open it audited Lemmas~\ref{lem:cov}--\ref{lem:B3} and
+Theorem~B, looking for a missing hypothesis, a wrong constant or an unjustified independence, and judged each
+sound. (iii) In the same way it audited the rest of the chain: Sections~\ref{sec:final} and~\ref{sec:time} and the
+proof of Theorem~\ref{thm:main}; the rest of Section~\ref{sec:alias} with Lemma~\ref{lem:samplers}
+and~\eqref{eq:couple}; Section~\ref{sec:filter} with Lemmas~\ref{lem:fourier}--\ref{lem:balance};
+Lemmas~\ref{lem:iso}--\ref{lem:fmono}, \ref{lem:primes}, \ref{lem:phase}, \ref{lem:sums} and
+Proposition~\ref{prop:P}; and the premises of Section~\ref{sec:params} against the proofs. It reported no gap in a
+proof and no use of a statement of~\cite{OAI} or~\cite{Base} that is not proved here; the clarifications it
+recommended are incorporated in this text. The comparison of its derivations with the proofs here was made by the
+builder. No row has been assessed by a human referee.
+
+\begin{center}
+\small
+\begin{longtable}{lp{0.27\linewidth}p{0.40\linewidth}p{0.18\linewidth}}
+\toprule
+ID & Where & Statement & Status\\
+\midrule
+\endhead
+S1 & Lemma~\ref{lem:iso} & isolation & W, B\\
+S2 & Lemma~\ref{lem:def} & deficiency; sign invariance & W, B\\
+S3 & Lemmas~\ref{lem:azuma}--\ref{lem:fmono} & random subsets: variance, tail, monotone mean & W, B\\
+S4 & Lemma~\ref{lem:primes} & random-prime collisions (prime count: C) & W, B, C\\
+S5 & Proposition~\ref{prop:P} & capped preliminary search, \textup{(LD)} dichotomy & W, B\\
+S6 & Lemma~\ref{lem:samplers}, \eqref{eq:couple} & bounded samplers, coupling & W\\
+S7 & Lemmas~\ref{lem:phase},~\ref{lem:sums} & finite-precision sums & W, B (sums)\\
+S8 & Lemmas~\ref{lem:cover}--\ref{lem:good}, Cor.~\ref{cor:D} & small layers, Corollary D & W, R, X\\
+S9 & \eqref{eq:signcF}, \eqref{eq:classsum}, Lemma~\ref{lem:A1} & sign identity, classes, soundness & W, B\\
+S10 & Lemma~\ref{lem:A2} & key and class counts & W, B\\
+S11 & Lemma~\ref{lem:A3} & trial count & W, B\\
+S12 & Lemma~\ref{lem:A4} & bad half-blocks & W, B\\
+S13 & Lemma~\ref{lem:A5} & one trial & W, R, X\\
+S14 & Corollary~\ref{cor:A6} & coverage & W, B\\
+S15 & Lemma~\ref{lem:A7} & expected work & W, B\\
+S16 & Theorem~A & Theorem A & W, B (given S13)\\
+S17 & Lemma~\ref{lem:order} & filter functions, entropy order, bounds & W, B\\
+S18 & Lemmas~\ref{lem:riemann}--\ref{lem:eval} & finite circle, with sine terms; evaluation & W, B\\
+S19 & Lemma~\ref{lem:fourier} & Fourier form & W, B\\
+S20 & Section~\ref{sec:tables}, Lemmas~\ref{lem:pattern},~\ref{lem:balance} & patterns, digits, tables & W, B\\
+S21 & Lemma~\ref{lem:cov} & coverage and sizes; joint moment & W, B\\
+S22 & Lemmas~\ref{lem:mult},~\ref{lem:cond} & multiplicity, direct sum, sampling error & W, B\\
+S23 & \eqref{eq:paterr} & pattern errors & W, B\\
+S24 & Lemmas~\ref{lem:B2},~\ref{lem:B3} & domination; one sampled pattern & W, B, R\\
+S25 & Section~\ref{sec:checksum}, last proof & resources and precision & W, B\\
+S26 & Theorem~B & Theorem B, one filter & W, B\\
+S27 & Lemma~\ref{lem:cancel}, Prop.~\ref{prop:correct} & alias subtraction, decision rule & W, B\\
+S28 & Section~\ref{sec:fallback}, Prop.~\ref{prop:time} & fallback, address space, time on every execution & W, B\\
+S29 & Theorem~\ref{thm:main} & main theorem & W, B\\
+N & Section~\ref{sec:cert} & premises (E0), (C1)--(C8), (N1)--(N14), (M1), (M2) & N\\
+N$'$ & Lemma~\ref{lem:strip} & strip bounds behind the moment certificate & W\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\paragraph{Supplementary files.} The files are in the folder \texttt{selfcontained-2026} of the repository
+\url{https://github.com/jv1000/subset-sum}; the supplement of~\cite{V} is the folder \texttt{exponent-2026} of the
+same repository. Only the files under \texttt{certificates/} enter the proof.
+(1) \texttt{certificates/candidate\_base.json}: the parameter point and filter
+coefficients (also printed in Appendix~\ref{app:filter}).
+(2) \texttt{certificates/certify\_selfcontained.py}, \texttt{certificates/certify\_c5.py} and
+\texttt{certificates/cert\_selfcontained\_512.json}: the certificate of this paper and its output.
+
+\paragraph{Use of AI tools.} The proofs in this manuscript were drafted by Claude under the author's
+direction, from the sources and from the author's earlier preprint; the blind derivations were produced by further
+instances of the same system; the review, the re-derivations and the audits described above were made by Astra, and the
+corrections that answer them were written by Claude. The author is responsible for the
+content. The role of AI systems is described here
+in full so that a reader can weigh the verification claims accordingly.
+
+\appendix
+\section{The filter}\label{app:filter}
+The log-density polynomials of Section~\ref{sec:filter} have degree $J=16$:
+\[
+ r(x)=\sum_{j=1}^{16}\bigl(r_j\cos jx+r'_j\sin jx\bigr),\qquad s(x)=\sum_{j=1}^{16}\bigl(s_j\cos jx+s'_j\sin jx\bigr),
+\]
+with the coefficients below, which are exact decimals. In \texttt{candidate\_base.json} the array \texttt{rc} holds
+$r_1,\dots,r_{16},r'_1,\dots,r'_{16}$ in this order, and \texttt{sc} holds $s_1,\dots,s_{16},s'_1,\dots,s'_{16}$.
+The filter is used with $\kappa=1.03465831$ and with the orientation of~\eqref{eq:fg}: $r$ is evaluated at $x+w$
+and $s$ at $w$.
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+$j$ & $r_j$ (cos) & $r'_j$ (sin) & $s_j$ (cos) & $s'_j$ (sin)\\
+\midrule
+1 & $-$0.21919156 & 0.91131919 & $-$0.20782817 & 0.96462148\\
+2 & $-$0.57160580 & 0.00973572 & 0.61194965 & 0.01416858\\
+3 & 0.02024951 & 0.47988091 & 0.02603977 & 0.38660217\\
+4 & 0.03552214 & $-$0.34819083 & 0.00846337 & 0.31951898\\
+5 & $-$0.29988253 & $-$0.07175384 & $-$0.22018634 & $-$0.07671638\\
+6 & $-$0.20387757 & 0.04897708 & 0.21025833 & $-$0.00950575\\
+7 & 0.12066750 & 0.01245896 & 0.20455466 & $-$0.02875410\\
+8 & $-$0.04068323 & $-$0.11710680 & 0.02047196 & 0.10160127\\
+9 & $-$0.03536274 & $-$0.01505095 & $-$0.04648472 & $-$0.01822490\\
+10 & $-$0.00662503 & $-$0.02221718 & $-$0.01884839 & $-$0.03524125\\
+11 & $-$0.00401488 & 0.00282094 & 0.02926117 & $-$0.01087451\\
+12 & 0.00734024 & 0.00166169 & 0.00689286 & 0.00271495\\
+13 & 0.00751173 & $-$0.00656995 & $-$0.00353414 & 0.00602714\\
+14 & $-$0.00392649 & $-$0.00332303 & $-$0.00297744 & $-$0.00342132\\
+15 & 0.00011920 & 0.00231101 & $-$0.00005725 & $-$0.00147364\\
+16 & 0.00117642 & $-$0.00007656 & 0.00128320 & $-$0.00005787\\
+\bottomrule
+\end{tabular}
+\end{center}
+The sums of the absolute values of the two columns of $r$ and of $s$ are $\|r\|_1=3.63121121$ and
+$\|s\|_1=3.59861571$, and $R^1=\sum_jj(\abs{r_j}+\abs{r'_j}+\abs{s_j}+\abs{s'_j})=24.49012608$.
+
+\begin{thebibliography}{99}
+\raggedright
+\makeatletter\g@addto@macro\UrlBreaks{\do\-}\makeatother
+\bibitem{OAI} OpenAI, \emph{Subset Sum in Time $O(2^{0.49n})$}, manuscript with \LaTeX\ source, 4 October 2026.\newline
+\url{https://github.com/openai/math/tree/main/preprints/Subset-Sum-in-Time-2-power-0-49n-October-4-2026}.
+\bibitem{Base} A.~Kapila, \emph{Subset Sum in time $O(2^{0.4877n})$: a complete proof}, manuscript
+(\texttt{subset-sum/PROOF\_0.4877.tex}), 14 October 2026.\newline \url{https://github.com/a-kapila/maths-proofs}, commit
+\texttt{44c34961}.
+\bibitem{V} J.~Voitle, \emph{A certified exponent of $0.48758$ for worst-case Subset Sum, and limits of the
+alias--checksum analysis}, preprint, hexagon:2611.00178, November 2026.
+\bibitem{RS} J.~B.~Rosser and L.~Schoenfeld, Approximate formulas for some functions of prime numbers,
+\emph{Illinois J.\ Math.}\ 6 (1962), 64--94.
+\bibitem{TW} L.~N.~Trefethen and J.~A.~C.~Weideman, The exponentially convergent trapezoidal rule,
+\emph{SIAM Review} 56 (2014), 385--458.
+\bibitem{MVV} K.~Mulmuley, U.~V.~Vazirani and V.~V.~Vazirani, Matching is as easy as matrix inversion,
+\emph{Combinatorica} 7 (1987), 105--113.
+\bibitem{HS} E.~Horowitz and S.~Sahni, Computing partitions with applications to the knapsack problem,
+\emph{J.\ ACM} 21 (1974), 277--292.
+\bibitem{KLM} R.~M.~Karp, M.~Luby and N.~Madras, Monte-Carlo approximation algorithms for enumeration problems,
+\emph{J.\ Algorithms} 10 (1989), 429--448.
+\bibitem{CJRS} X.~Chen, Y.~Jin, T.~Randolph and R.~A.~Servedio, Subset Sum in time $2^{n/2}/\poly(n)$, in
+\emph{APPROX/RANDOM 2023}; arXiv:2301.07134.
+\bibitem{LY} B.~Li and L.~Ye, \emph{Subset Sum via Partial Match}, preprint, arXiv:2610.10446v2, 7 October 2026,
+revised 2 November 2026.
+\bibitem{W} J.~Wharton, \emph{subset-sum-bound}, manuscript and repository, 20 October 2026.\newline
+\url{https://github.com/JoshuaQFEX/subset-sum-bound}, commit \texttt{bed8e18}.
+\bibitem{B} Y.~Bills, \emph{subset-sum-conditional-refinement}, manuscript and repository, v1.0.0, 21 October 2026,
+and v1.1.0 (verification supplement), 22 October 2026.\newline
+\url{https://github.com/yannouli/subset-sum-conditional-refinement}, commit \texttt{590bb68}.
+\end{thebibliography}
+\end{document}
