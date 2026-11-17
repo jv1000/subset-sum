@@ -21,9 +21,16 @@ been refereed by a human. Section 13 of the manuscript gives the verification st
 | `certificates/certify_c5.py` | The moment computation, imported by the script above; its error bounds are justified by Lemma 11.1 |
 | `certificates/cert_selfcontained_512.json` | Stored output of the certificate |
 | `requirements.txt` | The one Python dependency |
+| `LICENSE` | MIT License, for the certificate files |
 
 The files under `certificates/` are part of the proof: they verify the numerical premises listed in Section 1.4
 of the manuscript.
+
+## Licence
+
+The files under `certificates/` and `requirements.txt` are released under the MIT License (see `LICENSE`): anyone
+may run, copy, modify and redistribute them. The manuscript (`.pdf` and `.tex`) is not covered by that licence;
+its copyright remains with the author.
 
 ## Reproducing the certificate
 

@@ -90,6 +90,13 @@ state of 4 November; this page is the current summary. The folder `selfcontained
 | `exponent-2026/` | The research record: lab notebooks, pre-registrations, independent referee reports and their scripts, certificates, and every revision of the paper (`paper/rev8/` holds the current one). |
 | `references/` | Links to, and SHA-256 fingerprints of, the papers this work builds on. They are not redistributed. |
 
+## Licence
+
+The certificate files of the self-contained paper (`selfcontained-2026/certificates/` and
+`selfcontained-2026/requirements.txt`) are released under the MIT License; see
+[`selfcontained-2026/LICENSE`](selfcontained-2026/LICENSE). The two papers and the folder `exponent-2026/` carry no
+open licence at present.
+
 ## Credits and AI collaboration
 
 The construction builds on OpenAI, *Subset Sum in time O(2^{0.49n})* (4 Oct 2026), and on A. Kapila's modification
